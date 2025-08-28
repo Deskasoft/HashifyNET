@@ -1,0 +1,448 @@
+// *
+// *****************************************************************************
+// *
+// * Copyright (c) 2025 Deskasoft International
+// *
+// * Permission is hereby granted, free of charge, to any person obtaining a copy
+// * of this software and associated documentation files (the "Software"), to deal
+// * in the Software without restriction, including without limitation the rights
+// * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// * copies of the Software, and to permit persons to whom the Software is
+// * furnished to do so, subject to the following conditions:
+// *
+// * The above copyright notice and this permission notice shall be included in all
+// * copies or substantial portions of the Software.
+// *
+// * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// * SOFTWARE.
+// *
+// *
+// * Please refer to LICENSE file.
+// *
+// ******************************************************************************
+// *
+
+using HashifyNet.Core;
+using HashifyNet.Core.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+
+namespace HashifyNet.Algorithms.SpookyHash
+{
+	/// <summary>
+	/// Provides an implementation of the SpookyHash V1 algorithm, a non-cryptographic hash function  designed for high
+	/// performance on large data sets. This implementation supports hash sizes of  32, 64, and 128 bits.
+	/// </summary>
+	/// <remarks>This implementation is marked as obsolete due to known issues with SpookyHash V1. It is 
+	/// recommended to use SpookyHash V2 for improved reliability and correctness. The class is intended for internal use
+	/// and should not be used in new development. The hash function operates on streams of data and produces a hash value
+	/// based on the  configured hash size and seed values. The algorithm is optimized for performance but is not suitable
+	/// for cryptographic purposes.</remarks>
+	[HashAlgorithmImplementation(typeof(ISpookyHashV1), typeof(SpookyHashConfig))]
+	[Obsolete("SpookyHashV1 has known issues, use SpookyHashV2.")]
+	internal class SpookyHashV1_Implementation
+		: StreamableHashFunctionBase<ISpookyHashConfig>,
+			ISpookyHashV1
+	{
+		public override ISpookyHashConfig Config => _config.Clone();
+
+		private readonly ISpookyHashConfig _config;
+		private readonly ulong _seed1;
+		private readonly ulong _seed2;
+
+		private static readonly IEnumerable<int> _validHashSizes = new HashSet<int>() { 32, 64, 128 };
+
+		public SpookyHashV1_Implementation(ISpookyHashConfig config)
+		{
+			if (config == null)
+			{
+				throw new ArgumentNullException(nameof(config));
+			}
+
+			_config = config.Clone();
+
+			if (!_validHashSizes.Contains(_config.HashSizeInBits))
+			{
+				throw new ArgumentOutOfRangeException($"{nameof(config)}.{nameof(config.HashSizeInBits)}", _config.HashSizeInBits, $"{nameof(config)}.{nameof(config.HashSizeInBits)} must be contained within SpookyHashV1.ValidHashSizes.");
+			}
+
+			switch (_config.HashSizeInBits)
+			{
+				case 32:
+					_seed1 = _config.Seed & 0xFFFFFFFF;
+					_seed2 = _seed1;
+					break;
+
+				case 64:
+					_seed1 = _config.Seed;
+					_seed2 = _seed1;
+					break;
+
+				case 128:
+					_seed1 = _config.Seed;
+					_seed2 = _config.Seed2;
+					break;
+			}
+		}
+
+		public override IBlockTransformer CreateBlockTransformer() =>
+			new BlockTransformer(_config.HashSizeInBits, _seed1, _seed2);
+
+		private class BlockTransformer
+			: BlockTransformerBase<BlockTransformer>
+		{
+			private static readonly int[] _MixRotationParameters =
+				new[] {
+					11, 32, 43, 31, 17, 28, 39, 57, 55, 54, 22, 46
+				};
+
+			private static readonly int[] _EndPartialRotationParameters =
+				new[] {
+					44, 15, 34, 21, 38, 33, 10, 13, 38, 53, 42, 54
+				};
+
+			private static readonly int[] _ShortMixRotationParameters =
+				new[] {
+					50, 52, 30, 41, 54, 48, 38, 37, 62, 34, 5, 36
+				};
+
+			private static readonly int[] _ShortEndRotationParameters =
+				new[] {
+					15, 52, 26, 51, 28, 9, 47, 54, 32, 25, 63
+				};
+
+			private int _hashSizeInBits;
+
+			private ulong[] _hashValue;
+
+			private byte[] _shortHashBuffer;
+			private int _bytesProcessed;
+
+			public BlockTransformer()
+				: base(inputBlockSize: 96)
+			{
+			}
+
+			public BlockTransformer(int hashSizeInBits, ulong seed1, ulong seed2)
+				: this()
+			{
+				_hashSizeInBits = hashSizeInBits;
+
+				// _hashValue
+				{
+					var tempHashValue = new ulong[12];
+
+					tempHashValue[0] = tempHashValue[3] = tempHashValue[6] = tempHashValue[9] = seed1;
+					tempHashValue[1] = tempHashValue[4] = tempHashValue[7] = tempHashValue[10] = seed2;
+					tempHashValue[2] = tempHashValue[5] = tempHashValue[8] = tempHashValue[11] = 0XDEADBEEFDEADBEEF;
+
+					_hashValue = tempHashValue;
+				}
+
+				_shortHashBuffer = null;
+				_bytesProcessed = 0;
+			}
+
+			protected override void CopyStateTo(BlockTransformer other)
+			{
+				base.CopyStateTo(other);
+
+				other._hashSizeInBits = _hashSizeInBits;
+
+				other._hashValue = _hashValue.ToArray();
+
+				other._shortHashBuffer = _shortHashBuffer?.ToArray();
+				other._bytesProcessed = _bytesProcessed;
+			}
+
+			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			{
+				// Handle buffering for short hash
+				if (_bytesProcessed < 192)
+				{
+					var dataArray = data.Array;
+					var dataCount = data.Count;
+
+					if (dataCount + _bytesProcessed < 192)
+					{
+						if (_shortHashBuffer == null)
+						{
+							_shortHashBuffer = new byte[192];
+						}
+
+						Array.Copy(dataArray, data.Offset, _shortHashBuffer, _bytesProcessed, dataCount);
+
+						_bytesProcessed += dataCount;
+						return;
+					}
+
+					if (_shortHashBuffer != null)
+					{
+						Debug.Assert(_bytesProcessed == 96 || _bytesProcessed == 192);
+
+						Mix(_hashValue, new ArraySegment<byte>(_shortHashBuffer, 0, _bytesProcessed));
+
+						_shortHashBuffer = null;
+					}
+				}
+
+				Mix(_hashValue, data);
+				_bytesProcessed += data.Count;
+			}
+
+			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			{
+				// ShortHash
+				if (_bytesProcessed < 192)
+				{
+					return ComputeShortHashInternal(cancellationToken);
+				}
+
+				var finalHashValue = _hashValue.ToArray();
+				var finalMixBuffer = new byte[96];
+
+				var remainder = FinalizeInputBuffer;
+
+				if (remainder != null)
+				{
+					var remainderCount = remainder.Length;
+
+					Array.Copy(remainder, 0, finalMixBuffer, 0, remainderCount);
+
+					finalMixBuffer[95] = (byte)remainderCount;
+				}
+
+				Mix(finalHashValue, new ArraySegment<byte>(finalMixBuffer, 0, 96));
+				End(finalHashValue);
+
+				switch (_hashSizeInBits)
+				{
+					case 32:
+						return new HashValue(
+							BitConverter.GetBytes((uint)finalHashValue[0]),
+							32);
+
+					case 64:
+						return new HashValue(
+							BitConverter.GetBytes(finalHashValue[0]),
+							64);
+
+					case 128:
+						var hashValueResult = new byte[16];
+
+						BitConverter.GetBytes(finalHashValue[0])
+							.CopyTo(hashValueResult, 0);
+
+						BitConverter.GetBytes(finalHashValue[1])
+							.CopyTo(hashValueResult, 8);
+
+						return new HashValue(hashValueResult, 128);
+
+					default:
+						throw new NotImplementedException();
+				}
+			}
+
+			private IHashValue ComputeShortHashInternal(CancellationToken cancellationToken)
+			{
+				var tempHashValue = new ulong[4] {
+					_hashValue[0],
+					_hashValue[1],
+					_hashValue[2],
+					_hashValue[2]
+				};
+
+				byte[] dataArray = null;
+				int dataCount;
+				{
+					var shortHashBufferLength = _bytesProcessed;
+					var finalizeInputBufferLength = (FinalizeInputBuffer?.Length).GetValueOrDefault();
+
+					dataCount = shortHashBufferLength + finalizeInputBufferLength;
+
+					if (dataCount > 0)
+					{
+						dataArray = new byte[dataCount];
+
+						if (shortHashBufferLength > 0)
+						{
+							Array.Copy(_shortHashBuffer, 0, dataArray, 0, shortHashBufferLength);
+						}
+
+						if (finalizeInputBufferLength > 0)
+						{
+							Array.Copy(FinalizeInputBuffer, 0, dataArray, shortHashBufferLength, finalizeInputBufferLength);
+						}
+					}
+				}
+
+				if (dataArray != null)
+				{
+					var currentOffset = 0;
+
+					var remainderCount = dataCount % 32;
+
+					// Process 32-byte groups
+					{
+						var endOffset = currentOffset + dataCount - remainderCount;
+
+						while (currentOffset < endOffset)
+						{
+							tempHashValue[2] += BitConverter.ToUInt64(dataArray, currentOffset);
+							tempHashValue[3] += BitConverter.ToUInt64(dataArray, currentOffset + 8);
+
+							ShortMix(tempHashValue);
+
+							tempHashValue[0] += BitConverter.ToUInt64(dataArray, currentOffset + 16);
+							tempHashValue[1] += BitConverter.ToUInt64(dataArray, currentOffset + 24);
+
+							currentOffset += 32;
+						}
+					}
+
+					// Process 16-byte group (if available)
+					if (remainderCount >= 16)
+					{
+						tempHashValue[2] += BitConverter.ToUInt64(dataArray, currentOffset);
+						tempHashValue[3] += BitConverter.ToUInt64(dataArray, currentOffset + 8);
+
+						ShortMix(tempHashValue);
+
+						currentOffset += 16;
+						remainderCount -= 16;
+					}
+
+					tempHashValue[3] = ((ulong)dataCount) << 56;
+
+					if (remainderCount > 0)
+					{
+						var finalRemainderBuffer = new byte[16];
+						Array.Copy(dataArray, currentOffset, finalRemainderBuffer, 0, remainderCount);
+
+						tempHashValue[3] += BitConverter.ToUInt64(finalRemainderBuffer, 8);
+						tempHashValue[2] += BitConverter.ToUInt64(finalRemainderBuffer, 0);
+
+					}
+					else
+					{
+						tempHashValue[3] += 0XDEADBEEFDEADBEEF;
+						tempHashValue[2] += 0XDEADBEEFDEADBEEF;
+					}
+
+				}
+				else
+				{
+					tempHashValue[3] = 0XDEADBEEFDEADBEEF;
+					tempHashValue[2] += 0XDEADBEEFDEADBEEF;
+				}
+
+				ShortEnd(tempHashValue);
+
+				switch (_hashSizeInBits)
+				{
+					case 32:
+						return new HashValue(
+							BitConverter.GetBytes((uint)tempHashValue[0]),
+							32);
+
+					case 64:
+						return new HashValue(
+							BitConverter.GetBytes(tempHashValue[0]),
+							64);
+
+					case 128:
+						var finalHashValue = new byte[16];
+
+						BitConverter.GetBytes(tempHashValue[0])
+							.CopyTo(finalHashValue, 0);
+
+						BitConverter.GetBytes(tempHashValue[1])
+							.CopyTo(finalHashValue, 8);
+
+						return new HashValue(
+							finalHashValue,
+							128);
+
+					default:
+						throw new NotImplementedException();
+				}
+			}
+
+			private static void Mix(ulong[] hashValue, ArraySegment<byte> data)
+			{
+				Debug.Assert(data.Count % 96 == 0);
+
+				var dataArray = data.Array;
+				var dataCount = data.Count;
+				var endOffset = data.Offset + dataCount;
+
+				for (var currentOffset = data.Offset; currentOffset < endOffset; currentOffset += 96)
+				{
+					for (var i = 0; i < 12; ++i)
+					{
+						hashValue[i] += BitConverter.ToUInt64(dataArray, currentOffset + (i * 8));
+						hashValue[(i + 2) % 12] ^= hashValue[(i + 10) % 12];
+						hashValue[(i + 11) % 12] ^= hashValue[i];
+						hashValue[i] = RotateLeft(hashValue[i], _MixRotationParameters[i]);
+						hashValue[(i + 11) % 12] += hashValue[(i + 1) % 12];
+					}
+				}
+			}
+
+			private static void End(ulong[] hashValue)
+			{
+				EndPartial(hashValue);
+				EndPartial(hashValue);
+				EndPartial(hashValue);
+			}
+
+			private static void EndPartial(ulong[] hashValue)
+			{
+				for (int i = 0; i < 12; ++i)
+				{
+					hashValue[(i + 11) % 12] += hashValue[(i + 1) % 12];
+					hashValue[(i + 2) % 12] ^= hashValue[(i + 11) % 12];
+					hashValue[(i + 1) % 12] = RotateLeft(hashValue[(i + 1) % 12], _EndPartialRotationParameters[i]);
+				}
+			}
+
+			private static void ShortMix(ulong[] hashValue)
+			{
+				for (var i = 0; i < 12; ++i)
+				{
+
+					hashValue[(i + 2) % 4] = RotateLeft(hashValue[(i + 2) % 4], _ShortMixRotationParameters[i]);
+					hashValue[(i + 2) % 4] += hashValue[(i + 3) % 4];
+					hashValue[i % 4] ^= hashValue[(i + 2) % 4];
+				}
+			}
+
+			private void ShortEnd(ulong[] hashValue)
+			{
+				for (int i = 0; i < 11; ++i)
+				{
+					hashValue[(i + 3) % 4] ^= hashValue[(i + 2) % 4];
+					hashValue[(i + 2) % 4] = RotateLeft(hashValue[(i + 2) % 4], _ShortEndRotationParameters[i]);
+					hashValue[(i + 3) % 4] += hashValue[(i + 2) % 4];
+				}
+			}
+
+			private static ulong RotateLeft(ulong operand, int shiftCount)
+			{
+				shiftCount &= 0x3f;
+
+				return
+					(operand << shiftCount) |
+					(operand >> (64 - shiftCount));
+			}
+		}
+	}
+}
