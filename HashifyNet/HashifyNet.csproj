@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
     <SignAssembly>True</SignAssembly>
-    <DelaySign>False</DelaySign>
+    <DelaySign>True</DelaySign>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>HashifyNET</Title>
     <Platforms>AnyCPU;x64;x86</Platforms>
@@ -74,6 +74,10 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+    <None Include="..\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Include="..\README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -96,6 +100,8 @@
     <PackageProjectUrl>https://github.com/Deskasoft/HashifyNET</PackageProjectUrl>
     <Description>A comprehensive API for well-known hash algorithms.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>logo.png</PackageIcon>
+    <AssemblyOriginatorKeyFile>..\HashifyNET.publickey</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 </Project>
