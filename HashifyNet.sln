@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36401.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashifyNet", "HashifyNet\HashifyNet.csproj", "{072CCE7B-AFA9-4B88-B646-D1351F98266C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashifyNet.UnitTests", "HashifyNet.UnitTests\HashifyNet.UnitTests.csproj", "{91411EB9-003A-45FC-9806-EB2988FEACA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|ARM32 = Debug|ARM32
+		Debug|ARM64 = Debug|ARM64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|ARM32 = Release|ARM32
+		Release|ARM64 = Release|ARM64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Debug|ARM32.ActiveCfg = Debug|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Debug|ARM32.Build.0 = Debug|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Debug|x64.ActiveCfg = Debug|x64
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Debug|x64.Build.0 = Debug|x64
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Debug|x86.Build.0 = Debug|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Release|ARM32.ActiveCfg = Release|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Release|ARM32.Build.0 = Release|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Release|ARM64.Build.0 = Release|Any CPU
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Release|x64.ActiveCfg = Release|x64
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Release|x64.Build.0 = Release|x64
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Release|x86.ActiveCfg = Release|x86
+		{072CCE7B-AFA9-4B88-B646-D1351F98266C}.Release|x86.Build.0 = Release|x86
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Debug|ARM32.ActiveCfg = Debug|ARM32
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Debug|ARM32.Build.0 = Debug|ARM32
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Debug|ARM64.Build.0 = Debug|ARM64
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Debug|x64.ActiveCfg = Debug|x64
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Debug|x64.Build.0 = Debug|x64
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Debug|x86.Build.0 = Debug|Any CPU
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Release|ARM32.ActiveCfg = Release|ARM32
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Release|ARM32.Build.0 = Release|ARM32
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Release|ARM64.ActiveCfg = Release|ARM64
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Release|ARM64.Build.0 = Release|ARM64
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Release|x64.ActiveCfg = Release|x64
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Release|x64.Build.0 = Release|x64
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Release|x86.ActiveCfg = Release|x86
+		{91411EB9-003A-45FC-9806-EB2988FEACA9}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {882D1270-F0EA-4452-A85F-8A48EBA14831}
+	EndGlobalSection
+EndGlobal
