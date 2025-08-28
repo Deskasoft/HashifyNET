@@ -10,6 +10,8 @@
     <ErrorReport>prompt</ErrorReport>
     <Platforms>AnyCPU;ARM32;ARM64;x64;x86</Platforms>
     <SignAssembly>True</SignAssembly>
+    <DelaySign>True</DelaySign>
+    <AssemblyOriginatorKeyFile>..\HashifyNET.publickey</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
