@@ -40,6 +40,9 @@ The following hash functions have been implemented from the most reliable refere
 * [Gost](https://en.wikipedia.org/wiki/GOST_(hash_function))
   * Gost - Implementation of Streebog Family (GOST R 34.11-2012).
 * [HighwayHash](https://github.com/google/highwayhash)
+* [Hash Algorithm Wrapper](http://msdn.microsoft.com/en-us/library/system.security.cryptography.hashalgorithm%28v=vs.110%29.aspx)
+  * HashAlgorithmWrapper - Wraps an existing instance of a .NET HashAlgorithm
+  * HashAlgorithmWrapper<HashAlgorithmT> - Wraps a managed instance of a .NET HashAlgorithm
 * [Jenkins](http://en.wikipedia.org/wiki/Jenkins_hash_function)
   * JenkinsOneAtATime - Original
   * JenkinsLookup2 - Improvement upon One-at-a-Time hash function
@@ -170,5 +173,6 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
