@@ -268,7 +268,7 @@ namespace HashifyNet
 		/// Initializes a new instance of the <see cref="HashFactory"/> class.
 		/// </summary>
 		/// <remarks>This constructor is private to prevent direct instantiation of the <see cref="HashFactory"/>
-		/// class.  Use the provided factory methods to create instances as needed.</remarks>
+		/// class. Use the provided factory methods to create instances as needed.</remarks>
 		private HashFactory()
 		{
 		}
@@ -280,7 +280,7 @@ namespace HashifyNet
 		/// hash algorithms are registered, the method returns <see langword="null"/>.</remarks>
 		/// <returns>An array of <see cref="Type"/> objects representing the registered hash algorithm types, or <see
 		/// langword="null"/> if no hash algorithms are available.</returns>
-		public Type[] GetAllAvailableHashAlgorithms()
+		public Type[] GetAllHashAlgorithms()
 		{
 			if (_implementations.Count < 1)
 			{
@@ -290,6 +290,54 @@ namespace HashifyNet
 			Type[] types = new Type[_implementations.Keys.Count];
 			_implementations.Keys.CopyTo(types, 0);
 			return types;
+		}
+
+		/// <summary>
+		/// Retrieves all hash algorithm types that implement cryptographic hash functions.
+		/// </summary>
+		/// <remarks>This method filters the available hash algorithm types to include only those that implement the
+		/// <see cref="ICryptographicHashFunction{T}"/> interface. The returned array may be empty if no matching types are
+		/// found.</remarks>
+		/// <returns>An array of <see cref="Type"/> objects representing cryptographic hash algorithm types. Returns <see
+		/// langword="null"/> if no hash algorithms are available.</returns>
+		public Type[] GetAllCryptographicHashAlgorithms()
+		{
+			Type[] all = GetAllHashAlgorithms();
+			if (all == null || all.Length < 1)
+			{
+				return null;
+			}
+
+			return all.Where(t =>
+	t.GetInterfaces().Any(i => i.IsGenericType &&
+		i.GetGenericTypeDefinition() == typeof(ICryptographicHashFunction<>))
+	).ToArray();
+		}
+
+		/// <summary>
+		/// Retrieves all hash algorithm types that implement non-cryptographic hash functions.
+		/// </summary>
+		/// <remarks>This method filters the available hash algorithm types to include only those that implement the
+		/// <see cref="IHashFunction{T}"/> interface and exclude those that implement the <see
+		/// cref="ICryptographicHashFunction{T}"/> interface. The returned array may be empty if no matching types are
+		/// found.</remarks>
+		/// <returns>An array of <see cref="Type"/> objects representing non-cryptographic hash algorithm types. Returns <see
+		/// langword="null"/> if no hash algorithms are available.</returns>
+		public Type[] GetAllNonCryptographicHashAlgorithms()
+		{
+			Type[] all = GetAllHashAlgorithms();
+			if (all == null || all.Length < 1)
+			{
+				return null;
+			}
+
+			return all.Where(t =>
+	t.GetInterfaces().Any(i => i.IsGenericType &&
+		i.GetGenericTypeDefinition() == typeof(IHashFunction<>))
+	&&
+	!t.GetInterfaces().Any(i => i.IsGenericType &&
+		i.GetGenericTypeDefinition() == typeof(ICryptographicHashFunction<>))
+				).ToArray();
 		}
 
 		/// <summary>
@@ -374,3 +422,4 @@ namespace HashifyNet
 		}
 	}
 }
+
