@@ -25,7 +25,7 @@ The following hash functions have been implemented from the most reliable refere
   * Blake2b
 * [Blake3](https://en.wikipedia.org/wiki/BLAKE_(hash_function)#BLAKE3)
 * [BuzHash](http://www.serve.net/buz/hash.adt/java.002.html)
-  * BuzHashBase - Abstract implementation, there is no authoritative implementation
+  * BuzHashBase - Abstract implementation; there is no authoritative implementation
   * DefaultBuzHash - Concrete implementation, uses 256 random 64-bit integers
 * [CityHash](https://code.google.com/p/cityhash/)
 * [CRC](http://en.wikipedia.org/wiki/Cyclic_redundancy_check)
@@ -173,6 +173,7 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
