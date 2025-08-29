@@ -53,13 +53,35 @@ namespace HashifyNet.UnitTests.Core
 		}
 
 		[Fact]
-		public void Factory_GetAllAvailableHashAlgorithms_Works()
+		public void Factory_GetAllHashAlgorithms_Works()
 		{
-			var all = HashFactory.Instance.GetAllAvailableHashAlgorithms();
+			var all = HashFactory.Instance.GetAllHashAlgorithms();
 			Assert.NotNull(all);
 			Assert.NotEmpty(all);
 			Assert.All(all, item => Assert.NotNull(item));
 			Assert.All(all, item => typeof(IHashFunctionBase).IsAssignableFrom(item));
+		}
+
+		[Fact]
+		public void Factory_GetAllCryptographicHashAlgorithms_Works()
+		{
+			var all = HashFactory.Instance.GetAllCryptographicHashAlgorithms();
+			Assert.NotNull(all);
+			Assert.NotEmpty(all);
+			Assert.All(all, item => Assert.NotNull(item));
+			Assert.All(all, item => Assert.Contains(typeof(ICryptographicHashFunction<>), item.GetInterfaces().Where(t => t.IsGenericType).ToList().ConvertAll(t => t.GetGenericTypeDefinition())));
+		}
+
+		[Fact]
+		public void Factory_GetAllNonCryptographicHashAlgorithms_Works()
+		{
+			var all = HashFactory.Instance.GetAllNonCryptographicHashAlgorithms();
+
+			Assert.NotNull(all);
+			Assert.NotEmpty(all);
+			Assert.All(all, item => Assert.NotNull(item));
+			Assert.All(all, item => Assert.Contains(typeof(IHashFunctionBase), item.GetInterfaces()));
+			Assert.All(all, item => Assert.DoesNotContain(typeof(ICryptographicHashFunction<>), item.GetInterfaces().Where(t => t.IsGenericType).ToList().ConvertAll(t => t.GetGenericTypeDefinition())));
 		}
 
 		[Fact]
@@ -88,3 +110,4 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
+
