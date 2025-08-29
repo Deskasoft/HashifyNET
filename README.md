@@ -130,7 +130,7 @@ public class Program
 {
     static void Main()
     {
-        IAdler32 adler32 = HashFactory.Instance.Create(typeof(IAdler32));
+        IHashFunctionBase adler32 = HashFactory.Instance.Create(typeof(IAdler32));
         IHashValue computedHash = adler32.ComputeHash("foobar");
 
         Console.WriteLine(computedHash.AsHexString()); 
@@ -173,6 +173,7 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
