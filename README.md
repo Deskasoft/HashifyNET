@@ -92,6 +92,11 @@ As an addition, we introduced 11 more hash algorithms, sorted below:
 - Keccak
 - Argon2id
 
+### NuGet
+You can directly bind HashifyNET to your project through NuGet below:
+
+[![Version Status](https://img.shields.io/nuget/v/HashifyNET.svg)](https://www.nuget.org/packages/HashifyNET/)
+
 Usage
 -----
 
@@ -170,3 +175,4 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
