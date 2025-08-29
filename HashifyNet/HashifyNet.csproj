@@ -88,7 +88,7 @@
     <Company>Deskasoft International</Company>
     <Product>HashifyNET</Product>
     <Copyright>Copyright © Deskasoft International</Copyright>
-    <Version>4.0.0-beta</Version>
+    <Version>4.0.1</Version>
     <PackageTags>hash;hashing</PackageTags>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -102,7 +102,9 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>logo.png</PackageIcon>
     <AssemblyOriginatorKeyFile>..\HashifyNET.publickey</AssemblyOriginatorKeyFile>
+    <AssemblyName>$(MSBuildProjectName.Replace("Net", "NET"))</AssemblyName>
   </PropertyGroup>
 
 </Project>
+
 
