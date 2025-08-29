@@ -35,7 +35,8 @@ namespace HashifyNet
 	/// Common interface to cryptographic hash functions that can be computed over a stream of data without buffering.
 	/// </summary>
 	public interface ICryptographicStreamableHashFunction<CName>
-		: IStreamableHashFunction<CName>, IDisposable where CName : ICryptographicHashConfig<CName>
+		: ICryptographicHashFunction<CName>, IStreamableHashFunction<CName>, IDisposable where CName : ICryptographicHashConfig<CName>
 	{
 	}
+
 }
