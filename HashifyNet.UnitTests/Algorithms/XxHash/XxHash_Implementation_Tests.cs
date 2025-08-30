@@ -214,12 +214,6 @@ namespace HashifyNet.UnitTests.Algorithms.XxHash
 
 		#endregion
 
-		private readonly ITestOutputHelper logger;
-		public XxHash_Implementation_Tests(ITestOutputHelper output)
-		{
-			logger = output;
-		}
-
 		public class IStreamableHashFunction_Tests_xxHash
 			: IStreamableHashFunction_TestBase<IXxHash, IXxHashConfig>
 		{
@@ -280,4 +274,5 @@ namespace HashifyNet.UnitTests.Algorithms.XxHash
 					});
 		}
 	}
+
 }
