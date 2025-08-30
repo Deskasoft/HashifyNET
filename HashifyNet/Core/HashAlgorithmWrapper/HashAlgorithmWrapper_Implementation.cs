@@ -36,7 +36,7 @@ namespace HashifyNet.Core.HashAlgorithm
 {
 	[HashAlgorithmImplementation(typeof(IHashAlgorithmWrapper), typeof(HashAlgorithmWrapperConfig))]
 	internal class HashAlgorithmWrapper_Implementation
-		: HashFunctionBase<IHashAlgorithmWrapperConfig>,
+		: CryptographicHashFunctionBase<IHashAlgorithmWrapperConfig>,
 			IHashAlgorithmWrapper
 	{
 		public override IHashAlgorithmWrapperConfig Config => _config.Clone();
@@ -84,4 +84,5 @@ namespace HashifyNet.Core.HashAlgorithm
 			}
 		}
 	}
+
 }
