@@ -36,7 +36,7 @@ namespace HashifyNet.Core.HashAlgorithm
 	/// Implementation of <see cref="IHashFunction{FName}" /> that wraps cryptographic hash functions known as <see cref="System.Security.Cryptography.HashAlgorithm" />.
 	/// </summary>
 	public interface IHashAlgorithmWrapper
-		: IHashFunction<IHashAlgorithmWrapperConfig>
+		: ICryptographicHashFunction<IHashAlgorithmWrapperConfig>
 	{
 		/// <summary>
 		/// Computes hash value for the given stream.
@@ -50,4 +50,5 @@ namespace HashifyNet.Core.HashAlgorithm
 		/// <exception cref="ArgumentException">Stream must be seekable for this type of hash function.;<paramref name="data"/></exception>
 		IHashValue ComputeHash(Stream data);
 	}
+
 }
