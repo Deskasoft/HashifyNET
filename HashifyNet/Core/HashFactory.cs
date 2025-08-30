@@ -274,13 +274,94 @@ namespace HashifyNet
 		}
 
 		/// <summary>
-		/// Retrieves all available hash algorithm types registered in the system.
+		/// Retrieves an array of hash function instances based on the specified hash function type.
 		/// </summary>
-		/// <remarks>The returned array contains the types of all registered hash algorithm implementations. If no
-		/// hash algorithms are registered, the method returns <see langword="null"/>.</remarks>
-		/// <returns>An array of <see cref="Type"/> objects representing the registered hash algorithm types, or <see
-		/// langword="null"/> if no hash algorithms are available.</returns>
-		public Type[] GetAllHashAlgorithms()
+		/// <param name="type">The type of hash functions to retrieve. This determines the set of hash algorithms to be instantiated.</param>
+		/// <param name="defaultConfigMap">An optional dictionary mapping hash function types to their corresponding configuration objects.  If provided, the
+		/// configurations in this dictionary will be used to initialize the hash function instances. If a type is not present
+		/// in the dictionary, a default configuration will be used if available.</param>
+		/// <param name="ignoredFunctions">An optional array of hash function types to be ignored during instantiation. Any types present in this array (and any types derive from the types in this array) will be skipped.</param>
+		/// <returns>An array of <see cref="IHashFunctionBase"/> instances representing the hash functions for the specified type.</returns>
+		/// <exception cref="InvalidOperationException">Thrown if no hash algorithms are found for the specified <paramref name="type"/>.</exception>
+		public IHashFunctionBase[] GetHashFunctions(HashFunctionType type, Dictionary<Type, IHashConfigBase> defaultConfigMap = null, params Type[] ignoredFunctions)
+		{
+			Type[] functions = GetHashAlgorithms(type);
+
+			if (functions == null || functions.Length < 1)
+			{
+				throw new InvalidOperationException("No hash algorithms found.");
+			}
+
+			List<IHashFunctionBase> instances = new List<IHashFunctionBase>();
+			for (int i = 0; i < functions.Length; ++i)
+			{
+				Type funcType = functions[i];
+
+				if (ignoredFunctions != null && ignoredFunctions.Length > 0)
+				{
+					foreach (Type ignoredType in ignoredFunctions)
+					{
+						if ((funcType.IsGenericType && (funcType.GetGenericTypeDefinition() == ignoredType || ignoredType.IsAssignableFrom(funcType.GetGenericTypeDefinition()))) || funcType == ignoredType || ignoredType.IsAssignableFrom(funcType))
+						{
+							funcType = null;
+							break;
+						}
+					}
+				}
+
+				if (funcType == null)
+				{
+					continue;
+				}
+
+				if (defaultConfigMap != null && defaultConfigMap.ContainsKey(funcType))
+				{
+					instances.Add(Create(funcType, defaultConfigMap[funcType]));
+				}
+				else
+				{
+					instances.Add(Create(funcType));
+				}
+			}
+
+			return instances.ToArray();
+		}
+
+		/// <summary>
+		/// Retrieves an array of hash algorithm types based on the specified hash function category.
+		/// </summary>
+		/// <remarks>The returned array may include both cryptographic and non-cryptographic hash algorithms if the
+		/// specified <paramref name="type"/> includes both categories.</remarks>
+		/// <param name="type">A bitwise combination of <see cref="HashFunctionType"/> values that specifies the category of hash functions to
+		/// retrieve. Use <see cref="HashFunctionType.Cryptographic"/> to include cryptographic hash algorithms, <see
+		/// cref="HashFunctionType.Noncryptographic"/> to include non-cryptographic hash algorithms, or both.</param>
+		/// <returns>An array of <see cref="Type"/> objects representing the hash algorithms that match the specified category. If no
+		/// algorithms match the specified category, an empty array is returned. If the given <paramref name="type"/> neither contains <seealso cref="HashFunctionType.Cryptographic"/> nor <seealso cref="HashFunctionType.Noncryptographic"/>, the return value will be <see langword="null"/>.</returns>
+		public static Type[] GetHashAlgorithms(HashFunctionType type)
+		{
+			Type[] functions = null;
+			if ((type & HashFunctionType.Cryptographic) == HashFunctionType.Cryptographic)
+			{
+				functions = GetAllCryptographicHashAlgorithms();
+			}
+
+			if ((type & HashFunctionType.Noncryptographic) == HashFunctionType.Noncryptographic)
+			{
+				Type[] nonCrypto = GetAllNonCryptographicHashAlgorithms();
+				if (functions == null)
+				{
+					functions = nonCrypto;
+				}
+				else
+				{
+					functions = functions.Union(nonCrypto).ToArray();
+				}
+			}
+
+			return functions;
+		}
+
+		private static Type[] GetAllHashAlgorithms()
 		{
 			if (_implementations.Count < 1)
 			{
@@ -292,15 +373,7 @@ namespace HashifyNet
 			return types;
 		}
 
-		/// <summary>
-		/// Retrieves all hash algorithm types that implement cryptographic hash functions.
-		/// </summary>
-		/// <remarks>This method filters the available hash algorithm types to include only those that implement the
-		/// <see cref="ICryptographicHashFunction{T}"/> interface. The returned array may be empty if no matching types are
-		/// found.</remarks>
-		/// <returns>An array of <see cref="Type"/> objects representing cryptographic hash algorithm types. Returns <see
-		/// langword="null"/> if no hash algorithms are available.</returns>
-		public Type[] GetAllCryptographicHashAlgorithms()
+		private static Type[] GetAllCryptographicHashAlgorithms()
 		{
 			Type[] all = GetAllHashAlgorithms();
 			if (all == null || all.Length < 1)
@@ -314,16 +387,7 @@ namespace HashifyNet
 	).ToArray();
 		}
 
-		/// <summary>
-		/// Retrieves all hash algorithm types that implement non-cryptographic hash functions.
-		/// </summary>
-		/// <remarks>This method filters the available hash algorithm types to include only those that implement the
-		/// <see cref="IHashFunction{T}"/> interface and exclude those that implement the <see
-		/// cref="ICryptographicHashFunction{T}"/> interface. The returned array may be empty if no matching types are
-		/// found.</remarks>
-		/// <returns>An array of <see cref="Type"/> objects representing non-cryptographic hash algorithm types. Returns <see
-		/// langword="null"/> if no hash algorithms are available.</returns>
-		public Type[] GetAllNonCryptographicHashAlgorithms()
+		private static Type[] GetAllNonCryptographicHashAlgorithms()
 		{
 			Type[] all = GetAllHashAlgorithms();
 			if (all == null || all.Length < 1)
@@ -422,4 +486,3 @@ namespace HashifyNet
 		}
 	}
 }
-
