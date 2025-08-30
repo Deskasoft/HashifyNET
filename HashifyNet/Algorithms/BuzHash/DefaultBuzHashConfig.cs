@@ -39,15 +39,15 @@ namespace HashifyNet.Algorithms.BuzHash
 		: IBuzHashConfig
 	{
 		/// <summary>
-		/// Gets a list of <c>256</c> (preferably random and distinct) <see cref="UInt64"/> values.
+		/// Gets a list of <c>256</c> (preferably random and distinct) <see cref="ulong"/> values.
 		/// </summary>
 		/// <value>
-		/// List of 256 <see cref="UInt64"/> values.
+		/// List of 256 <see cref="ulong"/> values.
 		/// </value>
 		/// <remarks>
 		/// Defaults to a statically defined, random chosen of values.
 		/// </remarks>
-		public IReadOnlyList<UInt64> Rtab { get; } = _Rtab;
+		public IReadOnlyList<ulong> Rtab { get; } = _Rtab;
 
 		/// <summary>
 		/// Gets the desired hash size, in bits.
@@ -69,7 +69,7 @@ namespace HashifyNet.Algorithms.BuzHash
 		/// <remarks>
 		/// Defaults to <c>0x3CD05367FD0337D3UL</c>
 		/// </remarks>
-		public UInt64 Seed { get; set; } = 0x3CD05367FD0337D3UL;
+		public ulong Seed { get; set; } = 0x3CD05367FD0337D3UL;
 
 		/// <summary>
 		/// Gets the shift direction.
@@ -82,8 +82,8 @@ namespace HashifyNet.Algorithms.BuzHash
 		/// </remarks>
 		public CircularShiftDirection ShiftDirection { get; set; } = CircularShiftDirection.Left;
 
-		private static readonly IReadOnlyList<UInt64> _Rtab =
-			new UInt64[] {
+		private static readonly IReadOnlyList<ulong> _Rtab =
+			new ulong[] {
 				0xBDBF3FFFDEEF8A14, 0xFFB5AC3C0DB31F7F, 0x7BF7207BF73C4D2E, 0xADBFFF96358377F6,
 				0xC6BF8D442C4FD166, 0x7EB1EFF12B7D81F9, 0x88024802AB9F22C2, 0x2191221208E98495,
 				0xA9377F55EBA6AE60, 0x2954721569FD66AE, 0xB109C13854720646, 0x42088A01BE975A1D,
