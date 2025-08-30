@@ -40,12 +40,12 @@ namespace HashifyNet.Algorithms.BuzHash
 		: IBuzHashConfig
 	{
 		/// <summary>
-		/// Gets a list of <c>256</c> (preferably random and distinct) <see cref="UInt64"/> values.
+		/// Gets a list of <c>256</c> (preferably random and distinct) <see cref="ulong"/> values.
 		/// </summary>
 		/// <value>
-		/// List of 256 <see cref="UInt64"/> values.
+		/// List of 256 <see cref="ulong"/> values.
 		/// </value>
-		public IReadOnlyList<UInt64> Rtab { get; set; } = null;
+		public IReadOnlyList<ulong> Rtab { get; set; } = null;
 
 		/// <summary>
 		/// Gets the desired hash size, in bits.
@@ -67,7 +67,7 @@ namespace HashifyNet.Algorithms.BuzHash
 		/// <remarks>
 		/// Defaults to <c>0UL</c>
 		/// </remarks>
-		public UInt64 Seed { get; set; } = 0UL;
+		public ulong Seed { get; set; } = 0UL;
 
 		/// <summary>
 		/// Gets the shift direction.
