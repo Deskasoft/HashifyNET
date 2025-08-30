@@ -61,7 +61,6 @@ namespace HashifyNet.Algorithms.xxHash
 
 			_config = config.Clone();
 
-
 			if (!_validHashSizes.Contains(_config.HashSizeInBits))
 			{
 				throw new ArgumentOutOfRangeException($"{nameof(config)}.{nameof(config.HashSizeInBits)}", _config.HashSizeInBits, $"{nameof(config)}.{nameof(config.HashSizeInBits)} must be contained within xxHash.ValidHashSizes");
@@ -73,7 +72,7 @@ namespace HashifyNet.Algorithms.xxHash
 			switch (_config.HashSizeInBits)
 			{
 				case 32:
-					return new BlockTransformer32((UInt32)_config.Seed);
+					return new BlockTransformer32((uint)_config.Seed);
 
 				case 64:
 					return new BlockTransformer64(_config.Seed);
@@ -94,12 +93,12 @@ namespace HashifyNet.Algorithms.xxHash
 					 374761393U
 				};
 
-			private UInt32 _seed;
+			private uint _seed;
 
-			private UInt32 _a;
-			private UInt32 _b;
-			private UInt32 _c;
-			private UInt32 _d;
+			private uint _a;
+			private uint _b;
+			private uint _c;
+			private uint _d;
 
 			private ulong _bytesProcessed = 0;
 
@@ -109,7 +108,7 @@ namespace HashifyNet.Algorithms.xxHash
 
 			}
 
-			public BlockTransformer32(UInt32 seed)
+			public BlockTransformer32(uint seed)
 				: this()
 			{
 				_seed = seed;
@@ -179,7 +178,7 @@ namespace HashifyNet.Algorithms.xxHash
 
 			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
 			{
-				UInt32 hashValue;
+				uint hashValue;
 				{
 					if (_bytesProcessed > 0)
 					{
@@ -194,7 +193,7 @@ namespace HashifyNet.Algorithms.xxHash
 				var remainder = FinalizeInputBuffer;
 				var remainderLength = (remainder?.Length).GetValueOrDefault();
 
-				hashValue += (UInt32)(_bytesProcessed + (ulong)remainderLength);
+				hashValue += (uint)(_bytesProcessed + (ulong)remainderLength);
 
 				if (remainderLength > 0)
 				{
@@ -233,7 +232,7 @@ namespace HashifyNet.Algorithms.xxHash
 					32);
 			}
 
-			private static UInt32 RotateLeft(UInt32 operand, int shiftCount)
+			private static uint RotateLeft(uint operand, int shiftCount)
 			{
 				shiftCount &= 0x1f;
 
@@ -246,7 +245,7 @@ namespace HashifyNet.Algorithms.xxHash
 		private class BlockTransformer64
 			: BlockTransformerBase<BlockTransformer64>
 		{
-			private static readonly IReadOnlyList<UInt64> _primes64 =
+			private static readonly IReadOnlyList<ulong> _primes64 =
 				new[] {
 					11400714785074694791UL,
 					14029467366897019727UL,
@@ -255,12 +254,12 @@ namespace HashifyNet.Algorithms.xxHash
 					 2870177450012600261UL
 				};
 
-			private UInt64 _seed;
+			private ulong _seed;
 
-			private UInt64 _a;
-			private UInt64 _b;
-			private UInt64 _c;
-			private UInt64 _d;
+			private ulong _a;
+			private ulong _b;
+			private ulong _c;
+			private ulong _d;
 
 			private ulong _bytesProcessed = 0;
 
@@ -269,7 +268,7 @@ namespace HashifyNet.Algorithms.xxHash
 			{
 			}
 
-			public BlockTransformer64(UInt64 seed)
+			public BlockTransformer64(ulong seed)
 				: this()
 			{
 				_seed = seed;
@@ -339,7 +338,7 @@ namespace HashifyNet.Algorithms.xxHash
 
 			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
 			{
-				UInt64 hashValue;
+				ulong hashValue;
 				{
 					if (_bytesProcessed > 0)
 					{
@@ -381,7 +380,6 @@ namespace HashifyNet.Algorithms.xxHash
 
 						hashValue ^= tempD;
 						hashValue = (hashValue * _primes64[0]) + _primes64[3];
-
 					}
 					else
 					{
@@ -392,11 +390,10 @@ namespace HashifyNet.Algorithms.xxHash
 				var remainder = FinalizeInputBuffer;
 				var remainderLength = (remainder?.Length).GetValueOrDefault();
 
-				hashValue += _bytesProcessed + (UInt64)remainderLength;
+				hashValue += _bytesProcessed + (ulong)remainderLength;
 
 				if (remainderLength > 0)
 				{
-
 					// In 8-byte chunks, process all full chunks
 					for (int x = 0; x < remainder.Length / 8; ++x)
 					{
@@ -437,7 +434,7 @@ namespace HashifyNet.Algorithms.xxHash
 					64);
 			}
 
-			private static UInt64 RotateLeft(UInt64 operand, int shiftCount)
+			private static ulong RotateLeft(ulong operand, int shiftCount)
 			{
 				shiftCount &= 0x3f;
 
