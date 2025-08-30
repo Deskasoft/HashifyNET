@@ -111,6 +111,14 @@ namespace HashifyNet.Algorithms.Blake3
 			Personalization = personalization;
 		}
 
+  		/// <summary>
+		/// Initializes a new instance of the <see cref="Blake3Config"/> class.
+		/// </summary>
+		/// <remarks>This constructor creates a default configuration for the Blake3 hashing algorithm.</remarks>
+		public Blake3Config()
+		{
+		}
+
 		/// <summary>
 		/// Creates a new instance of the <see cref="Blake3Config"/> class with the same configuration settings as the current
 		/// instance.
@@ -152,4 +160,5 @@ namespace HashifyNet.Algorithms.Blake3
 			Personalization = null;
 		}
 	}
+
 }
