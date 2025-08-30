@@ -49,7 +49,7 @@ namespace HashifyNet.Core.HashAlgorithm
 		/// <value>
 		/// The delegate.
 		/// </value>
-		public Func<SystemHashAlgorithm> InstanceFactory { get; }
+		public Func<SystemHashAlgorithm> InstanceFactory { get; private set; }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="HashAlgorithmWrapperConfig"/> class with the specified hash algorithm
@@ -64,10 +64,18 @@ namespace HashifyNet.Core.HashAlgorithm
 		}
 
 		/// <summary>
-		/// Makes a deep clone of current instance.
+		/// Makes a deep clone of the current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public IHashAlgorithmWrapperConfig Clone() =>
 			new HashAlgorithmWrapperConfig(InstanceFactory, HashSizeInBits);
+
+   		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		public void Dispose()
+		{
+			InstanceFactory = null;
+		}
 	}
 }
