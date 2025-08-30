@@ -106,7 +106,7 @@ namespace HashifyNet.Algorithms.BuzHash
 		private class BlockTransformer_8Bit
 			: BlockTransformerBase<BlockTransformer_8Bit>
 		{
-			private IReadOnlyList<UInt64> _rtab;
+			private IReadOnlyList<ulong> _rtab;
 			private readonly CircularShiftDirection _shiftDirection;
 
 			private byte _hashValue;
@@ -154,10 +154,10 @@ namespace HashifyNet.Algorithms.BuzHash
 		private class BlockTransformer_16Bit
 			: BlockTransformerBase<BlockTransformer_16Bit>
 		{
-			private IReadOnlyList<UInt64> _rtab;
+			private IReadOnlyList<ulong> _rtab;
 			private readonly CircularShiftDirection _shiftDirection;
 
-			private UInt16 _hashValue;
+			private ushort _hashValue;
 			public BlockTransformer_16Bit()
 			{
 
@@ -169,7 +169,7 @@ namespace HashifyNet.Algorithms.BuzHash
 				_rtab = config.Rtab;
 				_shiftDirection = config.ShiftDirection;
 
-				_hashValue = (UInt16)config.Seed;
+				_hashValue = (ushort)config.Seed;
 			}
 
 			protected override void CopyStateTo(BlockTransformer_16Bit other)
@@ -191,7 +191,7 @@ namespace HashifyNet.Algorithms.BuzHash
 
 				for (var currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
 				{
-					tempHashValue = (UInt16)(CShift(tempHashValue, 1, _shiftDirection) ^ (UInt16)tempRtab[dataArray[currentOffset]]);
+					tempHashValue = (ushort)(CShift(tempHashValue, 1, _shiftDirection) ^ (ushort)tempRtab[dataArray[currentOffset]]);
 				}
 
 				_hashValue = tempHashValue;
@@ -202,10 +202,10 @@ namespace HashifyNet.Algorithms.BuzHash
 		private class BlockTransformer_32Bit
 		: BlockTransformerBase<BlockTransformer_32Bit>
 		{
-			private IReadOnlyList<UInt64> _rtab;
+			private IReadOnlyList<ulong> _rtab;
 			private readonly CircularShiftDirection _shiftDirection;
 
-			private UInt32 _hashValue;
+			private uint _hashValue;
 
 			public BlockTransformer_32Bit()
 			{
@@ -217,7 +217,7 @@ namespace HashifyNet.Algorithms.BuzHash
 				_rtab = config.Rtab;
 				_shiftDirection = config.ShiftDirection;
 
-				_hashValue = (UInt32)config.Seed;
+				_hashValue = (uint)config.Seed;
 			}
 
 			protected override void CopyStateTo(BlockTransformer_32Bit other)
@@ -239,7 +239,7 @@ namespace HashifyNet.Algorithms.BuzHash
 
 				for (var currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
 				{
-					tempHashValue = CShift(tempHashValue, 1, _shiftDirection) ^ (UInt32)tempRtab[dataArray[currentOffset]];
+					tempHashValue = CShift(tempHashValue, 1, _shiftDirection) ^ (uint)tempRtab[dataArray[currentOffset]];
 				}
 
 				_hashValue = tempHashValue;
@@ -252,10 +252,10 @@ namespace HashifyNet.Algorithms.BuzHash
 		private class BlockTransformer_64Bit
 			: BlockTransformerBase<BlockTransformer_64Bit>
 		{
-			private IReadOnlyList<UInt64> _rtab;
+			private IReadOnlyList<ulong> _rtab;
 			private readonly CircularShiftDirection _shiftDirection;
 
-			private UInt64 _hashValue;
+			private ulong _hashValue;
 
 			public BlockTransformer_64Bit()
 			{
@@ -310,7 +310,7 @@ namespace HashifyNet.Algorithms.BuzHash
 			return RotateLeft(n, shiftCount);
 		}
 
-		private static UInt16 CShift(UInt16 n, int shiftCount, CircularShiftDirection shiftDirection)
+		private static ushort CShift(ushort n, int shiftCount, CircularShiftDirection shiftDirection)
 		{
 			if (shiftDirection == CircularShiftDirection.Right)
 			{
@@ -320,7 +320,7 @@ namespace HashifyNet.Algorithms.BuzHash
 			return RotateLeft(n, shiftCount);
 		}
 
-		private static UInt32 CShift(UInt32 n, int shiftCount, CircularShiftDirection shiftDirection)
+		private static uint CShift(uint n, int shiftCount, CircularShiftDirection shiftDirection)
 		{
 			if (shiftDirection == CircularShiftDirection.Right)
 			{
@@ -330,7 +330,7 @@ namespace HashifyNet.Algorithms.BuzHash
 			return RotateLeft(n, shiftCount);
 		}
 
-		private static UInt64 CShift(UInt64 n, int shiftCount, CircularShiftDirection shiftDirection)
+		private static ulong CShift(ulong n, int shiftCount, CircularShiftDirection shiftDirection)
 		{
 			if (shiftDirection == CircularShiftDirection.Right)
 			{
@@ -353,16 +353,16 @@ namespace HashifyNet.Algorithms.BuzHash
 				(operand >> (8 - shiftCount)));
 		}
 
-		private static UInt16 RotateLeft(UInt16 operand, int shiftCount)
+		private static ushort RotateLeft(ushort operand, int shiftCount)
 		{
 			shiftCount &= 0x0f;
 
-			return (UInt16)(
+			return (ushort)(
 				(operand << shiftCount) |
 				(operand >> (16 - shiftCount)));
 		}
 
-		private static UInt32 RotateLeft(UInt32 operand, int shiftCount)
+		private static uint RotateLeft(uint operand, int shiftCount)
 		{
 			shiftCount &= 0x1f;
 
@@ -371,7 +371,7 @@ namespace HashifyNet.Algorithms.BuzHash
 				(operand >> (32 - shiftCount));
 		}
 
-		private static UInt64 RotateLeft(UInt64 operand, int shiftCount)
+		private static ulong RotateLeft(ulong operand, int shiftCount)
 		{
 			shiftCount &= 0x3f;
 
@@ -393,16 +393,16 @@ namespace HashifyNet.Algorithms.BuzHash
 				(operand << (8 - shiftCount)));
 		}
 
-		private static UInt16 RotateRight(UInt16 operand, int shiftCount)
+		private static ushort RotateRight(ushort operand, int shiftCount)
 		{
 			shiftCount &= 0x0f;
 
-			return (UInt16)(
+			return (ushort)(
 				(operand >> shiftCount) |
 				(operand << (16 - shiftCount)));
 		}
 
-		private static UInt32 RotateRight(UInt32 operand, int shiftCount)
+		private static uint RotateRight(uint operand, int shiftCount)
 		{
 			shiftCount &= 0x1f;
 
@@ -411,7 +411,7 @@ namespace HashifyNet.Algorithms.BuzHash
 				(operand << (32 - shiftCount));
 		}
 
-		private static UInt64 RotateRight(UInt64 operand, int shiftCount)
+		private static ulong RotateRight(ulong operand, int shiftCount)
 		{
 			shiftCount &= 0x3f;
 
