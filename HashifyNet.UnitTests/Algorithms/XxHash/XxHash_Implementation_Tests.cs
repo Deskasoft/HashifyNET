@@ -30,7 +30,6 @@
 using HashifyNet.Algorithms.XxHash;
 using HashifyNet.UnitTests.Utilities;
 using Moq;
-using Xunit.Abstractions;
 
 namespace HashifyNet.UnitTests.Algorithms.XxHash
 {
@@ -276,3 +275,4 @@ namespace HashifyNet.UnitTests.Algorithms.XxHash
 	}
 
 }
+
