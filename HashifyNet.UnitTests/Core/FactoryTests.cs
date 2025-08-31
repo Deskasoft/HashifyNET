@@ -27,7 +27,13 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Algorithms.Argon2id;
+using HashifyNet.Algorithms.BuzHash;
 using HashifyNet.Algorithms.CRC;
+using HashifyNet.Algorithms.FNV;
+using HashifyNet.Algorithms.Pearson;
+using HashifyNet.Core.HashAlgorithm;
+using HashifyNet.UnitTests.Utilities;
 
 namespace HashifyNet.UnitTests.Core
 {
@@ -55,7 +61,7 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void Factory_GetAllHashAlgorithms_Works()
 		{
-			var all = HashFactory.Instance.GetAllHashAlgorithms();
+			var all = HashFactory.GetHashAlgorithms(HashFunctionType.Cryptographic | HashFunctionType.Noncryptographic);
 			Assert.NotNull(all);
 			Assert.NotEmpty(all);
 			Assert.All(all, item => Assert.NotNull(item));
@@ -65,7 +71,7 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void Factory_GetAllCryptographicHashAlgorithms_Works()
 		{
-			var all = HashFactory.Instance.GetAllCryptographicHashAlgorithms();
+			var all = HashFactory.GetHashAlgorithms(HashFunctionType.Cryptographic);
 			Assert.NotNull(all);
 			Assert.NotEmpty(all);
 			Assert.All(all, item => Assert.NotNull(item));
@@ -75,13 +81,62 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void Factory_GetAllNonCryptographicHashAlgorithms_Works()
 		{
-			var all = HashFactory.Instance.GetAllNonCryptographicHashAlgorithms();
+			var all = HashFactory.GetHashAlgorithms(HashFunctionType.Noncryptographic);
 
 			Assert.NotNull(all);
 			Assert.NotEmpty(all);
 			Assert.All(all, item => Assert.NotNull(item));
 			Assert.All(all, item => Assert.Contains(typeof(IHashFunctionBase), item.GetInterfaces()));
 			Assert.All(all, item => Assert.DoesNotContain(typeof(ICryptographicHashFunction<>), item.GetInterfaces().Where(t => t.IsGenericType).ToList().ConvertAll(t => t.GetGenericTypeDefinition())));
+		}
+
+		[Fact]
+		public void Factory_ComputeNonCryptographicHashes_Works()
+		{
+			IHashFunctionBase[] functions = HashFactory.Instance.GetHashFunctions(HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>() 
+			{
+				{ typeof(ICRC), CRCConfig.CRC32 },
+				{ typeof(IPearson), new WikipediaPearsonConfig() },
+				{ typeof(IFNV1), FNVConfig.GetPredefinedConfig(32) },
+				{ typeof(IFNV1a), FNVConfig.GetPredefinedConfig(32) },
+				{ typeof(IBuzHash), new DefaultBuzHashConfig() },
+			});
+
+			Assert.NotNull(functions);
+			Assert.NotEmpty(functions);
+			Assert.All(functions, item => Assert.NotNull(item));
+
+			foreach (IHashFunctionBase function in functions)
+			{
+				IHashValue hv = function.ComputeHash(TestConstants.FooBar);
+				Assert.NotNull(hv);
+				Assert.NotNull(hv.Hash);
+				Assert.NotEmpty(hv.Hash);
+			}
+		}
+
+
+		[Fact]
+		public void Factory_ComputeCryptographicHashes_Works()
+		{
+			IHashFunctionBase[] functions = HashFactory.Instance.GetHashFunctions(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
+			{
+				{ typeof(IArgon2id), Argon2idConfig.OWASP_Standard }
+			}, typeof(IHashAlgorithmWrapper));
+
+			Assert.NotNull(functions);
+			Assert.NotEmpty(functions);
+			Assert.All(functions, item => Assert.NotNull(item));
+
+			foreach (IHashFunctionBase function in functions)
+			{
+				IHashValue hv = function.ComputeHash(TestConstants.FooBar);
+				Assert.NotNull(hv);
+				Assert.NotNull(hv.Hash);
+				Assert.NotEmpty(hv.Hash);
+
+				(function as ICryptographicHashFunctionBase).Dispose();
+			}
 		}
 
 		[Fact]
@@ -110,4 +165,3 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
-
