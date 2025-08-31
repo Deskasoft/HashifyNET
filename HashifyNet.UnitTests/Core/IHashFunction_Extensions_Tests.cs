@@ -362,7 +362,7 @@ namespace HashifyNet.UnitTests
 		[Fact]
 		public void IHashFunction_Extensions_ComputeHash_WithDesiredBits_byteArray()
 		{
-			var hashFunction = HashFactory<IJenkinsOneAtATime, IJenkinsOneAtATimeConfig>.Instance.Create();
+			var hashFunction = HashFactory<IJenkinsOneAtATime, IJenkinsOneAtATimeConfig>.Create();
 
 			var knownValues = new Dictionary<int, byte[]>() {
 				{  1, new byte[] { 0x00 } },
@@ -388,4 +388,5 @@ namespace HashifyNet.UnitTests
 			}
 		}
 	}
+
 }
