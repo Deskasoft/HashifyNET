@@ -45,7 +45,7 @@ namespace Isopoh.Cryptography.Argon2
 		private SecureArray<byte> InitialHash()
 		{
 			var ret = SecureArray<byte>.Best(64, this.config.SecureArrayCall);
-			var bhash = HashFactory<IBlake2B, IBlake2BConfig>.Instance.Create(new Blake2BConfig()
+			var bhash = HashFactory<IBlake2B, IBlake2BConfig>.Create(new Blake2BConfig()
 			{
 				HashSizeInBits = PrehashDigestLength * 8
 			});
@@ -387,4 +387,5 @@ namespace Isopoh.Cryptography.Argon2
 			public AutoResetEvent Are { get; }
 		}
 	}
+
 }
