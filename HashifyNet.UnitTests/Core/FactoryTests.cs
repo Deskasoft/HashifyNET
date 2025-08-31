@@ -115,7 +115,6 @@ namespace HashifyNet.UnitTests.Core
 			}
 		}
 
-
 		[Fact]
 		public void Factory_ComputeCryptographicHashes_Works()
 		{
@@ -165,3 +164,4 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
+
