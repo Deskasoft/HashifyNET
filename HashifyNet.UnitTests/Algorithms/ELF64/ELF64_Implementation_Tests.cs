@@ -39,7 +39,7 @@ namespace HashifyNet.UnitTests.Algorithms.ELF64
 		[Fact]
 		public void ELF64_Implementation_HashSizeInBits_IsNotChanged()
 		{
-			var elf64 = HashFactory<IELF64, IELF64Config>.Instance.Create();
+			var elf64 = HashFactory<IELF64, IELF64Config>.Create();
 
 			Assert.Equal(32, elf64.Config.HashSizeInBits);
 		}
@@ -56,7 +56,8 @@ namespace HashifyNet.UnitTests.Algorithms.ELF64
 				new KnownValue(32, TestConstants.LoremIpsum, 0x09e0a53e),
 				};
 
-			protected override IELF64 CreateHashFunction(int hashSize) => HashFactory<IELF64, IELF64Config>.Instance.Create();
+			protected override IELF64 CreateHashFunction(int hashSize) => HashFactory<IELF64, IELF64Config>.Create();
 		}
 	}
+
 }
