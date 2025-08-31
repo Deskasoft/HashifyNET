@@ -27,8 +27,6 @@
 // ******************************************************************************
 // *
 
-using System;
-
 namespace HashifyNet
 {
 	/// <summary>
@@ -38,4 +36,5 @@ namespace HashifyNet
 	{
 	}
 }
+
 
