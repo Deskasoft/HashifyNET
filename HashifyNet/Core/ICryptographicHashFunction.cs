@@ -34,7 +34,8 @@ namespace HashifyNet
 	/// <summary>
 	/// Common interface to cryptographic hash functions.
 	/// </summary>
-	public interface ICryptographicHashFunction<CName> : IHashFunction<CName>, IDisposable where CName : ICryptographicHashConfig<CName>
+	public interface ICryptographicHashFunction<CName> : IHashFunction<CName>, ICryptographicHashFunctionBase where CName : ICryptographicHashConfig<CName>
 	{
 	}
 }
+
