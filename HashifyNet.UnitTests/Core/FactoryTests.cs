@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -42,7 +42,7 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void Factory_CreateInstance_ValidInputs_Works()
 		{
-			var instance = HashFactory<ICRC>.Instance.Create(CRCConfig.CRC32);
+			var instance = HashFactory<ICRC>.Create(CRCConfig.CRC32);
 			Assert.NotNull(instance);
 			Assert.IsType<CRC_Implementation>(instance);
 		}
@@ -54,7 +54,7 @@ namespace HashifyNet.UnitTests.Core
 				"The provided type 'HashifyNet.Algorithms.CRC.CRC_Implementation' is not an interface. (Parameter 'type')",
 				Assert.Throws<ArgumentException>(() =>
 				{
-					HashFactory<CRC_Implementation>.Instance.Create();
+					HashFactory<CRC_Implementation>.Create();
 				}).Message);
 		}
 
@@ -93,7 +93,7 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void Factory_ComputeNonCryptographicHashes_Works()
 		{
-			IHashFunctionBase[] functions = HashFactory.Instance.GetHashFunctions(HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>() 
+			IHashFunctionBase[] functions = HashFactory.GetHashFunctions(HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>() 
 			{
 				{ typeof(ICRC), CRCConfig.CRC32 },
 				{ typeof(IPearson), new WikipediaPearsonConfig() },
@@ -118,7 +118,7 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void Factory_ComputeCryptographicHashes_Works()
 		{
-			IHashFunctionBase[] functions = HashFactory.Instance.GetHashFunctions(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
+			IHashFunctionBase[] functions = HashFactory.GetHashFunctions(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
 			{
 				{ typeof(IArgon2id), Argon2idConfig.OWASP_Standard }
 			}, typeof(IHashAlgorithmWrapper));
@@ -144,7 +144,7 @@ namespace HashifyNet.UnitTests.Core
 			Type type = typeof(ICRC);
 			Assert.NotNull(type);
 
-			var instance = HashFactory.Instance.Create(type, CRCConfig.CRC32);
+			var instance = HashFactory.Create(type, CRCConfig.CRC32);
 			Assert.NotNull(instance);
 			Assert.IsType<CRC_Implementation>(instance);
 		}
@@ -152,7 +152,7 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void Factory_CreateInstance_WithConfig_Works()
 		{
-			ICRC crc = HashFactory<ICRC>.Instance.Create(CRCConfig.CRC7);
+			ICRC crc = HashFactory<ICRC>.Create(CRCConfig.CRC7);
 			Assert.NotNull(crc);
 			Assert.IsType<CRC_Implementation>(crc);
 			Assert.Equal(CRCConfig.CRC7.HashSizeInBits, crc.Config.HashSizeInBits);
@@ -164,4 +164,3 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
-
