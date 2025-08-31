@@ -43,7 +43,8 @@ namespace HashifyNet.UnitTests.Algorithms.Jenkins
 				};
 
 			protected override IJenkinsOneAtATime CreateHashFunction(int hashSize) =>
-			   HashFactory<IJenkinsOneAtATime, IJenkinsOneAtATimeConfig>.Instance.Create();
+			   HashFactory<IJenkinsOneAtATime, IJenkinsOneAtATimeConfig>.Create();
 		}
 	}
+
 }
