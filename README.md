@@ -8,6 +8,35 @@ All code within the library is commented using Visual Studio-compatible XML comm
 
 You can join our Discord at https://discord.gg/PrKery9 any time you'd need support or just to join our Family.
 
+Differences
+-----------
+This library is the successor to https://github.com/Deskasoft/Data.HashFunction. While keeping the API structure *mostly* the same, the biggest change this library brings is the clearance of the dependency overhaul previously caused by Data.HashFunction.
+Every hash algorithm is now collected under one single assembly and package named HashifyNET, and all of the namespaces are shortened to HashifyNet.
+
+The former factory-based implementation, which assigned a unique factory to each hash function, has been superseded by a more modular and centralized factory.
+This new model provides superior accessibility and efficiency.
+
+As an addition, we introduced 11 more hash algorithms, sorted below:
+- Adler32
+- Blake3
+- Gost
+- HighwayHash
+- SipHash
+- Tiger
+- Tiger2
+- Whirlpool
+- SM3
+- Keccak
+- Argon2id
+
+> [!NOTE]
+> Please check Implementations for the full list of available hash algorithms.
+
+### NuGet
+You can directly bind HashifyNET to your project through NuGet below:
+
+[![Version Status](https://img.shields.io/nuget/v/HashifyNET.svg)](https://www.nuget.org/packages/HashifyNET/)
+
 Implementations
 ---------------
 
@@ -68,32 +97,6 @@ The following hash functions have been implemented from the most reliable refere
 * [Whirlpool](https://en.wikipedia.org/wiki/Whirlpool_(hash_function))
 * [xxHash](https://code.google.com/p/xxhash/)
   * xxHash - Original and 64-bit version.
-
-Differences
------------
-This library is the successor to https://github.com/Deskasoft/Data.HashFunction. While keeping the API structure *mostly* the same, the biggest change this library brings is the clearance of the dependency overhaul previously caused by Data.HashFunction.
-Every hash algorithm is now collected under one single assembly and package named HashifyNET, and all of the namespaces are shortened to HashifyNet.
-
-The former factory-based implementation, which assigned a unique factory to each hash function, has been superseded by a more modular and centralized factory.
-This new model provides superior accessibility and efficiency.
-
-As an addition, we introduced 11 more hash algorithms, sorted below:
-- Adler32
-- Blake3
-- Gost
-- HighwayHash
-- SipHash
-- Tiger
-- Tiger2
-- Whirlpool
-- SM3
-- Keccak
-- Argon2id
-
-### NuGet
-You can directly bind HashifyNET to your project through NuGet below:
-
-[![Version Status](https://img.shields.io/nuget/v/HashifyNET.svg)](https://www.nuget.org/packages/HashifyNET/)
 
 Usage
 -----
@@ -173,6 +176,7 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
