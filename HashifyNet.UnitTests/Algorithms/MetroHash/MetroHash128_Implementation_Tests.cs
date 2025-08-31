@@ -45,7 +45,7 @@ namespace HashifyNet.UnitTests.Algorithms.MetroHash
 			Assert.Equal(
 				"config",
 				Assert.Throws<ArgumentNullException>(
-						() => HashFactory<IMetroHash, IMetroHashConfig>.Instance.Create(null))
+						() => HashFactory<IMetroHash, IMetroHashConfig>.Create(null))
 					.ParamName);
 		}
 
@@ -61,7 +61,7 @@ namespace HashifyNet.UnitTests.Algorithms.MetroHash
 			}
 
 			GC.KeepAlive(
-				HashFactory<IMetroHash, IMetroHashConfig>.Instance.Create(metroHashConfigMock.Object));
+				HashFactory<IMetroHash, IMetroHashConfig>.Create(metroHashConfigMock.Object));
 
 			metroHashConfigMock.Verify(bc => bc.Clone(), Times.Once);
 
@@ -81,7 +81,7 @@ namespace HashifyNet.UnitTests.Algorithms.MetroHash
 			var metroHashConfig2 = Mock.Of<IMetroHashConfig>(mhc => mhc.HashSizeInBits == 128 && mhc.Clone() == metroHashConfig3);
 			var metroHashConfig = Mock.Of<IMetroHashConfig>(mhc => mhc.HashSizeInBits == 128 && mhc.Clone() == metroHashConfig2);
 
-			var metroHash = HashFactory<IMetroHash, IMetroHashConfig>.Instance.Create(metroHashConfig);
+			var metroHash = HashFactory<IMetroHash, IMetroHashConfig>.Create(metroHashConfig);
 
 			Assert.Equal(metroHashConfig3, metroHash.Config);
 		}
@@ -94,7 +94,7 @@ namespace HashifyNet.UnitTests.Algorithms.MetroHash
 		public void MetroHash128_Implementation_HashSizeInBits_Is128()
 		{
 			var metroHashConfig = Mock.Of<IMetroHashConfig>(mhc => mhc.Clone() == mhc && mhc.HashSizeInBits == 128);
-			var metroHash = HashFactory<IMetroHash, IMetroHashConfig>.Instance.Create(metroHashConfig);
+			var metroHash = HashFactory<IMetroHash, IMetroHashConfig>.Create(metroHashConfig);
 
 			Assert.Equal(128, metroHash.Config.HashSizeInBits);
 		}
@@ -114,7 +114,7 @@ namespace HashifyNet.UnitTests.Algorithms.MetroHash
 				};
 
 			protected override IMetroHash CreateHashFunction(int hashSize) =>
-				HashFactory<IMetroHash, IMetroHashConfig>.Instance.Create(new MetroHashConfig() { HashSizeInBits = 128 });
+				HashFactory<IMetroHash, IMetroHashConfig>.Create(new MetroHashConfig() { HashSizeInBits = 128 });
 		}
 
 		public class IStreamableHashFunction_Tests_WithSeed
@@ -130,7 +130,8 @@ namespace HashifyNet.UnitTests.Algorithms.MetroHash
 				};
 
 			protected override IMetroHash CreateHashFunction(int hashSize) =>
-				HashFactory<IMetroHash, IMetroHashConfig>.Instance.Create(new MetroHashConfig() { HashSizeInBits = 128, Seed = 1 });
+				HashFactory<IMetroHash, IMetroHashConfig>.Create(new MetroHashConfig() { HashSizeInBits = 128, Seed = 1 });
 		}
 	}
+
 }
