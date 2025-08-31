@@ -37,7 +37,7 @@ namespace HashifyNet.UnitTests.Algorithms.BernsteinHash
 		[Fact]
 		public void BernsteinHash_Implementation_HashSizeInBits_IsSet()
 		{
-			var bernsteinHash = HashFactory<IBernsteinHash, IBernsteinConfig>.Instance.Create();
+			var bernsteinHash = HashFactory<IBernsteinHash, IBernsteinConfig>.Create();
 
 			Assert.Equal(32, bernsteinHash.Config.HashSizeInBits);
 		}
@@ -54,8 +54,9 @@ namespace HashifyNet.UnitTests.Algorithms.BernsteinHash
 
 			protected override IBernsteinHash CreateHashFunction(int hashSize)
 			{
-				return HashFactory<IBernsteinHash, IBernsteinConfig>.Instance.Create();
+				return HashFactory<IBernsteinHash, IBernsteinConfig>.Create();
 			}
 		}
 	}
+
 }
