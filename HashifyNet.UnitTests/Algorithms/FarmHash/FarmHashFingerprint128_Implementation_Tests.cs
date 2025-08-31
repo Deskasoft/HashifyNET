@@ -34,14 +34,13 @@ namespace HashifyNet.UnitTests.Algorithms.FarmHash
 {
 	public class FarmHashFingerprint128_Implementation_Tests
 	{
-
 		#region Constructor
 
 		[Fact]
 		public void FarmHashFingerprint128_Implementation_Constructor_Works()
 		{
 			GC.KeepAlive(
-				HashFactory<IFarmHashFingerprint, IFarmHashConfig>.Instance.Create(new FarmHashConfig() { HashSizeInBits = 128 }));
+				HashFactory<IFarmHashFingerprint, IFarmHashConfig>.Create(new FarmHashConfig() { HashSizeInBits = 128 }));
 		}
 
 		#endregion
@@ -51,7 +50,7 @@ namespace HashifyNet.UnitTests.Algorithms.FarmHash
 		[Fact]
 		public void FarmHashFingerprint128_Implementation_HashSizeInBits_Is128()
 		{
-			var farmHash = HashFactory<IFarmHashFingerprint, IFarmHashConfig>.Instance.Create(new FarmHashConfig() { HashSizeInBits = 128 });
+			var farmHash = HashFactory<IFarmHashFingerprint, IFarmHashConfig>.Create(new FarmHashConfig() { HashSizeInBits = 128 });
 
 			Assert.Equal(128, farmHash.Config.HashSizeInBits);
 		}
@@ -74,7 +73,7 @@ namespace HashifyNet.UnitTests.Algorithms.FarmHash
 				};
 
 			protected override IFarmHashFingerprint CreateHashFunction(int hashSize) =>
-				HashFactory<IFarmHashFingerprint, IFarmHashConfig>.Instance.Create(new FarmHashConfig() { HashSizeInBits = 128 });
+				HashFactory<IFarmHashFingerprint, IFarmHashConfig>.Create(new FarmHashConfig() { HashSizeInBits = 128 });
 		}
 	}
 }
