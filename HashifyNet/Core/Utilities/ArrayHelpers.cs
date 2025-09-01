@@ -28,6 +28,8 @@
 // *
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HashifyNet.Core.Utilities
 {
@@ -110,4 +112,5 @@ namespace HashifyNet.Core.Utilities
 		}
 	}
 }
+
 
