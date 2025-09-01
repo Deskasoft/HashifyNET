@@ -97,7 +97,7 @@ namespace HashifyNet.Algorithms.SipHash
 			private ulong _messageLength;
 
 			public BlockTransformer()
-				: base(8, 8) // Process data in 8-byte blocks
+				: base(inputBlockSize: 8) // Process data in 8-byte blocks
 			{
 			}
 
@@ -211,4 +211,5 @@ namespace HashifyNet.Algorithms.SipHash
 			}
 		}
 	}
+
 }
