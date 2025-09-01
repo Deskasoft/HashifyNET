@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -29,6 +29,7 @@
 
 using Isopoh.Cryptography.Argon2;
 using System;
+using System.Linq;
 
 namespace HashifyNet.Algorithms.Argon2id
 {
@@ -101,8 +102,13 @@ namespace HashifyNet.Algorithms.Argon2id
 			{
 				throw new ArgumentNullException(nameof(original));
 			}
+			
+			if (!(original is IEncodedHashValue encodedHashValue))
+			{
+				throw new ArgumentException($"The provided {nameof(original)} must implement {nameof(IEncodedHashValue)}. The given hash value is likely not computed by Argon2id.", nameof(original));
+			}
 
-			return Verify(attempt, original.Hash, secret);
+			return Verify(attempt, encodedHashValue.EncodedHash.ToArray(), secret);
 		}
 	}
 }
