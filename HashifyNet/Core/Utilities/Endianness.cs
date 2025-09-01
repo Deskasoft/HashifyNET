@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -111,6 +111,62 @@ namespace HashifyNet.Core.Utilities
 				   ((ulong)buffer[offset + 5] << 40) |
 				   ((ulong)buffer[offset + 6] << 48) |
 				   ((ulong)buffer[offset + 7] << 56);
+		}
+
+		/// <summary>
+		/// Converts a sequence of bytes from the specified buffer, starting at the given offset,  into a 64-bit unsigned
+		/// integer using little-endian byte order.
+		/// </summary>
+		/// <remarks>This method assumes that the bytes in the buffer are stored in little-endian format, where the
+		/// least significant byte comes first.</remarks>
+		/// <param name="buffer">The buffer containing the bytes to convert. Must have at least 8 bytes available starting from <paramref
+		/// name="offset"/>.</param>
+		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin reading the bytes.</param>
+		/// <returns>A 64-bit unsigned integer constructed from the 8 bytes starting at <paramref name="offset"/> in little-endian
+		/// order.</returns>
+		public static ulong ToUInt64LittleEndian(ReadOnlySpan<byte> buffer, int offset)
+		{
+			return buffer[offset] |
+				   ((ulong)buffer[offset + 1] << 8) |
+				   ((ulong)buffer[offset + 2] << 16) |
+				   ((ulong)buffer[offset + 3] << 24) |
+				   ((ulong)buffer[offset + 4] << 32) |
+				   ((ulong)buffer[offset + 5] << 40) |
+				   ((ulong)buffer[offset + 6] << 48) |
+				   ((ulong)buffer[offset + 7] << 56);
+		}
+
+		/// <summary>
+		/// Converts a sequence of four bytes from the specified buffer, starting at the given offset,  into a 32-bit unsigned
+		/// integer using little-endian byte order.
+		/// </summary>
+		/// <param name="buffer">The byte array containing the data to convert. Must contain at least four bytes starting from <paramref
+		/// name="offset"/>.</param>
+		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin reading the four bytes.</param>
+		/// <returns>A 32-bit unsigned integer representing the value of the four bytes in little-endian order.</returns>
+		public static uint ToUInt32LittleEndian(byte[] buffer, int offset)
+		{
+			return buffer[offset] |
+				   ((uint)buffer[offset + 1] << 8) |
+				   ((uint)buffer[offset + 2] << 16) |
+				   ((uint)buffer[offset + 3] << 24);
+		}
+
+		/// <summary>
+		/// Converts a sequence of bytes from a specified offset in a buffer to a 32-bit unsigned integer, assuming
+		/// little-endian byte order.
+		/// </summary>
+		/// <param name="buffer">The buffer containing the bytes to convert. Must have at least four bytes available starting at the specified
+		/// offset.</param>
+		/// <param name="offset">The zero-based index in the buffer at which to begin reading the bytes.</param>
+		/// <returns>A 32-bit unsigned integer representing the value of the four bytes starting at the specified offset, interpreted
+		/// as little-endian.</returns>
+		public static uint ToUInt32LittleEndian(ReadOnlySpan<byte> buffer, int offset)
+		{
+			return buffer[offset] |
+				   ((uint)buffer[offset + 1] << 8) |
+				   ((uint)buffer[offset + 2] << 16) |
+				   ((uint)buffer[offset + 3] << 24);
 		}
 	}
 }
