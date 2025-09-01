@@ -47,5 +47,67 @@ namespace HashifyNet.Core.Utilities
 		{
 			ZeroFill(array.Array);
 		}
+		
+		/// <summary>
+		/// Coerces the given <paramref name="hash"/> to a byte array with <paramref name="bitLength"/> significant bits.
+		/// </summary>
+		/// <param name="hash">The hash.</param>
+		/// <param name="bitLength">Length of the hash, in bits.</param>
+		/// <returns>A byte array that has been coerced to the proper length.</returns>
+		public static byte[] CoerceToArray(IEnumerable<byte> hash, int bitLength)
+		{
+			var byteLength = (bitLength + 7) / 8;
+
+			if ((bitLength % 8) == 0)
+			{
+				if (hash is IReadOnlyCollection<byte> hashByteCollection)
+				{
+					if (hashByteCollection.Count == byteLength)
+					{
+						return hash.ToArray();
+					}
+				}
+
+				if (hash is byte[] hashByteArray)
+				{
+					var newHashArray = new byte[byteLength];
+					{
+						Array.Copy(hashByteArray, newHashArray, Math.Min(byteLength, hashByteArray.Length));
+					}
+
+					return newHashArray;
+				}
+			}
+
+			byte finalByteMask = (byte)((1 << (bitLength % 8)) - 1);
+			{
+				if (finalByteMask == 0)
+				{
+					finalByteMask = 255;
+				}
+			}
+
+			var coercedArray = new byte[byteLength];
+
+			var currentIndex = 0;
+			var hashEnumerator = hash.GetEnumerator();
+
+			while (currentIndex < byteLength && hashEnumerator.MoveNext())
+			{
+				if (currentIndex == (byteLength - 1))
+				{
+					coercedArray[currentIndex] = (byte)(hashEnumerator.Current & finalByteMask);
+				}
+				else
+				{
+					coercedArray[currentIndex] = hashEnumerator.Current;
+				}
+
+				currentIndex += 1;
+			}
+
+			return coercedArray;
+		}
 	}
 }
+
