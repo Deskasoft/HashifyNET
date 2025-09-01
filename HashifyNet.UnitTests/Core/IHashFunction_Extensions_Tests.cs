@@ -30,6 +30,7 @@
 using HashifyNet.Algorithms.Jenkins;
 using HashifyNet.UnitTests.Utilities;
 using Moq;
+using System.Collections.Immutable;
 using System.Text;
 
 namespace HashifyNet.UnitTests
@@ -348,7 +349,7 @@ namespace HashifyNet.UnitTests
 					.Returns(new DefaultHashConfig() { HashSizeInBits = 32 });
 
 				hashFunctionMock.Setup(hf => hf.ComputeHash(It.Is<byte[]>(d => data.SequenceEqual(d))))
-					.Returns(Mock.Of<IHashValue>(hv => hv.Hash == new byte[4]))
+					.Returns(Mock.Of<IHashValue>(hv => hv.Hash == new byte[4].ToImmutableArray()))
 					.Verifiable();
 
 				var hashFunction = hashFunctionMock.Object;
@@ -390,3 +391,4 @@ namespace HashifyNet.UnitTests
 	}
 
 }
+
