@@ -286,9 +286,15 @@ namespace HashifyNet.Algorithms.CRC
 					value >>= 8;
 				}
 
+				if (valueBytes.Length != (bitLength + 7) / 8)
+				{
+					byte[] result = ArrayHelpers.CoerceToArray(valueBytes, bitLength);
+					return result;
+				}
+
 				return valueBytes;
 			}
-
+   
 			private static ulong ReflectBits(ulong value, int bitLength)
 			{
 				ulong reflectedValue = 0UL;
@@ -307,3 +313,4 @@ namespace HashifyNet.Algorithms.CRC
 		}
 	}
 }
+
