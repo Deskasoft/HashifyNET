@@ -81,7 +81,7 @@ namespace HashifyNet.Algorithms.Keccak
 			{
 			}
 
-			public BlockTransformer(int hashSizeInBits, bool useSha3Padding) : base(GetRate(hashSizeInBits), GetRate(hashSizeInBits))
+			public BlockTransformer(int hashSizeInBits, bool useSha3Padding) : base(inputBlockSize: GetRate(hashSizeInBits))
 			{
 				_hashSizeInBits = hashSizeInBits;
 				_rateInBytes = GetRate(hashSizeInBits);
@@ -261,4 +261,5 @@ namespace HashifyNet.Algorithms.Keccak
 			#endregion
 		}
 	}
+
 }
