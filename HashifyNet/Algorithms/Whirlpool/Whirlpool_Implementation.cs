@@ -73,7 +73,7 @@ namespace HashifyNet.Algorithms.Whirlpool
 			private ulong _processedBytes;
 
 			public BlockTransformer()
-				: base(64, 64)
+				: base(inputBlockSize: 64)
 			{
 				_hash = new ulong[8];
 				_processedBytes = 0;
@@ -307,4 +307,5 @@ namespace HashifyNet.Algorithms.Whirlpool
 			}
 		}
 	}
+
 }
