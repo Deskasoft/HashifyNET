@@ -110,7 +110,6 @@ namespace HashifyNet.UnitTests.Core
 			{
 				IHashValue hv = function.ComputeHash(TestConstants.FooBar);
 				Assert.NotNull(hv);
-				Assert.NotNull(hv.Hash);
 				Assert.NotEmpty(hv.Hash);
 			}
 		}
@@ -131,7 +130,6 @@ namespace HashifyNet.UnitTests.Core
 			{
 				IHashValue hv = function.ComputeHash(TestConstants.FooBar);
 				Assert.NotNull(hv);
-				Assert.NotNull(hv.Hash);
 				Assert.NotEmpty(hv.Hash);
 
 				(function as ICryptographicHashFunctionBase).Dispose();
@@ -164,3 +162,4 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
+
