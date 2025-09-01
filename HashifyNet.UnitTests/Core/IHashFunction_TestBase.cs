@@ -46,7 +46,6 @@ namespace HashifyNet.UnitTests
 				var hashResults = ComputeHash(hf, knownValue.TestValue);
 
 				IHashConfig<CName> config = hf.Config;
-
 				Assert.Equal(
 					new HashValue(knownValue.ExpectedValue.Take((config.HashSizeInBits + 7) / 8), config.HashSizeInBits),
 					hashResults);
@@ -111,4 +110,5 @@ namespace HashifyNet.UnitTests
 			return valueBytes;
 		}
 	}
+
 }
