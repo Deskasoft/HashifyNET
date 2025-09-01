@@ -88,7 +88,7 @@ namespace HashifyNet.Algorithms.Tiger
 			private readonly byte _padding;
 
 			public BlockTransformer()
-				: base(64, 64)
+				: base(inputBlockSize: 64)
 			{
 			}
 
@@ -558,4 +558,5 @@ namespace HashifyNet.Algorithms.Tiger
 			}
 		}
 	}
+
 }
