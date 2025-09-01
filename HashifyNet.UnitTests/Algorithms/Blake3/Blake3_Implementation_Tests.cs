@@ -144,7 +144,7 @@ namespace HashifyNet.UnitTests.Algorithms.Blake3
 		{
 			var blake3Hasher = new Blake3_Implementation(new Blake3Config(bits));
 			var hashResult = blake3Hasher.ComputeHash(data, bits);
-			return hashResult.Hash;
+			return hashResult.AsByteArray();
 		}
 
 		private static string Hex(byte[] bytes) =>
@@ -2427,3 +2427,4 @@ new KnownValue(4096, new byte[4096], "b6fb73fc46938c981e2b0b4b1ef282adcfc89854d0
 
 	}
 }
+
