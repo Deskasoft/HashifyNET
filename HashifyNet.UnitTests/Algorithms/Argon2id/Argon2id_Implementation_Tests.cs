@@ -144,7 +144,6 @@ namespace HashifyNet.UnitTests.Algorithms.Argon2id
 			IHashValue hash1 = impl.ComputeHash(TestConstants.FooBar);
 
 			Assert.NotNull(hash1);
-			Assert.NotNull(hash1.Hash);
 
 			Assert.True(
 				hash1.VerifyArgon2id(TestConstants.FooBar)
@@ -158,7 +157,6 @@ namespace HashifyNet.UnitTests.Algorithms.Argon2id
 			IHashValue hash1 = impl.ComputeHash(TestConstants.FooBar);
 
 			Assert.NotNull(hash1);
-			Assert.NotNull(hash1.Hash);
 
 			Assert.False(
 				hash1.VerifyArgon2id(TestConstants.LoremIpsum)
@@ -182,9 +180,7 @@ namespace HashifyNet.UnitTests.Algorithms.Argon2id
 			protected override IHashValue ComputeHash(IArgon2id hf, byte[] data)
 			{
 				Argon2id_Implementation impl = hf as Argon2id_Implementation;
-				IHashValue value = impl.ComputeHashWithSaltInternal(data, new byte[8]);
-				byte[] actualHash = value.DecodeArgon2id();
-				return new HashValue(actualHash, impl.Config.HashSizeInBits);
+				return impl.ComputeHashWithSaltInternal(data, new byte[8]);
 			}
 
 			protected override IArgon2id CreateHashFunction(int hashSize) =>
