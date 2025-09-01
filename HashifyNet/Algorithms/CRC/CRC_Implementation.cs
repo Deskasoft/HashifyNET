@@ -50,7 +50,7 @@ namespace HashifyNet.Algorithms.CRC
 		public override ICRCConfig Config => _config.Clone();
 
 		private readonly ICRCConfig _config;
-		private static readonly ConcurrentDictionary<(int, UInt64, bool), IReadOnlyList<UInt64>> _dataDivisionTableCache =
+		private static readonly ConcurrentDictionary<(int, ulong, bool), IReadOnlyList<ulong>> _dataDivisionTableCache =
 			new ConcurrentDictionary<(int, ulong, bool), IReadOnlyList<ulong>>();
 
 		public CRC_Implementation(ICRCConfig config)
@@ -75,12 +75,12 @@ namespace HashifyNet.Algorithms.CRC
 			: BlockTransformerBase<BlockTransformer>
 		{
 			private int _hashSizeInBits;
-			private IReadOnlyList<UInt64> _crcTable;
+			private IReadOnlyList<ulong> _crcTable;
 			private int _mostSignificantShift;
 			private bool _reflectIn;
 			private bool _reflectOut;
-			private UInt64 _xOrOut;
-			private UInt64 _hashValue;
+			private ulong _xOrOut;
+			private ulong _hashValue;
 
 			public BlockTransformer()
 				: base()
@@ -178,7 +178,6 @@ namespace HashifyNet.Algorithms.CRC
 								tempHashValue = (tempHashValue << 1) ^ tempCrcTable[(byte)((tempHashValue >> tempMostSignificantShift) & 1) ^ ((byte)(dataArray[currentOffset] >> (7 - currentBit)) & 1)];
 							}
 						}
-
 					}
 				}
 
@@ -217,14 +216,14 @@ namespace HashifyNet.Algorithms.CRC
 			/// The table accounts for reflecting the index bits to fix the input endianness,
 			/// but it is not possible completely account for the output endianness if the CRC is mixed-endianness.
 			/// </remarks>
-			private static IReadOnlyList<UInt64> GetDataDivisionTable(int hashSizeInBits, UInt64 polynomial, bool reflectIn)
+			private static IReadOnlyList<ulong> GetDataDivisionTable(int hashSizeInBits, ulong polynomial, bool reflectIn)
 			{
 				return _dataDivisionTableCache.GetOrAdd(
 					(hashSizeInBits, polynomial, reflectIn),
 					GetDataDivisionTableInternal);
 			}
 
-			private static IReadOnlyList<UInt64> GetDataDivisionTableInternal((int, UInt64, bool) cacheKey)
+			private static IReadOnlyList<ulong> GetDataDivisionTableInternal((int, ulong, bool) cacheKey)
 			{
 				var hashSizeInBits = cacheKey.Item1;
 				var polynomial = cacheKey.Item2;
@@ -236,12 +235,12 @@ namespace HashifyNet.Algorithms.CRC
 					perBitCount = 1;
 				}
 
-				var crcTable = new UInt64[1 << perBitCount];
+				var crcTable = new ulong[1 << perBitCount];
 				var mostSignificantBit = 1UL << (hashSizeInBits - 1);
 
 				for (uint x = 0; x < crcTable.Length; ++x)
 				{
-					UInt64 curValue = x;
+					ulong curValue = x;
 
 					if (perBitCount > 1 && reflectIn)
 					{
@@ -267,7 +266,7 @@ namespace HashifyNet.Algorithms.CRC
 						curValue = ReflectBits(curValue, hashSizeInBits);
 					}
 
-					curValue &= UInt64.MaxValue >> (64 - hashSizeInBits);
+					curValue &= ulong.MaxValue >> (64 - hashSizeInBits);
 
 					crcTable[x] = curValue;
 				}
@@ -275,10 +274,9 @@ namespace HashifyNet.Algorithms.CRC
 				return crcTable;
 			}
 
-
-			private static byte[] ToBytes(UInt64 value, int bitLength)
+			private static byte[] ToBytes(ulong value, int bitLength)
 			{
-				value &= UInt64.MaxValue >> (64 - bitLength);
+				value &= ulong.MaxValue >> (64 - bitLength);
 
 				var valueBytes = new byte[(bitLength + 7) / 8];
 
@@ -291,9 +289,9 @@ namespace HashifyNet.Algorithms.CRC
 				return valueBytes;
 			}
 
-			private static UInt64 ReflectBits(UInt64 value, int bitLength)
+			private static ulong ReflectBits(ulong value, int bitLength)
 			{
-				UInt64 reflectedValue = 0UL;
+				ulong reflectedValue = 0UL;
 
 				for (int x = 0; x < bitLength; ++x)
 				{
