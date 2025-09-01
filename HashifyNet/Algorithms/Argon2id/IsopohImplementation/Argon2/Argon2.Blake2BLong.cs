@@ -52,7 +52,7 @@ namespace Isopoh.Cryptography.Argon2
 					}
 
 					var hv = transformer.FinalizeHashValue();
-					Array.Copy(hv.Hash, intermediateHash.Buffer, hv.Hash.Length);
+					Array.Copy(hv.AsByteArray(), intermediateHash.Buffer, hv.Hash.Length);
 				}
 
 				if (hash.Length <= intermediateHash.Buffer.Length)
@@ -73,7 +73,7 @@ namespace Isopoh.Cryptography.Argon2
 					{
 						Array.Copy(intermediateHash.Buffer, toHash.Buffer, intermediateHash.Buffer.Length); // set toHash to be the previous hash
 						var hv = HashFactory<IBlake2B, IBlake2BConfig>.Create(blake2BConfig).ComputeHash(toHash.Buffer);
-						Array.Copy(hv.Hash, intermediateHash.Buffer, hv.Hash.Length);
+						Array.Copy(hv.AsByteArray(), intermediateHash.Buffer, hv.Hash.Length);
 
 						Array.Copy(intermediateHash.Buffer, 0, hash, pos, b2B2); // copy half hash result
 						pos += b2B2;
@@ -92,7 +92,7 @@ namespace Isopoh.Cryptography.Argon2
 
 					{
 						var hv = HashFactory<IBlake2B, IBlake2BConfig>.Create(blake2BConfig).ComputeHash(toHash.Buffer);
-						Array.Copy(hv.Hash, intermediateHash.Buffer, hv.Hash.Length);
+						Array.Copy(hv.AsByteArray(), intermediateHash.Buffer, hv.Hash.Length);
 					}
 					Array.Copy(intermediateHash.Buffer, 0, hash, pos, hash.Length - pos); // copy the final bytes from the first part of the hash result
 				}
@@ -101,3 +101,4 @@ namespace Isopoh.Cryptography.Argon2
 	}
 
 }
+
