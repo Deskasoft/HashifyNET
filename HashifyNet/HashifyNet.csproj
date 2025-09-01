@@ -66,6 +66,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="9.0.8" />
     <PackageReference Include="System.IO.Hashing" Version="9.0.8" />
     <PackageReference Include="System.Memory" Version="4.6.3" />
   </ItemGroup>
@@ -107,6 +108,7 @@
   </PropertyGroup>
 
 </Project>
+
 
 
 
