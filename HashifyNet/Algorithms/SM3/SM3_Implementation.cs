@@ -86,7 +86,7 @@ namespace HashifyNet.Algorithms.SM3
 				0x79CC4519, 0x7A879D8A
 			};
 
-			public BlockTransformer() : base(64, 64) // SM3 uses 512-bit (64-byte) blocks
+			public BlockTransformer() : base(inputBlockSize: 64) // SM3 uses 512-bit (64-byte) blocks
 			{
 				Initialize();
 			}
@@ -243,3 +243,4 @@ namespace HashifyNet.Algorithms.SM3
 		}
 	}
 }
+
