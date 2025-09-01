@@ -333,9 +333,15 @@ namespace HashifyNet.Core
 
 					while (dataRemainingCount > 0)
 					{
-						cancellationToken.ThrowIfCancellationRequested();
+						if (((dataCurrentOffset - data.Offset) / _cancellationBatchSize) > (((dataCurrentOffset - data.Offset) - _inputBlockSize) / _cancellationBatchSize))
+						{
+							if (dataCurrentOffset > data.Offset)
+							{
+								cancellationToken.ThrowIfCancellationRequested();
+							}
+						}
 
-						var bytesToProcess = Math.Min(dataRemainingCount, _cancellationBatchSize);
+						var bytesToProcess = Math.Min(dataRemainingCount, _inputBlockSize);
 
 						TransformByteGroupsInternal(new ArraySegment<byte>(data.Array, dataCurrentOffset, bytesToProcess));
 
@@ -343,12 +349,14 @@ namespace HashifyNet.Core
 						dataRemainingCount -= bytesToProcess;
 					}
 
+					// Ensure a single call at least to make sure no cancellation is requested.
+					cancellationToken.ThrowIfCancellationRequested();
+
 					Debug.Assert(dataRemainingCount == 0);
 				}
 				catch (TaskCanceledException)
 				{
 					MarkSelfCorrupted();
-
 					throw;
 				}
 			}
@@ -372,4 +380,5 @@ namespace HashifyNet.Core
 		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
 		protected abstract IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken);
 	}
+
 }
