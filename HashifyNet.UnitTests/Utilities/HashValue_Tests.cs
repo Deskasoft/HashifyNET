@@ -29,6 +29,7 @@
 
 using HashifyNet.Core.Utilities;
 using Moq;
+using System.Collections.Immutable;
 using System.Text;
 
 namespace HashifyNet.UnitTests.Utilities
@@ -64,11 +65,11 @@ namespace HashifyNet.UnitTests.Utilities
 			foreach (var underlyingHashValue in underlyingHashValues)
 			{
 				var hashValues = new[] {
-					new HashValue(underlyingHashValue, 8),
-					new HashValue(underlyingHashValue, 9),
-					new HashValue(underlyingHashValue, 10),
-					new HashValue(underlyingHashValue, 16),
-					new HashValue(underlyingHashValue, 24)
+					new HashValue(ArrayHelpers.CoerceToArray(underlyingHashValue, 8), 8),
+					new HashValue(ArrayHelpers.CoerceToArray(underlyingHashValue, 9), 9),
+					new HashValue(ArrayHelpers.CoerceToArray(underlyingHashValue, 10), 10),
+					new HashValue(ArrayHelpers.CoerceToArray(underlyingHashValue, 16), 16),
+					new HashValue(ArrayHelpers.CoerceToArray(underlyingHashValue, 24), 24)
 				};
 
 				Assert.Equal(new byte[] { 1 }, hashValues[0].Hash);
@@ -125,8 +126,8 @@ namespace HashifyNet.UnitTests.Utilities
 
 				var hashValue = new HashValue(enumerableValue, 8);
 
-				Assert.NotStrictEqual(enumerableValue, hashValue.Hash);
-				Assert.Equal(enumerableValue, hashValue.Hash);
+				Assert.NotStrictEqual(enumerableValue, hashValue.AsByteArray());
+				Assert.Equal(enumerableValue, hashValue.AsByteArray());
 			}
 
 			// Underlying Array
@@ -135,8 +136,8 @@ namespace HashifyNet.UnitTests.Utilities
 
 				var hashValue = new HashValue(arrayValue, 8);
 
-				Assert.NotStrictEqual(arrayValue, hashValue.Hash);
-				Assert.Equal(arrayValue, hashValue.Hash);
+				Assert.NotStrictEqual(arrayValue, hashValue.AsByteArray());
+				Assert.Equal(arrayValue, hashValue.AsByteArray());
 			}
 		}
 
@@ -151,7 +152,9 @@ namespace HashifyNet.UnitTests.Utilities
 
 			foreach (var validBitLength in validBitLengths)
 			{
-				var hashValue = new HashValue(new byte[2], validBitLength);
+				byte[] orig = new byte[2];
+				byte[] coerced = ArrayHelpers.CoerceToArray(orig, validBitLength);
+				var hashValue = new HashValue(coerced, validBitLength);
 
 				Assert.Equal(validBitLength, hashValue.BitLength);
 			}
@@ -258,7 +261,7 @@ namespace HashifyNet.UnitTests.Utilities
 				Assert.False(hashValue.Equals((object)null));
 				Assert.False(hashValue.Equals("abc"));
 
-				var mockValue = Mock.Of<IHashValue>(hv => hv.BitLength == 24 && hv.Hash == new byte[] { 173, 0, 255 });
+				var mockValue = Mock.Of<IHashValue>(hv => hv.BitLength == 24 && hv.Hash == new byte[] { 173, 0, 255 }.ToImmutableArray());
 
 				Assert.True(hashValue.Equals(mockValue));
 				Assert.True(hashValue.Equals((object)mockValue));
@@ -266,21 +269,21 @@ namespace HashifyNet.UnitTests.Utilities
 
 			{
 				var hashValue = new HashValue(new byte[] { 173, 0, 254 }, 24);
-				var mockValue = Mock.Of<IHashValue>(hv => hv.BitLength == 24 && hv.Hash == new byte[] { 173, 0, 255 });
+				var mockValue = Mock.Of<IHashValue>(hv => hv.BitLength == 24 && hv.Hash == new byte[] { 173, 0, 255 }.ToImmutableArray());
 
 				Assert.False(hashValue.Equals(mockValue));
 			}
 
 			{
 				var hashValue = new HashValue(new byte[] { 173, 0, 254 }, 23);
-				var mockValue = Mock.Of<IHashValue>(hv => hv.BitLength == 24 && hv.Hash == new byte[] { 173, 0, 254 });
+				var mockValue = Mock.Of<IHashValue>(hv => hv.BitLength == 24 && hv.Hash == new byte[] { 173, 0, 254 }.ToImmutableArray());
 
 				Assert.False(hashValue.Equals(mockValue));
 			}
 
 			{
 				var hashValue = new HashValue(new byte[] { 173, 0, 255 }, 24);
-				var mockValue = Mock.Of<IHashValue>(hv => hv.BitLength == 23 && hv.Hash == new byte[] { 173, 0, 127 });
+				var mockValue = Mock.Of<IHashValue>(hv => hv.BitLength == 23 && hv.Hash == new byte[] { 173, 0, 127 }.ToImmutableArray());
 
 				Assert.False(hashValue.Equals(mockValue));
 			}
@@ -288,4 +291,5 @@ namespace HashifyNet.UnitTests.Utilities
 
 		#endregion
 	}
+
 }
