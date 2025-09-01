@@ -115,7 +115,7 @@ namespace HashifyNet.Algorithms.HighwayHash
 
 
 			public BlockTransformer()
-				: base(32, 32) // Process data in 32-byte blocks
+				: base(inputBlockSize: 32) // Process data in 32-byte blocks
 			{
 			}
 
@@ -348,4 +348,5 @@ namespace HashifyNet.Algorithms.HighwayHash
 			}
 		}
 	}
+
 }
