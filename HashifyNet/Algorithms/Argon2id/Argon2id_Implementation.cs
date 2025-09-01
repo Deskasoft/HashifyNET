@@ -90,7 +90,22 @@ namespace HashifyNet.Algorithms.Argon2id
 			Argon2Config config = Argon2idHelpers.GetArgon2Config(_config, data.Array, salt);
 			string hash = Argon2.Hash(config);
 
-			return new EncodedHashValue(Argon2idSerializer.Serialize(hash), _config.HashSizeInBits);
+			byte[] encodedHash = Argon2idSerializer.Serialize(hash);
+			Argon2Config overwrite = new Argon2Config();
+			if (!DecodeExtension.DecodeString(overwrite, hash, out var buffer))
+			{
+				throw new InvalidOperationException("Could not decode Argon2id hash.");
+			}
+
+			try
+			{
+				return new EncodedHashValue(encodedHash, (i) => Argon2idSerializer.Deserialize((byte[])i),  buffer.Buffer, _config.HashSizeInBits);
+			}
+			finally
+			{
+				buffer.Dispose();
+			}
 		}
 	}
+
 }
