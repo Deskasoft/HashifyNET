@@ -84,7 +84,8 @@ namespace HashifyNet.Algorithms.Argon2id
 				throw new ArgumentNullException(nameof(val));
 			}
 
-			return Decode(val.Hash);
+			return Decode(val.AsByteArray());
 		}
 	}
 }
+
