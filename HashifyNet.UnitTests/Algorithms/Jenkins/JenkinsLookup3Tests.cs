@@ -61,7 +61,8 @@ namespace HashifyNet.UnitTests.Algorithms.Jenkins
 
 			Assert.Equal(
 				0x85c64fdU,
-				BitConverter.ToUInt32(resultBytes.Hash, 0));
+				BitConverter.ToUInt32(resultBytes.AsByteArray(), 0));
 		}
 	}
+
 }
