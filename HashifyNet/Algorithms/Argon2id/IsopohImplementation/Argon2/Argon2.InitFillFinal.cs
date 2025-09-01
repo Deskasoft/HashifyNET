@@ -102,7 +102,7 @@ namespace Isopoh.Cryptography.Argon2
 			}
 
 			var hv = transformer.FinalizeHashValue();
-			Array.Copy(hv.Hash, ret.Buffer, hv.Hash.Length);
+			Array.Copy(hv.AsByteArray(), ret.Buffer, hv.Hash.Length);
 
 			return ret;
 		}
@@ -389,3 +389,4 @@ namespace Isopoh.Cryptography.Argon2
 	}
 
 }
+
