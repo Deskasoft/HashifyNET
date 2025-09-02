@@ -77,8 +77,8 @@ namespace HashifyNet.Algorithms.SipHash
 			}
 
 			// Extract key halves as little-endian ulongs
-			_k0 = BitConverter.ToUInt64(_config.Key as byte[] ?? new List<byte>(_config.Key).ToArray(), 0);
-			_k1 = BitConverter.ToUInt64(_config.Key as byte[] ?? new List<byte>(_config.Key).ToArray(), 8);
+			_k0 = Endianness.ToUInt64LittleEndian(_config.Key as byte[] ?? new List<byte>(_config.Key).ToArray(), 0);
+			_k1 = Endianness.ToUInt64LittleEndian(_config.Key as byte[] ?? new List<byte>(_config.Key).ToArray(), 8);
 		}
 
 		public override IBlockTransformer CreateBlockTransformer()
@@ -133,7 +133,7 @@ namespace HashifyNet.Algorithms.SipHash
 				}
 
 				_messageLength += (ulong)data.Count;
-				ulong m = BitConverter.ToUInt64(data.Array, data.Offset);
+				ulong m = Endianness.ToUInt64LittleEndian(data.Array, data.Offset);
 
 				_v3 ^= m;
 				for (int i = 0; i < _cRounds; ++i)
@@ -177,7 +177,7 @@ namespace HashifyNet.Algorithms.SipHash
 				}
 
 				ulong finalHash = _v0 ^ _v1 ^ _v2 ^ _v3;
-				var hashValueBytes = BitConverter.GetBytes(finalHash);
+				var hashValueBytes = Endianness.GetBytesLittleEndian(finalHash);
 
 				return new HashValue(hashValueBytes, 64);
 			}
@@ -211,5 +211,4 @@ namespace HashifyNet.Algorithms.SipHash
 			}
 		}
 	}
-
 }
