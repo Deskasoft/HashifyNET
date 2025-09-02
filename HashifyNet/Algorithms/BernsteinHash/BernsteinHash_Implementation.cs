@@ -91,9 +91,10 @@ namespace HashifyNet.Algorithms.BernsteinHash
 			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
 			{
 				return new HashValue(
-					BitConverter.GetBytes(_hashValue),
+					Endianness.GetBytesLittleEndian(_hashValue),
 					32);
 			}
 		}
 	}
+
 }
