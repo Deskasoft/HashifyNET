@@ -305,6 +305,31 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
+		/// Combines eight bytes into a 64-bit unsigned integer, interpreting the bytes in little-endian order.
+		/// </summary>
+		/// <param name="v1">The least significant byte of the resulting 64-bit integer.</param>
+		/// <param name="v2">The second least significant byte of the resulting 64-bit integer.</param>
+		/// <param name="v3">The third least significant byte of the resulting 64-bit integer.</param>
+		/// <param name="v4">The fourth least significant byte of the resulting 64-bit integer.</param>
+		/// <param name="v5">The fifth least significant byte of the resulting 64-bit integer.</param>
+		/// <param name="v6">The sixth least significant byte of the resulting 64-bit integer.</param>
+		/// <param name="v7">The seventh least significant byte of the resulting 64-bit integer.</param>
+		/// <param name="v8">The most significant byte of the resulting 64-bit integer.</param>
+		/// <returns>A 64-bit unsigned integer constructed from the specified bytes in little-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static ulong ToUInt64LittleEndian(byte v1, byte v2, byte v3, byte v4, byte v5, byte v6, byte v7, byte v8)
+		{
+			return v1 |
+				   ((ulong)v2 << 8) |
+				   ((ulong)v3 << 16) |
+				   ((ulong)v4 << 24) |
+				   ((ulong)v5 << 32) |
+				   ((ulong)v6 << 40) |
+				   ((ulong)v7 << 48) |
+				   ((ulong)v8 << 56);
+		}
+
+		/// <summary>
 		/// Converts a sequence of bytes from the specified buffer, starting at the given offset,  into a 64-bit unsigned
 		/// integer using little-endian byte order.
 		/// </summary>
@@ -329,6 +354,18 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
+		/// Converts two bytes to a 16-bit unsigned integer, assuming little-endian byte order.
+		/// </summary>
+		/// <param name="v1">The least significant byte of the 16-bit unsigned integer.</param>
+		/// <param name="v2">The most significant byte of the 16-bit unsigned integer.</param>
+		/// <returns>A 16-bit unsigned integer constructed from the specified bytes in little-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static ushort ToUInt16LittleEndian(byte v1, byte v2)
+		{
+			return (ushort)(v1 | (v2 << 8));
+		}
+
+		/// <summary>
 		/// Converts a sequence of two bytes from the specified buffer, starting at the given offset, into a 16-bit unsigned
 		/// integer using little-endian byte order.
 		/// </summary>
@@ -340,6 +377,23 @@ namespace HashifyNet.Core.Utilities
 		public static ushort ToUInt16LittleEndian(byte[] buffer, int offset)
 		{
 			return (ushort)(buffer[offset] | (buffer[offset + 1] << 8));
+		}
+
+		/// <summary>
+		/// Converts four bytes to a 32-bit unsigned integer using little-endian byte order.
+		/// </summary>
+		/// <param name="v1">The least significant byte of the resulting integer.</param>
+		/// <param name="v2">The second least significant byte of the resulting integer.</param>
+		/// <param name="v3">The second most significant byte of the resulting integer.</param>
+		/// <param name="v4">The most significant byte of the resulting integer.</param>
+		/// <returns>A 32-bit unsigned integer constructed from the specified bytes in little-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static uint ToUInt32LittleEndian(byte v1, byte v2, byte v3, byte v4)
+		{
+			return v1 |
+				   ((uint)v2 << 8) |
+				   ((uint)v3 << 16) |
+				   ((uint)v4 << 24);
 		}
 
 		/// <summary>
@@ -424,6 +478,46 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
+		/// Combines eight bytes into a single 64-bit unsigned integer, interpreting the bytes in big-endian order.
+		/// </summary>
+		/// <remarks>This method shifts each byte to its appropriate position in the 64-bit integer, with the most
+		/// significant byte placed at the highest position. It is optimized for performance and assumes the caller provides
+		/// all eight bytes in the correct order.</remarks>
+		/// <param name="v1">The most significant byte of the resulting 64-bit unsigned integer.</param>
+		/// <param name="v2">The second most significant byte of the resulting 64-bit unsigned integer.</param>
+		/// <param name="v3">The third most significant byte of the resulting 64-bit unsigned integer.</param>
+		/// <param name="v4">The fourth most significant byte of the resulting 64-bit unsigned integer.</param>
+		/// <param name="v5">The fifth most significant byte of the resulting 64-bit unsigned integer.</param>
+		/// <param name="v6">The sixth most significant byte of the resulting 64-bit unsigned integer.</param>
+		/// <param name="v7">The seventh most significant byte of the resulting 64-bit unsigned integer.</param>
+		/// <param name="v8">The least significant byte of the resulting 64-bit unsigned integer.</param>
+		/// <returns>A 64-bit unsigned integer constructed from the specified bytes in big-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static ulong ToUInt64BigEndian(byte v1, byte v2, byte v3, byte v4, byte v5, byte v6, byte v7, byte v8)
+		{
+			return ((ulong)v1 << 56) |
+				   ((ulong)v2 << 48) |
+				   ((ulong)v3 << 40) |
+				   ((ulong)v4 << 32) |
+				   ((ulong)v5 << 24) |
+				   ((ulong)v6 << 16) |
+				   ((ulong)v7 << 8) |
+				   v8;
+		}
+
+		/// <summary>
+		/// Converts two bytes to a 16-bit unsigned integer, interpreting the bytes in big-endian order.
+		/// </summary>
+		/// <param name="v1">The most significant byte of the 16-bit unsigned integer.</param>
+		/// <param name="v2">The least significant byte of the 16-bit unsigned integer.</param>
+		/// <returns>A 16-bit unsigned integer constructed from the specified bytes in big-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static ushort ToUInt16BigEndian(byte v1, byte v2)
+		{
+			return (ushort)((v1 << 8) | v2);
+		}
+
+		/// <summary>
 		/// Converts a sequence of two bytes from the specified buffer, starting at the given offset, into a 16-bit unsigned
 		/// integer using big-endian byte order.
 		/// </summary>
@@ -435,6 +529,25 @@ namespace HashifyNet.Core.Utilities
 		public static uint ToUInt16BigEndian(byte[] buffer, int offset)
 		{
 			return (ushort)((buffer[offset] << 8) | buffer[offset + 1]);
+		}
+
+		/// <summary>
+		/// Converts four bytes to a 32-bit unsigned integer, interpreting the bytes in big-endian order.
+		/// </summary>
+		/// <remarks>This method assumes the input bytes are provided in big-endian order, where the most significant
+		/// byte is first and the least significant byte is last.</remarks>
+		/// <param name="v1">The most significant byte of the 32-bit unsigned integer.</param>
+		/// <param name="v2">The second most significant byte of the 32-bit unsigned integer.</param>
+		/// <param name="v3">The third most significant byte of the 32-bit unsigned integer.</param>
+		/// <param name="v4">The least significant byte of the 32-bit unsigned integer.</param>
+		/// <returns>A 32-bit unsigned integer constructed from the specified bytes in big-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static uint ToUInt32BigEndian(byte v1, byte v2, byte v3, byte v4)
+		{
+			return ((uint)v1 << 24) |
+				   ((uint)v2 << 16) |
+				   ((uint)v3 << 8) |
+				   v4;
 		}
 
 		/// <summary>
