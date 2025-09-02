@@ -179,11 +179,11 @@ namespace HashifyNet.Algorithms.Blake2
 					((uint)hashSizeInBits / 8) |
 					(originalKeyLength << 8);
 
-				_e ^= BitConverter.ToUInt64(salt, 0);
-				_f ^= BitConverter.ToUInt64(salt, 8);
+				_e ^= Endianness.ToUInt64LittleEndian(salt, 0);
+				_f ^= Endianness.ToUInt64LittleEndian(salt, 8);
 
-				_g ^= BitConverter.ToUInt64(personalization, 0);
-				_h ^= BitConverter.ToUInt64(personalization, 8);
+				_g ^= Endianness.ToUInt64LittleEndian(personalization, 0);
+				_h ^= Endianness.ToUInt64LittleEndian(personalization, 8);
 			}
 			protected override void CopyStateTo(BlockTransformer other)
 			{
@@ -320,14 +320,14 @@ namespace HashifyNet.Algorithms.Blake2
 						true);
 				}
 
-				var hashValueBytes = BitConverter.GetBytes(tempA)
-					.Concat(BitConverter.GetBytes(tempB))
-					.Concat(BitConverter.GetBytes(tempC))
-					.Concat(BitConverter.GetBytes(tempD))
-					.Concat(BitConverter.GetBytes(tempE))
-					.Concat(BitConverter.GetBytes(tempF))
-					.Concat(BitConverter.GetBytes(tempG))
-					.Concat(BitConverter.GetBytes(tempH))
+				var hashValueBytes = Endianness.GetBytesLittleEndian(tempA)
+					.Concat(Endianness.GetBytesLittleEndian(tempB))
+					.Concat(Endianness.GetBytesLittleEndian(tempC))
+					.Concat(Endianness.GetBytesLittleEndian(tempD))
+					.Concat(Endianness.GetBytesLittleEndian(tempE))
+					.Concat(Endianness.GetBytesLittleEndian(tempF))
+					.Concat(Endianness.GetBytesLittleEndian(tempG))
+					.Concat(Endianness.GetBytesLittleEndian(tempH))
 					.Take(_hashSizeInBits / 8)
 					.ToArray();
 
@@ -370,4 +370,5 @@ namespace HashifyNet.Algorithms.Blake2
 			}
 		}
 	}
+
 }
