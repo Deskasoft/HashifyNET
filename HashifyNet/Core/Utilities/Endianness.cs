@@ -61,6 +61,22 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
+		/// Converts the specified 16-bit unsigned integer to its little-endian byte representation and writes the result to
+		/// the specified buffer at the given offset.
+		/// </summary>
+		/// <remarks>This method writes exactly 2 bytes to the buffer, starting at the specified offset. Ensure that
+		/// the buffer has sufficient capacity to accommodate the bytes being written.</remarks>
+		/// <param name="value">The 16-bit unsigned integer to convert.</param>
+		/// <param name="buffer">The byte array to which the little-endian representation will be written.</param>
+		/// <param name="offset">The zero-based index in the buffer at which to begin writing the bytes.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ToLittleEndianBytes(ushort value, byte[] buffer, int offset)
+		{
+			buffer[offset] = (byte)value;
+			buffer[offset + 1] = (byte)(value >> 8);
+		}
+
+		/// <summary>
 		/// Converts the specified 64-bit unsigned integer to its little-endian byte representation and writes the result to
 		/// the specified buffer at the given offset.
 		/// </summary>
@@ -81,6 +97,22 @@ namespace HashifyNet.Core.Utilities
 			buffer[offset + 5] = (byte)(value >> 40);
 			buffer[offset + 6] = (byte)(value >> 48);
 			buffer[offset + 7] = (byte)(value >> 56);
+		}
+
+		/// <summary>
+		/// Converts the specified 16-bit unsigned integer to its big-endian byte representation and writes the result to
+		/// the specified buffer at the given offset.
+		/// </summary>
+		/// <remarks>This method writes exactly 2 bytes to the buffer, starting at the specified offset. Ensure that
+		/// the buffer has sufficient capacity to accommodate the bytes being written.</remarks>
+		/// <param name="value">The 16-bit unsigned integer to convert.</param>
+		/// <param name="buffer">The byte array to which the big-endian representation will be written.</param>
+		/// <param name="offset">The zero-based index in the buffer at which to begin writing the bytes.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ToBigEndianBytes(ushort value, byte[] buffer, int offset)
+		{
+			buffer[offset] = (byte)(value >> 8);
+			buffer[offset + 1] = (byte)value;
 		}
 
 		/// <summary>
@@ -130,7 +162,7 @@ namespace HashifyNet.Core.Utilities
 		/// <remarks>This method ensures that the returned value is in little-endian format, regardless of the 
 		/// system's endianness. It is optimized for performance and uses aggressive inlining.</remarks>
 		/// <param name="value">The 64-bit unsigned integer to convert.</param>
-		/// <returns>The value in little-endian format. If the system architecture is already little-endian,  the original value is
+		/// <returns>The value in little-endian format. If the system architecture is already little-endian, the original value is
 		/// returned unchanged. Otherwise, the byte order is reversed.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ulong ToLittleEndian(ulong value)
@@ -145,6 +177,47 @@ namespace HashifyNet.Core.Utilities
 			return BinaryPrimitives.ReverseEndianness(value);
 		}
 
+		/// <summary>
+		/// Converts the specified 32-bit unsigned integer to little-endian format.
+		/// </summary>
+		/// <remarks>This method ensures that the returned value is in little-endian format, regardless of the 
+		/// system's endianness. It is optimized for performance and uses aggressive inlining.</remarks>
+		/// <param name="value">The 32-bit unsigned integer to convert.</param>
+		/// <returns>The value in little-endian format. If the system architecture is already little-endian, the original value is
+		/// returned unchanged. Otherwise, the byte order is reversed.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static uint ToLittleEndian(uint value)
+		{
+			// If the system architecture is already little-endian, the value doesn't need to be changed.
+			if (BitConverter.IsLittleEndian)
+			{
+				return value;
+			}
+
+			// If the system is big-endian, we must reverse the byte order to make it little-endian.
+			return BinaryPrimitives.ReverseEndianness(value);
+		}
+
+		/// <summary>
+		/// Converts the specified 16-bit unsigned integer to little-endian format.
+		/// </summary>
+		/// <remarks>This method ensures that the returned value is in little-endian format, regardless of the 
+		/// system's endianness. It is optimized for performance and uses aggressive inlining.</remarks>
+		/// <param name="value">The 16-bit unsigned integer to convert.</param>
+		/// <returns>The value in little-endian format. If the system architecture is already little-endian, the original value is
+		/// returned unchanged. Otherwise, the byte order is reversed.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static ushort ToLittleEndian(ushort value)
+		{
+			// If the system architecture is already little-endian, the value doesn't need to be changed.
+			if (BitConverter.IsLittleEndian)
+			{
+				return value;
+			}
+
+			// If the system is big-endian, we must reverse the byte order to make it little-endian.
+			return BinaryPrimitives.ReverseEndianness(value);
+		}
 
 		/// <summary>
 		/// Converts the specified 64-bit unsigned integer to big-endian format.
@@ -152,10 +225,52 @@ namespace HashifyNet.Core.Utilities
 		/// <remarks>This method ensures that the returned value is in big-endian format, regardless of the 
 		/// system's endianness. It is optimized for performance and uses aggressive inlining.</remarks>
 		/// <param name="value">The 64-bit unsigned integer to convert.</param>
-		/// <returns>The value in big-endian format. If the system architecture is already big-endian,  the original value is
+		/// <returns>The value in big-endian format. If the system architecture is already big-endian, the original value is
 		/// returned unchanged. Otherwise, the byte order is reversed.</returns>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ulong ToBigEndian(ulong value)
+		{
+			// If the system architecture is already big-endian, the value doesn't need to be changed.
+			if (!BitConverter.IsLittleEndian)
+			{
+				return value;
+			}
+
+			// If the system is little-endian, we must reverse the byte order to make it big-endian.
+			return BinaryPrimitives.ReverseEndianness(value);
+		}
+
+		/// <summary>
+		/// Converts the specified 16-bit unsigned integer to big-endian format.
+		/// </summary>
+		/// <remarks>This method ensures that the returned value is in big-endian format, regardless of the 
+		/// system's endianness. It is optimized for performance and uses aggressive inlining.</remarks>
+		/// <param name="value">The 16-bit unsigned integer to convert.</param>
+		/// <returns>The value in big-endian format. If the system architecture is already big-endian, the original value is
+		/// returned unchanged. Otherwise, the byte order is reversed.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static ushort ToBigEndian(ushort value)
+		{
+			// If the system architecture is already big-endian, the value doesn't need to be changed.
+			if (!BitConverter.IsLittleEndian)
+			{
+				return value;
+			}
+
+			// If the system is little-endian, we must reverse the byte order to make it big-endian.
+			return BinaryPrimitives.ReverseEndianness(value);
+		}
+
+		/// <summary>
+		/// Converts the specified 32-bit unsigned integer to big-endian format.
+		/// </summary>
+		/// <remarks>This method ensures that the returned value is in big-endian format, regardless of the 
+		/// system's endianness. It is optimized for performance and uses aggressive inlining.</remarks>
+		/// <param name="value">The 32-bit unsigned integer to convert.</param>
+		/// <returns>The value in big-endian format. If the system architecture is already big-endian, the original value is
+		/// returned unchanged. Otherwise, the byte order is reversed.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static uint ToBigEndian(uint value)
 		{
 			// If the system architecture is already big-endian, the value doesn't need to be changed.
 			if (!BitConverter.IsLittleEndian)
@@ -214,7 +329,21 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
-		/// Converts a sequence of four bytes from the specified buffer, starting at the given offset,  into a 32-bit unsigned
+		/// Converts a sequence of two bytes from the specified buffer, starting at the given offset, into a 16-bit unsigned
+		/// integer using little-endian byte order.
+		/// </summary>
+		/// <param name="buffer">The byte array containing the data to convert. Must contain at least two bytes starting from <paramref
+		/// name="offset"/>.</param>
+		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin reading the two bytes.</param>
+		/// <returns>A 16-bit unsigned integer representing the value of the two bytes in little-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static ushort ToUInt16LittleEndian(byte[] buffer, int offset)
+		{
+			return (ushort)(buffer[offset] | (buffer[offset + 1] << 8));
+		}
+
+		/// <summary>
+		/// Converts a sequence of four bytes from the specified buffer, starting at the given offset, into a 32-bit unsigned
 		/// integer using little-endian byte order.
 		/// </summary>
 		/// <param name="buffer">The byte array containing the data to convert. Must contain at least four bytes starting from <paramref
@@ -295,6 +424,20 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
+		/// Converts a sequence of two bytes from the specified buffer, starting at the given offset, into a 16-bit unsigned
+		/// integer using big-endian byte order.
+		/// </summary>
+		/// <param name="buffer">The byte array containing the data to convert. Must contain at least two bytes starting from <paramref
+		/// name="offset"/>.</param>
+		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin reading the two bytes.</param>
+		/// <returns>A 16-bit unsigned integer representing the value of the two bytes in big-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static uint ToUInt16BigEndian(byte[] buffer, int offset)
+		{
+			return (ushort)((buffer[offset] << 8) | buffer[offset + 1]);
+		}
+
+		/// <summary>
 		/// Converts a sequence of four bytes from the specified buffer, starting at the given offset, into a 32-bit unsigned
 		/// integer using big-endian byte order.
 		/// </summary>
@@ -356,6 +499,19 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
+		/// Converts the specified 16-bit unsigned integer to a byte array in little-endian format.
+		/// </summary>
+		/// <param name="value">The 16-bit unsigned integer to convert.</param>
+		/// <returns>A byte array containing the little-endian representation of the specified value.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesLittleEndian(ushort value)
+		{
+			byte[] bytes = new byte[2];
+			ToLittleEndianBytes(value, bytes, 0);
+			return bytes;
+		}
+
+		/// <summary>
 		/// Converts the specified 64-bit unsigned integer to an array of bytes in big-endian order.
 		/// </summary>
 		/// <param name="value">The 64-bit unsigned integer to convert.</param>
@@ -377,6 +533,19 @@ namespace HashifyNet.Core.Utilities
 		public static byte[] GetBytesBigEndian(uint value)
 		{
 			byte[] bytes = new byte[4];
+			ToBigEndianBytes(value, bytes, 0);
+			return bytes;
+		}
+
+		/// <summary>
+		/// Converts the specified 16-bit unsigned integer to a byte array in big-endian format.
+		/// </summary>
+		/// <param name="value">The 16-bit unsigned integer to convert.</param>
+		/// <returns>A byte array containing the big-endian representation of the specified value.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesBigEndian(ushort value)
+		{
+			byte[] bytes = new byte[2];
 			ToBigEndianBytes(value, bytes, 0);
 			return bytes;
 		}
