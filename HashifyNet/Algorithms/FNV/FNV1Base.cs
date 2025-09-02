@@ -79,8 +79,8 @@ namespace HashifyNet.Algorithms.FNV
 			: BlockTransformerBase<TSelf>
 			where TSelf : BlockTransformer_32BitBase<TSelf>, new()
 		{
-			protected UInt32 _prime;
-			protected UInt32 _hashValue;
+			protected uint _prime;
+			protected uint _hashValue;
 
 			public BlockTransformer_32BitBase()
 			{
@@ -99,22 +99,23 @@ namespace HashifyNet.Algorithms.FNV
 				other._hashValue = _hashValue;
 			}
 			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(BitConverter.GetBytes(_hashValue), 32);
+				new HashValue(Endianness.GetBytesLittleEndian(_hashValue), 32);
 		}
+
 		protected abstract class BlockTransformer_64BitBase<TSelf>
 			: BlockTransformerBase<TSelf>
 			where TSelf : BlockTransformer_64BitBase<TSelf>, new()
 		{
-			protected UInt64 _prime;
-			protected UInt64 _hashValue;
+			protected ulong _prime;
+			protected ulong _hashValue;
 			public BlockTransformer_64BitBase()
 			{
 			}
 			public BlockTransformer_64BitBase(FNVPrimeOffset fnvPrimeOffset)
 				: this()
 			{
-				_prime = ((UInt64)fnvPrimeOffset.Prime[1] << 32) | fnvPrimeOffset.Prime[0];
-				_hashValue = ((UInt64)fnvPrimeOffset.Offset[1] << 32) | fnvPrimeOffset.Offset[0];
+				_prime = ((ulong)fnvPrimeOffset.Prime[1] << 32) | fnvPrimeOffset.Prime[0];
+				_hashValue = ((ulong)fnvPrimeOffset.Offset[1] << 32) | fnvPrimeOffset.Offset[0];
 			}
 
 			protected override void CopyStateTo(TSelf other)
@@ -125,15 +126,15 @@ namespace HashifyNet.Algorithms.FNV
 			}
 
 			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(BitConverter.GetBytes(_hashValue), 64);
+				new HashValue(Endianness.GetBytesLittleEndian(_hashValue), 64);
 		}
 
 		protected abstract class BlockTransformer_ExtendedBase<TSelf>
 			: BlockTransformerBase<TSelf>
 			where TSelf : BlockTransformer_ExtendedBase<TSelf>, new()
 		{
-			protected UInt32[] _prime;
-			protected UInt32[] _hashValue;
+			protected uint[] _prime;
+			protected uint[] _hashValue;
 			protected int _hashSizeInBytes;
 
 			public BlockTransformer_ExtendedBase()
@@ -164,16 +165,16 @@ namespace HashifyNet.Algorithms.FNV
 		/// <summary>
 		/// Multiplies operand1 by operand2 as if both operand1 and operand2 were single large integers.
 		/// </summary>
-		/// <param name="operand1">Array of UInt32 values to be multiplied.</param>
-		/// <param name="operand2">Array of UInt32 values to multiply by.</param>
+		/// <param name="operand1">Array of <see cref="uint"/> values to be multiplied.</param>
+		/// <param name="operand2">Array of <see cref="uint"/> values to multiply by.</param>
 		/// <param name="hashSizeInBytes">Hash size, in bytes, to truncate products at.</param>
 		/// <returns></returns>
-		protected static UInt32[] ExtendedMultiply(IReadOnlyList<UInt32> operand1, IReadOnlyList<UInt32> operand2, int hashSizeInBytes)
+		protected static uint[] ExtendedMultiply(IReadOnlyList<uint> operand1, IReadOnlyList<uint> operand2, int hashSizeInBytes)
 		{
 			Debug.Assert(hashSizeInBytes % 4 == 0);
 
 			// Temporary array to hold the results of 32-bit multiplication.
-			var product = new UInt32[hashSizeInBytes / 4];
+			var product = new uint[hashSizeInBytes / 4];
 
 			// Bottom of equation
 			for (int y = 0; y < operand2.Count; ++y)
@@ -184,7 +185,7 @@ namespace HashifyNet.Algorithms.FNV
 					continue;
 				}
 
-				UInt32 carryOver = 0;
+				uint carryOver = 0;
 
 				// Top of equation
 				for (int x = 0; x < operand1.Count; ++x)
@@ -194,19 +195,19 @@ namespace HashifyNet.Algorithms.FNV
 						break;
 					}
 
-					var productResult = product[x + y] + (((UInt64)operand2[y]) * operand1[x]) + carryOver;
-					product[x + y] = (UInt32)productResult;
+					var productResult = product[x + y] + (((ulong)operand2[y]) * operand1[x]) + carryOver;
+					product[x + y] = (uint)productResult;
 
-					carryOver = (UInt32)(productResult >> 32);
+					carryOver = (uint)(productResult >> 32);
 				}
 			}
 
 			return product;
 		}
 
-		private static IEnumerable<byte> UInt32ArrayToBytes(IEnumerable<UInt32> values)
+		private static IEnumerable<byte> UInt32ArrayToBytes(IEnumerable<uint> values)
 		{
-			return values.SelectMany(v => BitConverter.GetBytes(v));
+			return values.SelectMany(v => Endianness.GetBytesLittleEndian(v));
 		}
 	}
 }
