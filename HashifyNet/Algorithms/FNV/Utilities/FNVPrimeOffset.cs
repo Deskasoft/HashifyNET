@@ -37,13 +37,13 @@ namespace HashifyNet.Algorithms.FNV.Utilities
 {
 	internal sealed class FNVPrimeOffset
 	{
-		public IReadOnlyList<UInt32> Prime { get; }
-		public IReadOnlyList<UInt32> Offset { get; }
+		public IReadOnlyList<uint> Prime { get; }
+		public IReadOnlyList<uint> Offset { get; }
 
-		private static readonly ConcurrentDictionary<(BigInteger, int), IReadOnlyList<UInt32>> _calculatedUintArrays =
+		private static readonly ConcurrentDictionary<(BigInteger, int), IReadOnlyList<uint>> _calculatedUintArrays =
 			new ConcurrentDictionary<(BigInteger, int), IReadOnlyList<uint>>();
 
-		private FNVPrimeOffset(IReadOnlyList<UInt32> prime, IReadOnlyList<UInt32> offset)
+		private FNVPrimeOffset(IReadOnlyList<uint> prime, IReadOnlyList<uint> offset)
 		{
 			Debug.Assert(prime != null);
 			Debug.Assert(offset != null);
@@ -74,15 +74,15 @@ namespace HashifyNet.Algorithms.FNV.Utilities
 				_calculatedUintArrays.GetOrAdd((offset, bitSize), ToUInt32Array));
 		}
 
-		private static IReadOnlyList<UInt32> ToUInt32Array((BigInteger, int) tuple) =>
+		private static IReadOnlyList<uint> ToUInt32Array((BigInteger, int) tuple) =>
 			ToUInt32Array(tuple.Item1, tuple.Item2);
 
-		private static IReadOnlyList<UInt32> ToUInt32Array(BigInteger value, int bitSize)
+		private static IReadOnlyList<uint> ToUInt32Array(BigInteger value, int bitSize)
 		{
 			Debug.Assert(bitSize > 0);
 			Debug.Assert(bitSize % 32 == 0);
 
-			var uint32Values = new UInt32[bitSize / 32];
+			var uint32Values = new uint[bitSize / 32];
 			var bigIntegerBytes = value.ToByteArray();
 
 			var copyLength = uint32Values.Length * 4;
