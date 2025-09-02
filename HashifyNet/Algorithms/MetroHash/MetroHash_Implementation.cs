@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -135,16 +135,16 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				for (var currentOffset = dataOffset; currentOffset < endOffset; currentOffset += 32)
 				{
-					tempA += BitConverter.ToUInt64(dataArray, currentOffset) * _k0;
+					tempA += Endianness.ToUInt64LittleEndian(dataArray, currentOffset) * _k0;
 					tempA = RotateRight(tempA, 29) + tempC;
 
-					tempB += BitConverter.ToUInt64(dataArray, currentOffset + 8) * _k1;
+					tempB += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 8) * _k1;
 					tempB = RotateRight(tempB, 29) + tempD;
 
-					tempC += BitConverter.ToUInt64(dataArray, currentOffset + 16) * _k2;
+					tempC += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 16) * _k2;
 					tempC = RotateRight(tempC, 29) + tempA;
 
-					tempD += BitConverter.ToUInt64(dataArray, currentOffset + 24) * _k3;
+					tempD += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 24) * _k3;
 					tempD = RotateRight(tempD, 29) + tempB;
 				}
 
@@ -177,10 +177,10 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 16)
 				{
-					tempA += BitConverter.ToUInt64(remainder, remainderOffset) * _k2;
+					tempA += Endianness.ToUInt64LittleEndian(remainder, remainderOffset) * _k2;
 					tempA = RotateRight(tempA, 33) * _k3;
 
-					tempB += BitConverter.ToUInt64(remainder, remainderOffset + 8) * _k2;
+					tempB += Endianness.ToUInt64LittleEndian(remainder, remainderOffset + 8) * _k2;
 					tempB = RotateRight(tempB, 33) * _k3;
 
 					tempA ^= RotateRight((tempA * _k2) + tempB, 45) * _k1;
@@ -192,7 +192,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 8)
 				{
-					tempA += BitConverter.ToUInt64(remainder, remainderOffset) * _k2;
+					tempA += Endianness.ToUInt64LittleEndian(remainder, remainderOffset) * _k2;
 					tempA = RotateRight(tempA, 33) * _k3;
 					tempA ^= RotateRight((tempA * _k2) + tempB, 27) * _k1;
 
@@ -202,7 +202,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 4)
 				{
-					tempB += BitConverter.ToUInt32(remainder, remainderOffset) * _k2;
+					tempB += Endianness.ToUInt32LittleEndian(remainder, remainderOffset) * _k2;
 					tempB = RotateRight(tempB, 33) * _k3;
 					tempB ^= RotateRight((tempB * _k3) + tempA, 46) * _k0;
 
@@ -212,7 +212,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 2)
 				{
-					tempA += BitConverter.ToUInt16(remainder, remainderOffset) * _k2;
+					tempA += Endianness.ToUInt16LittleEndian(remainder, remainderOffset) * _k2;
 					tempA = RotateRight(tempA, 33) * _k3;
 					tempA ^= RotateRight((tempA * _k2) + tempB, 22) * _k1;
 
@@ -234,8 +234,8 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				var hashValueBytes = new byte[16];
 
-				Array.Copy(BitConverter.GetBytes(tempA), 0, hashValueBytes, 0, 8);
-				Array.Copy(BitConverter.GetBytes(tempB), 0, hashValueBytes, 8, 8);
+				Array.Copy(Endianness.GetBytesLittleEndian(tempA), 0, hashValueBytes, 0, 8);
+				Array.Copy(Endianness.GetBytesLittleEndian(tempB), 0, hashValueBytes, 8, 8);
 
 				return new HashValue(hashValueBytes, 128);
 			}
@@ -314,16 +314,16 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				for (var currentOffset = dataOffset; currentOffset < endOffset; currentOffset += 32)
 				{
-					tempA += BitConverter.ToUInt64(dataArray, currentOffset) * _k0;
+					tempA += Endianness.ToUInt64LittleEndian(dataArray, currentOffset) * _k0;
 					tempA = RotateRight(tempA, 29) + tempC;
 
-					tempB += BitConverter.ToUInt64(dataArray, currentOffset + 8) * _k1;
+					tempB += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 8) * _k1;
 					tempB = RotateRight(tempB, 29) + tempD;
 
-					tempC += BitConverter.ToUInt64(dataArray, currentOffset + 16) * _k2;
+					tempC += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 16) * _k2;
 					tempC = RotateRight(tempC, 29) + tempA;
 
-					tempD += BitConverter.ToUInt64(dataArray, currentOffset + 24) * _k3;
+					tempD += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 24) * _k3;
 					tempD = RotateRight(tempD, 29) + tempB;
 				}
 
@@ -359,10 +359,10 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 16)
 				{
-					tempB = tempA + (BitConverter.ToUInt64(remainder, remainderOffset) * _k2);
+					tempB = tempA + (Endianness.ToUInt64LittleEndian(remainder, remainderOffset) * _k2);
 					tempB = RotateRight(tempB, 29) * _k3;
 
-					tempC = tempA + (BitConverter.ToUInt64(remainder, remainderOffset + 8) * _k2);
+					tempC = tempA + (Endianness.ToUInt64LittleEndian(remainder, remainderOffset + 8) * _k2);
 					tempC = RotateRight(tempC, 29) * _k3;
 
 					tempB ^= RotateRight(tempB * _k0, 21) + tempC;
@@ -376,7 +376,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 8)
 				{
-					tempA += BitConverter.ToUInt64(remainder, remainderOffset) * _k3;
+					tempA += Endianness.ToUInt64LittleEndian(remainder, remainderOffset) * _k3;
 					tempA ^= RotateRight(tempA, 55) * _k1;
 
 					remainderOffset += 8;
@@ -385,7 +385,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 4)
 				{
-					tempA += BitConverter.ToUInt32(remainder, remainderOffset) * _k3;
+					tempA += Endianness.ToUInt32LittleEndian(remainder, remainderOffset) * _k3;
 					tempA ^= RotateRight(tempA, 26) * _k1;
 
 					remainderOffset += 4;
@@ -394,7 +394,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 2)
 				{
-					tempA += BitConverter.ToUInt16(remainder, remainderOffset) * _k3;
+					tempA += Endianness.ToUInt16LittleEndian(remainder, remainderOffset) * _k3;
 					tempA ^= RotateRight(tempA, 48) * _k1;
 
 					remainderOffset += 2;
@@ -412,7 +412,7 @@ namespace HashifyNet.Algorithms.MetroHash
 				tempA ^= RotateRight(tempA, 29);
 
 				return new HashValue(
-					BitConverter.GetBytes(tempA),
+					Endianness.GetBytesLittleEndian(tempA),
 					64);
 			}
 			private static ulong RotateRight(ulong operand, int shiftCount)
