@@ -80,7 +80,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 
 				for (var currentOffset = dataOffset; currentOffset < groupEndOffset; currentOffset += 4)
 				{
-					hashValue += BitConverter.ToUInt32(dataArray, currentOffset);
+					hashValue += Endianness.ToUInt32LittleEndian(dataArray, currentOffset);
 					hashValue *= _m;
 					hashValue ^= hashValue >> 16;
 				}
@@ -112,7 +112,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 			hashValue ^= hashValue >> 17;
 
 			return new HashValue(
-				BitConverter.GetBytes(hashValue),
+				Endianness.GetBytesLittleEndian(hashValue),
 				32);
 		}
 	}
