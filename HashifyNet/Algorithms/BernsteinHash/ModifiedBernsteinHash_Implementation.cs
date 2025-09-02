@@ -65,7 +65,7 @@ namespace HashifyNet.Algorithms.BernsteinHash
 		private class BlockTransformer
 			: BlockTransformerBase<BlockTransformer>
 		{
-			private UInt32 _hashValue;
+			private uint _hashValue;
 
 			protected override void CopyStateTo(BlockTransformer other)
 			{
@@ -92,9 +92,10 @@ namespace HashifyNet.Algorithms.BernsteinHash
 			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
 			{
 				return new HashValue(
-					BitConverter.GetBytes(_hashValue),
+					Endianness.GetBytesLittleEndian(_hashValue),
 					32);
 			}
 		}
 	}
+
 }
