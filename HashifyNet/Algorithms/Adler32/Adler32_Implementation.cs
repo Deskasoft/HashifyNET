@@ -126,15 +126,9 @@ namespace HashifyNet.Algorithms.Adler32
 				// Combine s2 and s1 into the final 32-bit checksum
 				uint finalValue = (_s2 << 16) | _s1;
 
-				// Convert to a big-endian byte array
-				var hashValueBytes = new byte[4];
-				hashValueBytes[0] = (byte)(finalValue >> 24);
-				hashValueBytes[1] = (byte)(finalValue >> 16);
-				hashValueBytes[2] = (byte)(finalValue >> 8);
-				hashValueBytes[3] = (byte)finalValue;
-
-				return new HashValue(hashValueBytes, 32);
+				return new HashValue(Endianness.GetBytesBigEndian(finalValue), 32);
 			}
 		}
 	}
+
 }
