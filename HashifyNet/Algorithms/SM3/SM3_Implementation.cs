@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -122,7 +122,7 @@ namespace HashifyNet.Algorithms.SM3
 				byte[] hash = new byte[32];
 				for (int i = 0; i < 8; i++)
 				{
-					byte[] wordBytes = ToBigEndian(_v[i]);
+					byte[] wordBytes = Endianness.GetBytesBigEndian(_v[i]);
 					Buffer.BlockCopy(wordBytes, 0, hash, i * 4, 4);
 				}
 
@@ -141,7 +141,7 @@ namespace HashifyNet.Algorithms.SM3
 
 				padded[remainderLen] = 0x80;
 
-				byte[] lengthBytes = ToBigEndian64(totalBits);
+				byte[] lengthBytes = Endianness.GetBytesBigEndian((ulong)totalBits);
 				Buffer.BlockCopy(lengthBytes, 0, padded, padded.Length - 8, 8);
 
 				return padded;
@@ -154,7 +154,7 @@ namespace HashifyNet.Algorithms.SM3
 
 				for (int i = 0; i < 16; i++)
 				{
-					W[i] = ToBigEndian(block, offset + (i * 4));
+					W[i] = Endianness.ToUInt32BigEndian(block, offset + (i * 4));
 				}
 
 				for (int j = 16; j < 68; j++)
@@ -208,39 +208,6 @@ namespace HashifyNet.Algorithms.SM3
 			private static uint P0(uint x) => x ^ RotL(x, 9) ^ RotL(x, 17);
 			private static uint P1(uint x) => x ^ RotL(x, 15) ^ RotL(x, 23);
 			private static uint RotL(uint x, int n) => (x << n) | (x >> (32 - n));
-
-			private static uint ToBigEndian(byte[] bytes, int offset)
-			{
-				return ((uint)bytes[offset] << 24) |
-					   ((uint)bytes[offset + 1] << 16) |
-					   ((uint)bytes[offset + 2] << 8) |
-					   bytes[offset + 3];
-			}
-
-			private static byte[] ToBigEndian(uint val)
-			{
-				return new byte[] {
-					(byte)(val >> 24),
-					(byte)(val >> 16),
-					(byte)(val >> 8),
-					(byte)val
-				};
-			}
-
-			private static byte[] ToBigEndian64(long val)
-			{
-				return new byte[] {
-					(byte)(val >> 56),
-					(byte)(val >> 48),
-					(byte)(val >> 40),
-					(byte)(val >> 32),
-					(byte)(val >> 24),
-					(byte)(val >> 16),
-					(byte)(val >> 8),
-					(byte)val
-				};
-			}
 		}
 	}
 }
-
