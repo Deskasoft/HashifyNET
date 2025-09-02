@@ -124,7 +124,7 @@ namespace HashifyNet.Algorithms.Tiger
 				var block = new ulong[8];
 				for (int i = 0; i < 8; i++)
 				{
-					block[i] = LoadLe64(data.Array, data.Offset + (i * 8));
+					block[i] = Endianness.ToUInt64LittleEndian(data.Array, data.Offset + (i * 8));
 				}
 
 				ProcessBlock(block);
@@ -143,24 +143,24 @@ namespace HashifyNet.Algorithms.Tiger
 
 				if (remainderCount < 56)
 				{
-					StoreLe64(totalBytesProcessed * 8, finalData, 56);
+					Endianness.ToLittleEndianBytes(totalBytesProcessed * 8, finalData, 56);
 
 					var block = new ulong[8];
 					for (int i = 0; i < 8; i++)
 					{
-						block[i] = LoadLe64(finalData, i * 8);
+						block[i] = Endianness.ToUInt64LittleEndian(finalData, i * 8);
 					}
 
 					ProcessBlock(block);
 				}
 				else
 				{
-					StoreLe64(totalBytesProcessed * 8, finalData, 120);
+					Endianness.ToLittleEndianBytes(totalBytesProcessed * 8, finalData, 120);
 
 					var block1 = new ulong[8];
 					for (int i = 0; i < 8; i++)
 					{
-						block1[i] = LoadLe64(finalData, i * 8);
+						block1[i] = Endianness.ToUInt64LittleEndian(finalData, i * 8);
 					}
 
 					ProcessBlock(block1);
@@ -168,16 +168,13 @@ namespace HashifyNet.Algorithms.Tiger
 					var block2 = new ulong[8];
 					for (int i = 0; i < 8; i++)
 					{
-						block2[i] = LoadLe64(finalData, 64 + (i * 8));
+						block2[i] = Endianness.ToUInt64LittleEndian(finalData, 64 + (i * 8));
 					}
 
 					ProcessBlock(block2);
 				}
 
-				var fullHash = new byte[24];
-				StoreLe64(_a, fullHash, 0);
-				StoreLe64(_b, fullHash, 8);
-				StoreLe64(_c, fullHash, 16);
+				var fullHash = Endianness.GetBytesLittleEndian(_a, _b, _c);
 
 				int bytesNeeded = _hashSizeInBits / 8;
 				if (bytesNeeded < 24)
@@ -259,30 +256,6 @@ namespace HashifyNet.Algorithms.Tiger
 				x[5] ^= x[4];
 				x[6] += x[5];
 				x[7] -= x[6] ^ 0x0123456789ABCDEFUL;
-			}
-
-			private static ulong LoadLe64(byte[] buf, int offset)
-			{
-				return buf[offset] |
-					   (((ulong)buf[offset + 1]) << 8) |
-					   (((ulong)buf[offset + 2]) << 16) |
-					   (((ulong)buf[offset + 3]) << 24) |
-					   (((ulong)buf[offset + 4]) << 32) |
-					   (((ulong)buf[offset + 5]) << 40) |
-					   (((ulong)buf[offset + 6]) << 48) |
-					   (((ulong)buf[offset + 7]) << 56);
-			}
-
-			private static void StoreLe64(ulong value, byte[] buf, int offset)
-			{
-				buf[offset] = (byte)(value & 0xFF);
-				buf[offset + 1] = (byte)((value >> 8) & 0xFF);
-				buf[offset + 2] = (byte)((value >> 16) & 0xFF);
-				buf[offset + 3] = (byte)((value >> 24) & 0xFF);
-				buf[offset + 4] = (byte)((value >> 32) & 0xFF);
-				buf[offset + 5] = (byte)((value >> 40) & 0xFF);
-				buf[offset + 6] = (byte)((value >> 48) & 0xFF);
-				buf[offset + 7] = (byte)((value >> 56) & 0xFF);
 			}
 
 			private static class S
@@ -558,5 +531,4 @@ namespace HashifyNet.Algorithms.Tiger
 			}
 		}
 	}
-
 }
