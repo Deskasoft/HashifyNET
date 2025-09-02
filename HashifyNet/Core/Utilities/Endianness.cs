@@ -29,6 +29,7 @@
 
 using System;
 using System.Buffers.Binary;
+using System.Runtime.CompilerServices;
 
 namespace HashifyNet.Core.Utilities
 {
@@ -50,6 +51,7 @@ namespace HashifyNet.Core.Utilities
 		/// <param name="value">The 32-bit unsigned integer to convert.</param>
 		/// <param name="buffer">The byte array to which the little-endian representation will be written.</param>
 		/// <param name="offset">The zero-based index in the buffer at which to begin writing the bytes.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void ToLittleEndianBytes(uint value, byte[] buffer, int offset)
 		{
 			buffer[offset] = (byte)value;
@@ -68,6 +70,7 @@ namespace HashifyNet.Core.Utilities
 		/// <param name="value">The 64-bit unsigned integer to convert.</param>
 		/// <param name="buffer">The byte array to which the little-endian representation of <paramref name="value"/> will be written.</param>
 		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin writing the bytes.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void ToLittleEndianBytes(ulong value, byte[] buffer, int offset)
 		{
 			buffer[offset] = (byte)value;
@@ -80,6 +83,15 @@ namespace HashifyNet.Core.Utilities
 			buffer[offset + 7] = (byte)(value >> 56);
 		}
 
+		/// <summary>
+		/// Converts the specified 64-bit unsigned integer to little-endian format.
+		/// </summary>
+		/// <remarks>This method ensures that the returned value is in little-endian format, regardless of the 
+		/// system's endianness. It is optimized for performance and uses aggressive inlining.</remarks>
+		/// <param name="value">The 64-bit unsigned integer to convert.</param>
+		/// <returns>The value in little-endian format. If the system architecture is already little-endian,  the original value is
+		/// returned unchanged. Otherwise, the byte order is reversed.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ulong ToLittleEndian(ulong value)
 		{
 			// If the system architecture is already little-endian, the value doesn't need to be changed.
@@ -101,6 +113,7 @@ namespace HashifyNet.Core.Utilities
 		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin reading the 8 bytes.</param>
 		/// <returns>A 64-bit unsigned integer representing the little-endian interpretation of the 8 bytes starting at <paramref
 		/// name="offset"/>.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ulong ToUInt64LittleEndian(byte[] buffer, int offset)
 		{
 			return buffer[offset] |
@@ -124,6 +137,7 @@ namespace HashifyNet.Core.Utilities
 		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin reading the bytes.</param>
 		/// <returns>A 64-bit unsigned integer constructed from the 8 bytes starting at <paramref name="offset"/> in little-endian
 		/// order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ulong ToUInt64LittleEndian(ReadOnlySpan<byte> buffer, int offset)
 		{
 			return buffer[offset] |
@@ -144,6 +158,7 @@ namespace HashifyNet.Core.Utilities
 		/// name="offset"/>.</param>
 		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin reading the four bytes.</param>
 		/// <returns>A 32-bit unsigned integer representing the value of the four bytes in little-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static uint ToUInt32LittleEndian(byte[] buffer, int offset)
 		{
 			return buffer[offset] |
@@ -161,12 +176,39 @@ namespace HashifyNet.Core.Utilities
 		/// <param name="offset">The zero-based index in the buffer at which to begin reading the bytes.</param>
 		/// <returns>A 32-bit unsigned integer representing the value of the four bytes starting at the specified offset, interpreted
 		/// as little-endian.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static uint ToUInt32LittleEndian(ReadOnlySpan<byte> buffer, int offset)
 		{
 			return buffer[offset] |
 				   ((uint)buffer[offset + 1] << 8) |
 				   ((uint)buffer[offset + 2] << 16) |
 				   ((uint)buffer[offset + 3] << 24);
+		}
+
+		/// <summary>
+		/// Converts the specified 64-bit unsigned integer to an array of bytes in little-endian order.
+		/// </summary>
+		/// <param name="value">The 64-bit unsigned integer to convert.</param>
+		/// <returns>An array of 8 bytes representing the <paramref name="value"/> in little-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesLittleEndian(ulong value)
+		{
+			byte[] bytes = new byte[8];
+			ToLittleEndianBytes(value, bytes, 0);
+			return bytes;
+		}
+
+		/// <summary>
+		/// Converts the specified 32-bit unsigned integer to a byte array in little-endian format.
+		/// </summary>
+		/// <param name="value">The 32-bit unsigned integer to convert.</param>
+		/// <returns>A byte array containing the little-endian representation of the specified value.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesLittleEndian(uint value)
+		{
+			byte[] bytes = new byte[4];
+			ToLittleEndianBytes(value, bytes, 0);
+			return bytes;
 		}
 	}
 }
