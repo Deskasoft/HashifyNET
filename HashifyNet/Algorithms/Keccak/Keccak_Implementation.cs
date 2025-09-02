@@ -136,7 +136,7 @@ namespace HashifyNet.Algorithms.Keccak
 					{
 						if (byteIndex < _rateInBytes)
 						{
-							_state[x, y] ^= BitConverter.ToUInt64(data, offset + byteIndex);
+							_state[x, y] ^= Endianness.ToUInt64LittleEndian(data, offset + byteIndex);
 							byteIndex += 8;
 						}
 						else
@@ -168,7 +168,7 @@ namespace HashifyNet.Algorithms.Keccak
 						{
 							if (stateByteIndex < _rateInBytes)
 							{
-								byte[] laneBytes = BitConverter.GetBytes(_state[x, y]);
+								byte[] laneBytes = Endianness.GetBytesLittleEndian(_state[x, y]);
 								Buffer.BlockCopy(laneBytes, 0, stateBytes, stateByteIndex, 8);
 								stateByteIndex += 8;
 							}
@@ -261,5 +261,4 @@ namespace HashifyNet.Algorithms.Keccak
 			#endregion
 		}
 	}
-
 }
