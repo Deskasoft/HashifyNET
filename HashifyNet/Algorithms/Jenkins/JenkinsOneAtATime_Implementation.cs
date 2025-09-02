@@ -101,9 +101,10 @@ namespace HashifyNet.Algorithms.Jenkins
 				finalHashValue += finalHashValue << 15;
 
 				return new HashValue(
-					BitConverter.GetBytes(finalHashValue),
+					Endianness.GetBytesLittleEndian(finalHashValue),
 					32);
 			}
 		}
 	}
+
 }
