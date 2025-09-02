@@ -99,9 +99,10 @@ namespace HashifyNet.Algorithms.ELF64
 			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
 			{
 				return new HashValue(
-					BitConverter.GetBytes(_hashValue),
+					Endianness.GetBytesLittleEndian(_hashValue),
 					32);
 			}
 		}
 	}
+
 }
