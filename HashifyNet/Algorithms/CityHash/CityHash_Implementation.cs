@@ -104,7 +104,7 @@ namespace HashifyNet.Algorithms.CityHash
 
 			var dataCount = data.Count;
 
-			UInt32 hashValue;
+			uint hashValue;
 
 			if (dataCount > 24)
 			{
@@ -132,7 +132,7 @@ namespace HashifyNet.Algorithms.CityHash
 		}
 
 
-		private UInt32 Hash32Len0to4(ArraySegment<byte> data)
+		private uint Hash32Len0to4(ArraySegment<byte> data)
 		{
 			var dataArray = data.Array;
 			var dataOffset = data.Offset;
@@ -140,8 +140,8 @@ namespace HashifyNet.Algorithms.CityHash
 
 			var endOffset = dataOffset + dataCount;
 
-			UInt32 b = 0;
-			UInt32 c = 9;
+			uint b = 0;
+			uint c = 9;
 
 			for (var currentOffset = dataOffset; currentOffset < endOffset; currentOffset += 1)
 			{
@@ -149,20 +149,20 @@ namespace HashifyNet.Algorithms.CityHash
 				c ^= b;
 			}
 
-			return Mix(Mur(b, Mur((UInt32)dataCount, c)));
+			return Mix(Mur(b, Mur((uint)dataCount, c)));
 		}
 
-		private UInt32 Hash32Len5to12(ArraySegment<byte> data)
+		private uint Hash32Len5to12(ArraySegment<byte> data)
 		{
 			var dataArray = data.Array;
 			var dataOffset = data.Offset;
 			var dataCount = data.Count;
 
-			UInt32 a = (UInt32)dataCount;
-			UInt32 b = (UInt32)dataCount * 5;
+			uint a = (uint)dataCount;
+			uint b = (uint)dataCount * 5;
 
-			UInt32 c = 9;
-			UInt32 d = b;
+			uint c = 9;
+			uint d = b;
 
 			a += BitConverter.ToUInt32(dataArray, dataOffset);
 			b += BitConverter.ToUInt32(dataArray, dataOffset + dataCount - 4);
@@ -171,25 +171,25 @@ namespace HashifyNet.Algorithms.CityHash
 			return Mix(Mur(c, Mur(b, Mur(a, d))));
 		}
 
-		private UInt32 Hash32Len13to24(ArraySegment<byte> data)
+		private uint Hash32Len13to24(ArraySegment<byte> data)
 		{
 			var dataArray = data.Array;
 			var dataOffset = data.Offset;
 			var dataCount = data.Count;
 
 
-			UInt32 a = BitConverter.ToUInt32(dataArray, dataOffset + (dataCount >> 1) - 4);
-			UInt32 b = BitConverter.ToUInt32(dataArray, dataOffset + 4);
-			UInt32 c = BitConverter.ToUInt32(dataArray, dataOffset + dataCount - 8);
-			UInt32 d = BitConverter.ToUInt32(dataArray, dataOffset + (dataCount >> 1));
-			UInt32 e = BitConverter.ToUInt32(dataArray, dataOffset);
-			UInt32 f = BitConverter.ToUInt32(dataArray, dataOffset + dataCount - 4);
-			UInt32 h = (UInt32)dataCount;
+			uint a = BitConverter.ToUInt32(dataArray, dataOffset + (dataCount >> 1) - 4);
+			uint b = BitConverter.ToUInt32(dataArray, dataOffset + 4);
+			uint c = BitConverter.ToUInt32(dataArray, dataOffset + dataCount - 8);
+			uint d = BitConverter.ToUInt32(dataArray, dataOffset + (dataCount >> 1));
+			uint e = BitConverter.ToUInt32(dataArray, dataOffset);
+			uint f = BitConverter.ToUInt32(dataArray, dataOffset + dataCount - 4);
+			uint h = (uint)dataCount;
 
 			return Mix(Mur(f, Mur(e, Mur(d, Mur(c, Mur(b, Mur(a, h)))))));
 		}
 
-		private UInt32 Hash32Len25Plus(ArraySegment<byte> data, CancellationToken cancellationToken)
+		private uint Hash32Len25Plus(ArraySegment<byte> data, CancellationToken cancellationToken)
 		{
 
 			var dataArray = data.Array;
@@ -201,15 +201,15 @@ namespace HashifyNet.Algorithms.CityHash
 			cancellationToken.ThrowIfCancellationRequested();
 
 			// dataCount > 24
-			UInt32 h = (UInt32)dataCount;
-			UInt32 g = (UInt32)dataCount * C1;
-			UInt32 f = g;
+			uint h = (uint)dataCount;
+			uint g = (uint)dataCount * C1;
+			uint f = g;
 			{
-				UInt32 a0 = RotateRight(BitConverter.ToUInt32(dataArray, endOffset - 4) * C1, 17) * C2;
-				UInt32 a1 = RotateRight(BitConverter.ToUInt32(dataArray, endOffset - 8) * C1, 17) * C2;
-				UInt32 a2 = RotateRight(BitConverter.ToUInt32(dataArray, endOffset - 16) * C1, 17) * C2;
-				UInt32 a3 = RotateRight(BitConverter.ToUInt32(dataArray, endOffset - 12) * C1, 17) * C2;
-				UInt32 a4 = RotateRight(BitConverter.ToUInt32(dataArray, endOffset - 20) * C1, 17) * C2;
+				uint a0 = RotateRight(BitConverter.ToUInt32(dataArray, endOffset - 4) * C1, 17) * C2;
+				uint a1 = RotateRight(BitConverter.ToUInt32(dataArray, endOffset - 8) * C1, 17) * C2;
+				uint a2 = RotateRight(BitConverter.ToUInt32(dataArray, endOffset - 16) * C1, 17) * C2;
+				uint a3 = RotateRight(BitConverter.ToUInt32(dataArray, endOffset - 12) * C1, 17) * C2;
+				uint a4 = RotateRight(BitConverter.ToUInt32(dataArray, endOffset - 20) * C1, 17) * C2;
 
 				h ^= a0;
 				h = RotateRight(h, 19);
@@ -238,11 +238,11 @@ namespace HashifyNet.Algorithms.CityHash
 			{
 				cancellationToken.ThrowIfCancellationRequested();
 
-				UInt32 a0 = RotateRight(BitConverter.ToUInt32(dataArray, groupOffset + 0) * C1, 17) * C2;
-				UInt32 a1 = BitConverter.ToUInt32(dataArray, groupOffset + 4);
-				UInt32 a2 = RotateRight(BitConverter.ToUInt32(dataArray, groupOffset + 8) * C1, 17) * C2;
-				UInt32 a3 = RotateRight(BitConverter.ToUInt32(dataArray, groupOffset + 12) * C1, 17) * C2;
-				UInt32 a4 = BitConverter.ToUInt32(dataArray, groupOffset + 16);
+				uint a0 = RotateRight(BitConverter.ToUInt32(dataArray, groupOffset + 0) * C1, 17) * C2;
+				uint a1 = BitConverter.ToUInt32(dataArray, groupOffset + 4);
+				uint a2 = RotateRight(BitConverter.ToUInt32(dataArray, groupOffset + 8) * C1, 17) * C2;
+				uint a3 = RotateRight(BitConverter.ToUInt32(dataArray, groupOffset + 12) * C1, 17) * C2;
+				uint a4 = BitConverter.ToUInt32(dataArray, groupOffset + 16);
 
 				h ^= a0;
 				h = RotateRight(h, 18);
@@ -297,7 +297,7 @@ namespace HashifyNet.Algorithms.CityHash
 			cancellationToken.ThrowIfCancellationRequested();
 
 			var dataCount = data.Count;
-			UInt64 hashValue;
+			ulong hashValue;
 
 			if (dataCount > 64)
 			{
@@ -323,25 +323,25 @@ namespace HashifyNet.Algorithms.CityHash
 				BitConverter.GetBytes(hashValue),
 				64);
 		}
-		private UInt64 Hash64Len16(UInt64 u, UInt64 v)
+		private ulong Hash64Len16(ulong u, ulong v)
 		{
 			return Hash128to64(
 				new UInt128(v, u));
 		}
 
-		private static UInt64 Hash64Len16(UInt64 u, UInt64 v, UInt64 mul)
+		private static ulong Hash64Len16(ulong u, ulong v, ulong mul)
 		{
-			UInt64 a = (u ^ v) * mul;
+			ulong a = (u ^ v) * mul;
 			a ^= a >> 47;
 
-			UInt64 b = (v ^ a) * mul;
+			ulong b = (v ^ a) * mul;
 			b ^= b >> 47;
 			b *= mul;
 
 			return b;
 		}
 
-		private UInt64 Hash64Len0to16(ArraySegment<byte> data)
+		private ulong Hash64Len0to16(ArraySegment<byte> data)
 		{
 			var dataArray = data.Array;
 			var dataOffset = data.Offset;
@@ -351,20 +351,20 @@ namespace HashifyNet.Algorithms.CityHash
 
 			if (dataCount >= 8)
 			{
-				UInt64 mul = K2 + ((UInt64)dataCount * 2);
-				UInt64 a = BitConverter.ToUInt64(dataArray, dataOffset) + K2;
-				UInt64 b = BitConverter.ToUInt64(dataArray, endOffset - 8);
-				UInt64 c = (RotateRight(b, 37) * mul) + a;
-				UInt64 d = (RotateRight(a, 25) + b) * mul;
+				ulong mul = K2 + ((ulong)dataCount * 2);
+				ulong a = BitConverter.ToUInt64(dataArray, dataOffset) + K2;
+				ulong b = BitConverter.ToUInt64(dataArray, endOffset - 8);
+				ulong c = (RotateRight(b, 37) * mul) + a;
+				ulong d = (RotateRight(a, 25) + b) * mul;
 
 				return Hash64Len16(c, d, mul);
 			}
 
 			if (dataCount >= 4)
 			{
-				UInt64 mul = K2 + ((UInt64)dataCount * 2);
-				UInt64 a = BitConverter.ToUInt32(dataArray, dataOffset);
-				return Hash64Len16((UInt64)dataCount + (a << 3), BitConverter.ToUInt32(dataArray, endOffset - 4), mul);
+				ulong mul = K2 + ((ulong)dataCount * 2);
+				ulong a = BitConverter.ToUInt32(dataArray, dataOffset);
+				return Hash64Len16((ulong)dataCount + (a << 3), BitConverter.ToUInt32(dataArray, endOffset - 4), mul);
 			}
 
 			if (dataCount > 0)
@@ -373,8 +373,8 @@ namespace HashifyNet.Algorithms.CityHash
 				byte b = dataArray[dataOffset + (dataCount >> 1)];
 				byte c = dataArray[endOffset - 1];
 
-				UInt32 y = a + ((UInt32)b << 8);
-				UInt32 z = (UInt32)dataCount + ((UInt32)c << 2);
+				uint y = a + ((uint)b << 8);
+				uint z = (uint)dataCount + ((uint)c << 2);
 
 				return Mix((y * K2) ^ (z * K0)) * K2;
 			}
@@ -384,7 +384,7 @@ namespace HashifyNet.Algorithms.CityHash
 
 		// This probably works well for 16-byte strings as well, but it may be overkill
 		// in that case.
-		private static UInt64 Hash64Len17to32(ArraySegment<byte> data)
+		private static ulong Hash64Len17to32(ArraySegment<byte> data)
 		{
 			var dataArray = data.Array;
 			var dataOffset = data.Offset;
@@ -392,11 +392,11 @@ namespace HashifyNet.Algorithms.CityHash
 
 			var endOffset = dataOffset + dataCount;
 
-			UInt64 mul = K2 + ((UInt64)dataCount * 2);
-			UInt64 a = BitConverter.ToUInt64(dataArray, dataOffset) * K1;
-			UInt64 b = BitConverter.ToUInt64(dataArray, dataOffset + 8);
-			UInt64 c = BitConverter.ToUInt64(dataArray, endOffset - 8) * mul;
-			UInt64 d = BitConverter.ToUInt64(dataArray, endOffset - 16) * K2;
+			ulong mul = K2 + ((ulong)dataCount * 2);
+			ulong a = BitConverter.ToUInt64(dataArray, dataOffset) * K1;
+			ulong b = BitConverter.ToUInt64(dataArray, dataOffset + 8);
+			ulong c = BitConverter.ToUInt64(dataArray, endOffset - 8) * mul;
+			ulong d = BitConverter.ToUInt64(dataArray, endOffset - 16) * K2;
 
 			return Hash64Len16(
 				RotateRight(a + b, 43) +
@@ -408,12 +408,12 @@ namespace HashifyNet.Algorithms.CityHash
 		// Return a 16-byte hash for 48 bytes.  Quick and dirty.
 		// Callers do best to use "random-looking" values for a and b.
 		private UInt128 WeakHashLen32WithSeeds(
-			UInt64 w, UInt64 x, UInt64 y, UInt64 z, UInt64 a, UInt64 b)
+			ulong w, ulong x, ulong y, ulong z, ulong a, ulong b)
 		{
 			a += w;
 			b = RotateRight(b + a + z, 21);
 
-			UInt64 c = a;
+			ulong c = a;
 			a += x;
 			a += y;
 
@@ -423,7 +423,7 @@ namespace HashifyNet.Algorithms.CityHash
 		}
 
 		// Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
-		private UInt128 WeakHashLen32WithSeeds(byte[] data, int startIndex, UInt64 a, UInt64 b)
+		private UInt128 WeakHashLen32WithSeeds(byte[] data, int startIndex, ulong a, ulong b)
 		{
 			return WeakHashLen32WithSeeds(
 				BitConverter.ToUInt64(data, startIndex),
@@ -435,7 +435,7 @@ namespace HashifyNet.Algorithms.CityHash
 		}
 
 		// Return an 8-byte hash for 33 to 64 bytes.
-		private UInt64 Hash64Len33to64(ArraySegment<byte> data)
+		private ulong Hash64Len33to64(ArraySegment<byte> data)
 		{
 			var dataArray = data.Array;
 			var dataOffset = data.Offset;
@@ -443,29 +443,29 @@ namespace HashifyNet.Algorithms.CityHash
 
 			var endOffset = dataOffset + dataCount;
 
-			UInt64 mul = K2 + ((UInt64)dataCount * 2);
-			UInt64 a = BitConverter.ToUInt64(dataArray, dataOffset) * K2;
-			UInt64 b = BitConverter.ToUInt64(dataArray, dataOffset + 8);
-			UInt64 c = BitConverter.ToUInt64(dataArray, endOffset - 24);
-			UInt64 d = BitConverter.ToUInt64(dataArray, endOffset - 32);
-			UInt64 e = BitConverter.ToUInt64(dataArray, dataOffset + 16) * K2;
-			UInt64 f = BitConverter.ToUInt64(dataArray, dataOffset + 24) * 9;
-			UInt64 g = BitConverter.ToUInt64(dataArray, endOffset - 8);
-			UInt64 h = BitConverter.ToUInt64(dataArray, endOffset - 16) * mul;
+			ulong mul = K2 + ((ulong)dataCount * 2);
+			ulong a = BitConverter.ToUInt64(dataArray, dataOffset) * K2;
+			ulong b = BitConverter.ToUInt64(dataArray, dataOffset + 8);
+			ulong c = BitConverter.ToUInt64(dataArray, endOffset - 24);
+			ulong d = BitConverter.ToUInt64(dataArray, endOffset - 32);
+			ulong e = BitConverter.ToUInt64(dataArray, dataOffset + 16) * K2;
+			ulong f = BitConverter.ToUInt64(dataArray, dataOffset + 24) * 9;
+			ulong g = BitConverter.ToUInt64(dataArray, endOffset - 8);
+			ulong h = BitConverter.ToUInt64(dataArray, endOffset - 16) * mul;
 
-			UInt64 u = RotateRight(a + g, 43) + ((RotateRight(b, 30) + c) * 9);
-			UInt64 v = ((a + g) ^ d) + f + 1;
-			UInt64 w = ReverseByteOrder((u + v) * mul) + h;
-			UInt64 x = RotateRight(e + f, 42) + c;
-			UInt64 y = (ReverseByteOrder((v + w) * mul) + g) * mul;
-			UInt64 z = e + f + c;
+			ulong u = RotateRight(a + g, 43) + ((RotateRight(b, 30) + c) * 9);
+			ulong v = ((a + g) ^ d) + f + 1;
+			ulong w = ReverseByteOrder((u + v) * mul) + h;
+			ulong x = RotateRight(e + f, 42) + c;
+			ulong y = (ReverseByteOrder((v + w) * mul) + g) * mul;
+			ulong z = e + f + c;
 
 			a = ReverseByteOrder(((x + z) * mul) + y) + b;
 			b = Mix(((z + a) * mul) + d + h) * mul;
 			return b + x;
 		}
 
-		private UInt64 Hash64Len65Plus(ArraySegment<byte> data, CancellationToken cancellationToken)
+		private ulong Hash64Len65Plus(ArraySegment<byte> data, CancellationToken cancellationToken)
 		{
 			var dataArray = data.Array;
 			var dataOffset = data.Offset;
@@ -475,13 +475,13 @@ namespace HashifyNet.Algorithms.CityHash
 
 			// For strings over 64 bytes we hash the end first, and then as we
 			// loop we keep 56 bytes of state: v, w, x, y, and z.
-			UInt64 x = BitConverter.ToUInt64(dataArray, endOffset - 40);
-			UInt64 y = BitConverter.ToUInt64(dataArray, endOffset - 16) + BitConverter.ToUInt64(dataArray, endOffset - 56);
-			UInt64 z = Hash64Len16(
-				BitConverter.ToUInt64(dataArray, endOffset - 48) + (UInt64)dataCount,
+			ulong x = BitConverter.ToUInt64(dataArray, endOffset - 40);
+			ulong y = BitConverter.ToUInt64(dataArray, endOffset - 16) + BitConverter.ToUInt64(dataArray, endOffset - 56);
+			ulong z = Hash64Len16(
+				BitConverter.ToUInt64(dataArray, endOffset - 48) + (ulong)dataCount,
 				BitConverter.ToUInt64(dataArray, endOffset - 24));
 
-			UInt128 v = WeakHashLen32WithSeeds(dataArray, endOffset - 64, (UInt64)dataCount, z);
+			UInt128 v = WeakHashLen32WithSeeds(dataArray, endOffset - 64, (ulong)dataCount, z);
 			UInt128 w = WeakHashLen32WithSeeds(dataArray, endOffset - 32, y + K1, x);
 
 			x = (x * K1) + BitConverter.ToUInt64(dataArray, 0);
@@ -501,7 +501,7 @@ namespace HashifyNet.Algorithms.CityHash
 				v = WeakHashLen32WithSeeds(dataArray, currentOffset, v.GetUpper() * K1, x + w.GetLower());
 				w = WeakHashLen32WithSeeds(dataArray, currentOffset + 32, z + w.GetUpper(), y + BitConverter.ToUInt64(dataArray, currentOffset + 16));
 
-				UInt64 temp = x;
+				ulong temp = x;
 				x = z;
 				z = temp;
 			}
@@ -572,11 +572,11 @@ namespace HashifyNet.Algorithms.CityHash
 
 			UInt128 w = new UInt128(
 				RotateRight(seed.GetLower() + BitConverter.ToUInt64(dataArray, dataOffset + 88), 53) * K1,
-				(RotateRight(seed.GetUpper() + ((UInt64)dataCount * K1), 35) * K1) + seed.GetLower());
+				(RotateRight(seed.GetUpper() + ((ulong)dataCount * K1), 35) * K1) + seed.GetLower());
 
-			UInt64 x = seed.GetLower();
-			UInt64 y = seed.GetUpper();
-			UInt64 z = (UInt64)dataCount * K1;
+			ulong x = seed.GetLower();
+			ulong y = seed.GetUpper();
+			ulong z = (ulong)dataCount * K1;
 
 			// This is the same inner loop as CityHash64()
 			int lastGroupEndOffset;
@@ -596,7 +596,7 @@ namespace HashifyNet.Algorithms.CityHash
 					w = WeakHashLen32WithSeeds(dataArray, groupCurrentOffset + 32, z + w.GetUpper(), y + BitConverter.ToUInt64(dataArray, groupCurrentOffset + 16));
 
 					{
-						UInt64 temp = z;
+						ulong temp = z;
 						z = x;
 						x = temp;
 					}
@@ -610,7 +610,7 @@ namespace HashifyNet.Algorithms.CityHash
 					w = WeakHashLen32WithSeeds(dataArray, groupCurrentOffset + 96, z + w.GetUpper(), y + BitConverter.ToUInt64(dataArray, groupCurrentOffset + 80));
 
 					{
-						UInt64 temp = z;
+						ulong temp = z;
 						z = x;
 						x = temp;
 					}
@@ -667,10 +667,10 @@ namespace HashifyNet.Algorithms.CityHash
 
 			var endOffset = dataOffset + dataCount;
 
-			UInt64 a = seed.GetLower();
-			UInt64 b = seed.GetUpper();
-			UInt64 c;
-			UInt64 d;
+			ulong a = seed.GetLower();
+			ulong b = seed.GetUpper();
+			ulong c;
+			ulong d;
 
 			if (dataCount <= 16)
 			{
@@ -684,7 +684,7 @@ namespace HashifyNet.Algorithms.CityHash
 			{
 				// len > 16
 				c = Hash64Len16(BitConverter.ToUInt64(dataArray, endOffset - 8) + K1, a);
-				d = Hash64Len16(b + (UInt64)dataCount, c + BitConverter.ToUInt64(dataArray, endOffset - 16));
+				d = Hash64Len16(b + (ulong)dataCount, c + BitConverter.ToUInt64(dataArray, endOffset - 16));
 				a += d;
 
 				var groupEndOffset = dataOffset + dataCount - 16;
@@ -709,7 +709,7 @@ namespace HashifyNet.Algorithms.CityHash
 
 		#region Shared Utilities
 
-		private static UInt32 Mix(UInt32 h)
+		private static uint Mix(uint h)
 		{
 			h ^= h >> 16;
 			h *= 0x85ebca6b;
@@ -719,10 +719,10 @@ namespace HashifyNet.Algorithms.CityHash
 			return h;
 		}
 
-		private static UInt64 Mix(UInt64 value) =>
+		private static ulong Mix(ulong value) =>
 			value ^ (value >> 47);
 
-		private UInt32 Mur(UInt32 a, UInt32 h)
+		private uint Mur(uint a, uint h)
 		{
 			// Helper from Murmur3 for combining two 32-bit values.
 			a *= C1;
@@ -733,29 +733,29 @@ namespace HashifyNet.Algorithms.CityHash
 			return (h * 5) + 0xe6546b64;
 		}
 
-		private static void Permute3(ref UInt32 a, ref UInt32 b, ref UInt32 c)
+		private static void Permute3(ref uint a, ref uint b, ref uint c)
 		{
-			UInt32 temp = a;
+			uint temp = a;
 			a = c;
 			c = b;
 			b = temp;
 		}
 
-		private static UInt64 Hash128to64(UInt128 x)
+		private static ulong Hash128to64(UInt128 x)
 		{
-			const UInt64 kMul = 0x9ddfea08eb382d69;
+			const ulong kMul = 0x9ddfea08eb382d69;
 
-			UInt64 a = (x.GetLower() ^ x.GetUpper()) * kMul;
+			ulong a = (x.GetLower() ^ x.GetUpper()) * kMul;
 			a ^= a >> 47;
 
-			UInt64 b = (x.GetUpper() ^ a) * kMul;
+			ulong b = (x.GetUpper() ^ a) * kMul;
 			b ^= b >> 47;
 			b *= kMul;
 
 			return b;
 		}
 
-		private static UInt32 RotateRight(UInt32 operand, int shiftCount)
+		private static uint RotateRight(uint operand, int shiftCount)
 		{
 			shiftCount &= 0x1f;
 
@@ -764,7 +764,7 @@ namespace HashifyNet.Algorithms.CityHash
 				(operand << (32 - shiftCount));
 		}
 
-		private static UInt64 RotateRight(UInt64 operand, int shiftCount)
+		private static ulong RotateRight(ulong operand, int shiftCount)
 		{
 			shiftCount &= 0x3f;
 
@@ -773,7 +773,7 @@ namespace HashifyNet.Algorithms.CityHash
 				(operand << (64 - shiftCount));
 		}
 
-		private static UInt32 ReverseByteOrder(UInt32 operand)
+		private static uint ReverseByteOrder(uint operand)
 		{
 			return
 				(operand >> 24) |
@@ -782,7 +782,7 @@ namespace HashifyNet.Algorithms.CityHash
 				(operand << 24);
 		}
 
-		private static UInt64 ReverseByteOrder(UInt64 operand)
+		private static ulong ReverseByteOrder(ulong operand)
 		{
 			return
 				(operand >> 56) |
@@ -796,5 +796,4 @@ namespace HashifyNet.Algorithms.CityHash
 		}
 		#endregion
 	}
-
 }
