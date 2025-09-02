@@ -512,6 +512,131 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
+		/// Converts an array of 64-bit unsigned integers to their little-endian byte representation.
+		/// </summary>
+		/// <remarks>This method ensures that each <see cref="ulong"/> value is converted to its little-endian byte
+		/// order, regardless of the system's endianness.</remarks>
+		/// <param name="values">An array of <see cref="ulong"/> values to convert. Each value is represented as 8 bytes in the resulting array.</param>
+		/// <returns>A byte array containing the little-endian representation of the input values. The length of the array is 
+		/// <c>values.Length * sizeof(ulong)</c>.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesLittleEndian(params ulong[] values)
+		{
+			byte[] bytes = new byte[values.Length * sizeof(ulong)];
+			for (int i = 0; i < values.Length; ++i)
+			{
+				ToLittleEndianBytes(values[i], bytes, i * sizeof(ulong));
+			}
+
+			return bytes;
+		}
+
+		/// <summary>
+		/// Converts an array of unsigned 32-bit integers to their little-endian byte representation.
+		/// </summary>
+		/// <remarks>Each integer in the input array is converted to its little-endian byte representation and stored
+		/// sequentially in the resulting byte array. The method ensures that the byte order is consistent with little-endian
+		/// format, regardless of the system's endianness.</remarks>
+		/// <param name="values">An array of unsigned 32-bit integers to convert. Cannot be null.</param>
+		/// <returns>A byte array containing the little-endian representation of the input integers. The length of the returned array
+		/// is <c>values.Length * sizeof(uint)</c>.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesLittleEndian(params uint[] values)
+		{
+			byte[] bytes = new byte[values.Length * sizeof(uint)];
+			for (int i = 0; i < values.Length; ++i)
+			{
+				ToLittleEndianBytes(values[i], bytes, i * sizeof(uint));
+			}
+
+			return bytes;
+		}
+
+		/// <summary>
+		/// Converts an array of 16-bit unsigned integers to a byte array in little-endian order.
+		/// </summary>
+		/// <remarks>Each <see cref="ushort"/> value in the input array is converted to its little-endian byte
+		/// representation and stored sequentially in the resulting byte array. The method ensures that the byte order is
+		/// consistent with little-endian systems, regardless of the platform's native endianness.</remarks>
+		/// <param name="values">An array of <see cref="ushort"/> values to convert to little-endian byte representation.</param>
+		/// <returns>A byte array containing the little-endian representation of the input values. The length of the array is
+		/// <c>values.Length * 2</c>.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesLittleEndian(params ushort[] values)
+		{
+			byte[] bytes = new byte[values.Length * sizeof(ushort)];
+			for (int i = 0; i < values.Length; ++i)
+			{
+				ToLittleEndianBytes(values[i], bytes, i * sizeof(ushort));
+			}
+
+			return bytes;
+		}
+
+		/// <summary>
+		/// Converts an array of 64-bit unsigned integers to their big-endian byte representation.
+		/// </summary>
+		/// <remarks>Each <see cref="ulong"/> value in the input array is converted to an 8-byte big-endian sequence
+		/// and written sequentially into the returned byte array. The caller is responsible for ensuring that the input array
+		/// is not null.</remarks>
+		/// <param name="values">An array of <see cref="ulong"/> values to convert. Cannot be null.</param>
+		/// <returns>A byte array containing the big-endian representation of the input values. The length of the returned array is
+		/// equal to <c>values.Length * sizeof(ulong)</c>.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesBigEndian(params ulong[] values)
+		{
+			byte[] bytes = new byte[values.Length * sizeof(ulong)];
+			for (int i = 0; i < values.Length; ++i)
+			{
+				ToBigEndianBytes(values[i], bytes, i * sizeof(ulong));
+			}
+
+			return bytes;
+		}
+
+		/// <summary>
+		/// Converts an array of 32-bit unsigned integers to their big-endian byte representation.
+		/// </summary>
+		/// <remarks>Each 32-bit unsigned integer in the input array is converted to a sequence of 4 bytes in
+		/// big-endian order (most significant byte first). The resulting bytes are concatenated into a single
+		/// array.</remarks>
+		/// <param name="values">An array of 32-bit unsigned integers to convert.</param>
+		/// <returns>A byte array containing the big-endian representation of the input values. The length of the returned array is
+		/// <c>values.Length * sizeof(uint)</c>.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesBigEndian(params uint[] values)
+		{
+			byte[] bytes = new byte[values.Length * sizeof(uint)];
+			for (int i = 0; i < values.Length; ++i)
+			{
+				ToBigEndianBytes(values[i], bytes, i * sizeof(uint));
+			}
+
+			return bytes;
+		}
+
+		/// <summary>
+		/// Converts an array of 16-bit unsigned integers to a big-endian byte array.
+		/// </summary>
+		/// <remarks>Each <see cref="ushort"/> value in the input array is converted to its big-endian representation
+		/// and appended to the resulting byte array. The caller is responsible for ensuring the input array is not
+		/// null.</remarks>
+		/// <param name="values">An array of <see cref="ushort"/> values to convert. Cannot be null.</param>
+		/// <returns>A byte array representing the input values in big-endian format. The length of the array is twice the number of
+		/// input values.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesBigEndian(params ushort[] values)
+		{
+			byte[] bytes = new byte[values.Length * sizeof(ushort)];
+			for (int i = 0; i < values.Length; ++i)
+			{
+				ToBigEndianBytes(values[i], bytes, i * sizeof(ushort));
+			}
+
+			return bytes;
+		}
+
+		/// <summary>
 		/// Converts the specified 64-bit unsigned integer to an array of bytes in big-endian order.
 		/// </summary>
 		/// <param name="value">The 64-bit unsigned integer to convert.</param>
