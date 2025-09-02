@@ -143,8 +143,7 @@ namespace HashifyNet.Algorithms.HighwayHash
 				_v0[1] = key[1] ^ _mul0[1];
 				_v0[2] = key[2] ^ _mul0[2];
 				_v0[3] = key[3] ^ _mul0[3];
-
-				// **FIX 1: The key must be 32-bit rotated before being XORed into v1.**
+	
 				_v1[0] = ((key[0] >> 32) | (key[0] << 32)) ^ _mul1[0];
 				_v1[1] = ((key[1] >> 32) | (key[1] << 32)) ^ _mul1[1];
 				_v1[2] = ((key[2] >> 32) | (key[2] << 32)) ^ _mul1[2];
@@ -293,7 +292,6 @@ namespace HashifyNet.Algorithms.HighwayHash
 				for (int round = 0; round < finalizationRounds; round++)
 				{
 					cancellationToken.ThrowIfCancellationRequested();
-					// **FIX 2: The final element of the permuted packet must come from _v0[1].**
 					Span<ulong> permuted_v0 = new ulong[4]
 					{
 						(_v0[2] >> 32) | (_v0[2] << 32),
@@ -350,3 +348,4 @@ namespace HashifyNet.Algorithms.HighwayHash
 	}
 
 }
+
