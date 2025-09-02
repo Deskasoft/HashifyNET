@@ -84,6 +84,47 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
+		/// Converts the specified 32-bit unsigned integer to its big-endian byte representation and writes the result to
+		/// the specified buffer at the given offset.
+		/// </summary>
+		/// <remarks>This method writes exactly 4 bytes to the buffer, starting at the specified offset. Ensure that
+		/// the buffer has sufficient capacity to accommodate the bytes being written.</remarks>
+		/// <param name="value">The 32-bit unsigned integer to convert.</param>
+		/// <param name="buffer">The byte array to which the big-endian representation will be written.</param>
+		/// <param name="offset">The zero-based index in the buffer at which to begin writing the bytes.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ToBigEndianBytes(uint value, byte[] buffer, int offset)
+		{
+			buffer[offset] = (byte)(value >> 24);
+			buffer[offset + 1] = (byte)(value >> 16);
+			buffer[offset + 2] = (byte)(value >> 8);
+			buffer[offset + 3] = (byte)value;
+		}
+
+		/// <summary>
+		/// Converts the specified 64-bit unsigned integer to its big-endian byte representation and writes the result to
+		/// the specified buffer at the given offset.
+		/// </summary>
+		/// <remarks>This method writes the most significant byte of <paramref name="value"/> to <paramref
+		/// name="buffer"/> at the specified <paramref name="offset"/>, followed by the remaining bytes in decreasing order
+		/// of significance.</remarks>
+		/// <param name="value">The 64-bit unsigned integer to convert.</param>
+		/// <param name="buffer">The byte array to which the big-endian representation of <paramref name="value"/> will be written.</param>
+		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin writing the bytes.</param>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void ToBigEndianBytes(ulong value, byte[] buffer, int offset)
+		{
+			buffer[offset] = (byte)(value >> 56);
+			buffer[offset + 1] = (byte)(value >> 48);
+			buffer[offset + 2] = (byte)(value >> 40);
+			buffer[offset + 3] = (byte)(value >> 32);
+			buffer[offset + 4] = (byte)(value >> 24);
+			buffer[offset + 5] = (byte)(value >> 16);
+			buffer[offset + 6] = (byte)(value >> 8);
+			buffer[offset + 7] = (byte)value;
+		}
+
+		/// <summary>
 		/// Converts the specified 64-bit unsigned integer to little-endian format.
 		/// </summary>
 		/// <remarks>This method ensures that the returned value is in little-endian format, regardless of the 
@@ -101,6 +142,28 @@ namespace HashifyNet.Core.Utilities
 			}
 
 			// If the system is big-endian, we must reverse the byte order to make it little-endian.
+			return BinaryPrimitives.ReverseEndianness(value);
+		}
+
+
+		/// <summary>
+		/// Converts the specified 64-bit unsigned integer to big-endian format.
+		/// </summary>
+		/// <remarks>This method ensures that the returned value is in big-endian format, regardless of the 
+		/// system's endianness. It is optimized for performance and uses aggressive inlining.</remarks>
+		/// <param name="value">The 64-bit unsigned integer to convert.</param>
+		/// <returns>The value in big-endian format. If the system architecture is already big-endian,  the original value is
+		/// returned unchanged. Otherwise, the byte order is reversed.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static ulong ToBigEndian(ulong value)
+		{
+			// If the system architecture is already big-endian, the value doesn't need to be changed.
+			if (!BitConverter.IsLittleEndian)
+			{
+				return value;
+			}
+
+			// If the system is little-endian, we must reverse the byte order to make it big-endian.
 			return BinaryPrimitives.ReverseEndianness(value);
 		}
 
@@ -186,6 +249,87 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
+		/// Converts a sequence of 8 bytes from the specified buffer, starting at the given offset, into a 64-bit unsigned
+		/// integer using big-endian byte order.
+		/// </summary>
+		/// <param name="buffer">The byte array containing the data to convert. Must contain at least 8 bytes starting from <paramref
+		/// name="offset"/>.</param>
+		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin reading the 8 bytes.</param>
+		/// <returns>A 64-bit unsigned integer representing the big-endian interpretation of the 8 bytes starting at <paramref
+		/// name="offset"/>.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static ulong ToUInt64BigEndian(byte[] buffer, int offset)
+		{
+			return ((ulong)buffer[offset] << 56) |
+				   ((ulong)buffer[offset + 1] << 48) |
+				   ((ulong)buffer[offset + 2] << 40) |
+				   ((ulong)buffer[offset + 3] << 32) |
+				   ((ulong)buffer[offset + 4] << 24) |
+				   ((ulong)buffer[offset + 5] << 16) |
+				   ((ulong)buffer[offset + 6] << 8) |
+				   buffer[offset + 7];
+		}
+
+		/// <summary>
+		/// Converts a sequence of bytes from the specified buffer, starting at the given offset, into a 64-bit unsigned
+		/// integer using big-endian byte order.
+		/// </summary>
+		/// <remarks>This method assumes that the bytes in the buffer are stored in big-endian format, where the
+		/// most significant byte comes first.</remarks>
+		/// <param name="buffer">The buffer containing the bytes to convert. Must have at least 8 bytes available starting from <paramref
+		/// name="offset"/>.</param>
+		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin reading the bytes.</param>
+		/// <returns>A 64-bit unsigned integer constructed from the 8 bytes starting at <paramref name="offset"/> in big-endian
+		/// order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static ulong ToUInt64BigEndian(ReadOnlySpan<byte> buffer, int offset)
+		{
+			return ((ulong)buffer[offset] << 56) |
+				   ((ulong)buffer[offset + 1] << 48) |
+				   ((ulong)buffer[offset + 2] << 40) |
+				   ((ulong)buffer[offset + 3] << 32) |
+				   ((ulong)buffer[offset + 4] << 24) |
+				   ((ulong)buffer[offset + 5] << 16) |
+				   ((ulong)buffer[offset + 6] << 8) |
+				   buffer[offset + 7];
+		}
+
+		/// <summary>
+		/// Converts a sequence of four bytes from the specified buffer, starting at the given offset, into a 32-bit unsigned
+		/// integer using big-endian byte order.
+		/// </summary>
+		/// <param name="buffer">The byte array containing the data to convert. Must contain at least four bytes starting from <paramref
+		/// name="offset"/>.</param>
+		/// <param name="offset">The zero-based index in <paramref name="buffer"/> at which to begin reading the four bytes.</param>
+		/// <returns>A 32-bit unsigned integer representing the value of the four bytes in big-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static uint ToUInt32BigEndian(byte[] buffer, int offset)
+		{
+			return ((uint)buffer[offset] << 24) |
+				   ((uint)buffer[offset + 1] << 16) |
+				   ((uint)buffer[offset + 2] << 8) |
+				   buffer[offset + 3];
+		}
+
+		/// <summary>
+		/// Converts a sequence of bytes from a specified offset in a buffer to a 32-bit unsigned integer, assuming
+		/// big-endian byte order.
+		/// </summary>
+		/// <param name="buffer">The buffer containing the bytes to convert. Must have at least four bytes available starting at the specified
+		/// offset.</param>
+		/// <param name="offset">The zero-based index in the buffer at which to begin reading the bytes.</param>
+		/// <returns>A 32-bit unsigned integer representing the value of the four bytes starting at the specified offset, interpreted
+		/// as big-endian.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static uint ToUInt32BigEndian(ReadOnlySpan<byte> buffer, int offset)
+		{
+			return ((uint)buffer[offset] << 24) |
+				   ((uint)buffer[offset + 1] << 16) |
+				   ((uint)buffer[offset + 2] << 8) |
+				   buffer[offset + 3];
+		}
+
+		/// <summary>
 		/// Converts the specified 64-bit unsigned integer to an array of bytes in little-endian order.
 		/// </summary>
 		/// <param name="value">The 64-bit unsigned integer to convert.</param>
@@ -208,6 +352,32 @@ namespace HashifyNet.Core.Utilities
 		{
 			byte[] bytes = new byte[4];
 			ToLittleEndianBytes(value, bytes, 0);
+			return bytes;
+		}
+
+		/// <summary>
+		/// Converts the specified 64-bit unsigned integer to an array of bytes in big-endian order.
+		/// </summary>
+		/// <param name="value">The 64-bit unsigned integer to convert.</param>
+		/// <returns>An array of 8 bytes representing the <paramref name="value"/> in big-endian order.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesBigEndian(ulong value)
+		{
+			byte[] bytes = new byte[8];
+			ToBigEndianBytes(value, bytes, 0);
+			return bytes;
+		}
+
+		/// <summary>
+		/// Converts the specified 32-bit unsigned integer to a byte array in big-endian format.
+		/// </summary>
+		/// <param name="value">The 32-bit unsigned integer to convert.</param>
+		/// <returns>A byte array containing the big-endian representation of the specified value.</returns>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static byte[] GetBytesBigEndian(uint value)
+		{
+			byte[] bytes = new byte[4];
+			ToBigEndianBytes(value, bytes, 0);
 			return bytes;
 		}
 	}
