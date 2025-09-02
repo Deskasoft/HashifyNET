@@ -794,7 +794,7 @@ namespace HashifyNet.Algorithms.Gost
 			{
 				for (int i = 0; i < 8; i++)
 				{
-					output[i] = BitConverter.ToUInt64(input, offset + (i * 8));
+					output[i] = Endianness.ToUInt64LittleEndian(input, offset + (i * 8));
 				}
 			}
 
@@ -802,10 +802,11 @@ namespace HashifyNet.Algorithms.Gost
 			{
 				for (int i = 0; i < 8; i++)
 				{
-					var bytes = BitConverter.GetBytes(input[i]);
+					var bytes = Endianness.GetBytesLittleEndian(input[i]);
 					Array.Copy(bytes, 0, output, i * 8, 8);
 				}
 			}
 		}
 	}
+
 }
