@@ -294,14 +294,7 @@ namespace HashifyNet.Core.Utilities
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ulong ToUInt64LittleEndian(byte[] buffer, int offset)
 		{
-			return buffer[offset] |
-				   ((ulong)buffer[offset + 1] << 8) |
-				   ((ulong)buffer[offset + 2] << 16) |
-				   ((ulong)buffer[offset + 3] << 24) |
-				   ((ulong)buffer[offset + 4] << 32) |
-				   ((ulong)buffer[offset + 5] << 40) |
-				   ((ulong)buffer[offset + 6] << 48) |
-				   ((ulong)buffer[offset + 7] << 56);
+			return ToUInt64LittleEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3], buffer[offset + 4], buffer[offset + 5], buffer[offset + 6], buffer[offset + 7]);
 		}
 
 		/// <summary>
@@ -343,14 +336,7 @@ namespace HashifyNet.Core.Utilities
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ulong ToUInt64LittleEndian(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return buffer[offset] |
-				   ((ulong)buffer[offset + 1] << 8) |
-				   ((ulong)buffer[offset + 2] << 16) |
-				   ((ulong)buffer[offset + 3] << 24) |
-				   ((ulong)buffer[offset + 4] << 32) |
-				   ((ulong)buffer[offset + 5] << 40) |
-				   ((ulong)buffer[offset + 6] << 48) |
-				   ((ulong)buffer[offset + 7] << 56);
+			return ToUInt64LittleEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3], buffer[offset + 4], buffer[offset + 5], buffer[offset + 6], buffer[offset + 7]);
 		}
 
 		/// <summary>
@@ -376,7 +362,7 @@ namespace HashifyNet.Core.Utilities
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ushort ToUInt16LittleEndian(byte[] buffer, int offset)
 		{
-			return (ushort)(buffer[offset] | (buffer[offset + 1] << 8));
+			return ToUInt16LittleEndian(buffer[offset], buffer[offset + 1]);
 		}
 
 		/// <summary>
@@ -407,10 +393,7 @@ namespace HashifyNet.Core.Utilities
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static uint ToUInt32LittleEndian(byte[] buffer, int offset)
 		{
-			return buffer[offset] |
-				   ((uint)buffer[offset + 1] << 8) |
-				   ((uint)buffer[offset + 2] << 16) |
-				   ((uint)buffer[offset + 3] << 24);
+			return ToUInt32LittleEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3]);
 		}
 
 		/// <summary>
@@ -425,10 +408,7 @@ namespace HashifyNet.Core.Utilities
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static uint ToUInt32LittleEndian(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return buffer[offset] |
-				   ((uint)buffer[offset + 1] << 8) |
-				   ((uint)buffer[offset + 2] << 16) |
-				   ((uint)buffer[offset + 3] << 24);
+			return ToUInt32LittleEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3]);
 		}
 
 		/// <summary>
@@ -443,14 +423,7 @@ namespace HashifyNet.Core.Utilities
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ulong ToUInt64BigEndian(byte[] buffer, int offset)
 		{
-			return ((ulong)buffer[offset] << 56) |
-				   ((ulong)buffer[offset + 1] << 48) |
-				   ((ulong)buffer[offset + 2] << 40) |
-				   ((ulong)buffer[offset + 3] << 32) |
-				   ((ulong)buffer[offset + 4] << 24) |
-				   ((ulong)buffer[offset + 5] << 16) |
-				   ((ulong)buffer[offset + 6] << 8) |
-				   buffer[offset + 7];
+			return ToUInt64BigEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3], buffer[offset + 4], buffer[offset + 5], buffer[offset + 6], buffer[offset + 7]);
 		}
 
 		/// <summary>
@@ -467,14 +440,7 @@ namespace HashifyNet.Core.Utilities
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ulong ToUInt64BigEndian(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return ((ulong)buffer[offset] << 56) |
-				   ((ulong)buffer[offset + 1] << 48) |
-				   ((ulong)buffer[offset + 2] << 40) |
-				   ((ulong)buffer[offset + 3] << 32) |
-				   ((ulong)buffer[offset + 4] << 24) |
-				   ((ulong)buffer[offset + 5] << 16) |
-				   ((ulong)buffer[offset + 6] << 8) |
-				   buffer[offset + 7];
+			return ToUInt64BigEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3], buffer[offset + 4], buffer[offset + 5], buffer[offset + 6], buffer[offset + 7]);
 		}
 
 		/// <summary>
@@ -528,7 +494,7 @@ namespace HashifyNet.Core.Utilities
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static uint ToUInt16BigEndian(byte[] buffer, int offset)
 		{
-			return (ushort)((buffer[offset] << 8) | buffer[offset + 1]);
+			return ToUInt16BigEndian(buffer[offset], buffer[offset + 1]);
 		}
 
 		/// <summary>
@@ -561,10 +527,7 @@ namespace HashifyNet.Core.Utilities
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static uint ToUInt32BigEndian(byte[] buffer, int offset)
 		{
-			return ((uint)buffer[offset] << 24) |
-				   ((uint)buffer[offset + 1] << 16) |
-				   ((uint)buffer[offset + 2] << 8) |
-				   buffer[offset + 3];
+			return ToUInt32BigEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3]);
 		}
 
 		/// <summary>
@@ -579,10 +542,7 @@ namespace HashifyNet.Core.Utilities
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static uint ToUInt32BigEndian(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return ((uint)buffer[offset] << 24) |
-				   ((uint)buffer[offset + 1] << 16) |
-				   ((uint)buffer[offset + 2] << 8) |
-				   buffer[offset + 3];
+			return ToUInt32BigEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3]);
 		}
 
 		/// <summary>
