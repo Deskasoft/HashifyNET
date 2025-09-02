@@ -147,7 +147,7 @@ namespace HashifyNet.Algorithms.Blake3
 			for (int i = 0; i < state.Length; i++)
 			{
 				int baseIdx = i * 4 % data.Length;
-				uint w = BitConverter.ToUInt32(data, baseIdx);
+				uint w = Endianness.ToUInt32LittleEndian(data, baseIdx);
 				state[i] ^= w;
 			}
 		}
@@ -621,4 +621,5 @@ namespace HashifyNet.Algorithms.Blake3
 			}
 		}
 	}
+
 }
