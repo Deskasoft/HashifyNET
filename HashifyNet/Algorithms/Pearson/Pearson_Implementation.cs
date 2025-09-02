@@ -60,7 +60,6 @@ namespace HashifyNet.Algorithms.Pearson
 
 			_config = config.Clone();
 
-
 			if (_config.Table == null)
 			{
 				throw new ArgumentException($"{nameof(config)}.{nameof(config.Table)} must be non-null.", $"{nameof(config)}.{nameof(config.Table)}");
@@ -91,7 +90,6 @@ namespace HashifyNet.Algorithms.Pearson
 			private byte[] _hashValue;
 			public BlockTransformer()
 			{
-
 			}
 
 			public BlockTransformer(IPearsonConfig config)
@@ -130,7 +128,6 @@ namespace HashifyNet.Algorithms.Pearson
 
 				var tempTable = _table;
 				var tempHashValueLength = tempHashValue.Length;
-
 
 				for (var currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
 				{
