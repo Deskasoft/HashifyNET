@@ -264,14 +264,14 @@ namespace HashifyNet.Algorithms.Whirlpool
 					uint v8 = MaskWithReductionPolynomial(v4 << 1);
 					uint v9 = v8 ^ v1;
 
-					C0[i] = PackIntoUInt64(v1, v1, v4, v1, v8, v5, v2, v9);
-					C1[i] = PackIntoUInt64(v9, v1, v1, v4, v1, v8, v5, v2);
-					C2[i] = PackIntoUInt64(v2, v9, v1, v1, v4, v1, v8, v5);
-					C3[i] = PackIntoUInt64(v5, v2, v9, v1, v1, v4, v1, v8);
-					C4[i] = PackIntoUInt64(v8, v5, v2, v9, v1, v1, v4, v1);
-					C5[i] = PackIntoUInt64(v1, v8, v5, v2, v9, v1, v1, v4);
-					C6[i] = PackIntoUInt64(v4, v1, v8, v5, v2, v9, v1, v1);
-					C7[i] = PackIntoUInt64(v1, v4, v1, v8, v5, v2, v9, v1);
+					C0[i] = Endianness.ToUInt64BigEndian((byte)v1, (byte)v1, (byte)v4, (byte)v1, (byte)v8, (byte)v5, (byte)v2, (byte)v9);
+					C1[i] = Endianness.ToUInt64BigEndian((byte)v9, (byte)v1, (byte)v1, (byte)v4, (byte)v1, (byte)v8, (byte)v5, (byte)v2);
+					C2[i] = Endianness.ToUInt64BigEndian((byte)v2, (byte)v9, (byte)v1, (byte)v1, (byte)v4, (byte)v1, (byte)v8, (byte)v5);
+					C3[i] = Endianness.ToUInt64BigEndian((byte)v5, (byte)v2, (byte)v9, (byte)v1, (byte)v1, (byte)v4, (byte)v1, (byte)v8);
+					C4[i] = Endianness.ToUInt64BigEndian((byte)v8, (byte)v5, (byte)v2, (byte)v9, (byte)v1, (byte)v1, (byte)v4, (byte)v1);
+					C5[i] = Endianness.ToUInt64BigEndian((byte)v1, (byte)v8, (byte)v5, (byte)v2, (byte)v9, (byte)v1, (byte)v1, (byte)v4);
+					C6[i] = Endianness.ToUInt64BigEndian((byte)v4, (byte)v1, (byte)v8, (byte)v5, (byte)v2, (byte)v9, (byte)v1, (byte)v1);
+					C7[i] = Endianness.ToUInt64BigEndian((byte)v1, (byte)v4, (byte)v1, (byte)v8, (byte)v5, (byte)v2, (byte)v9, (byte)v1);
 				}
 
 				RC[0] = 0;
@@ -298,14 +298,6 @@ namespace HashifyNet.Algorithms.Whirlpool
 
 				return input;
 			}
-
-			private static ulong PackIntoUInt64(uint b7, uint b6, uint b5, uint b4, uint b3, uint b2, uint b1, uint b0)
-			{
-				return ((ulong)b7 << 56) ^ ((ulong)b6 << 48) ^ ((ulong)b5 << 40)
-					^ ((ulong)b4 << 32) ^ ((ulong)b3 << 24) ^ ((ulong)b2 << 16)
-					^ ((ulong)b1 << 8) ^ b0;
-			}
 		}
 	}
-
 }
