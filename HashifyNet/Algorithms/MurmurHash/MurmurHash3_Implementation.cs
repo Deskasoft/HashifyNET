@@ -129,7 +129,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 
 				for (var currentOffset = dataOffset; currentOffset < endOffset; currentOffset += 4)
 				{
-					uint k1 = BitConverter.ToUInt32(dataArray, currentOffset);
+					uint k1 = Endianness.ToUInt32LittleEndian(dataArray, currentOffset);
 
 					k1 *= c1_32;
 					k1 = RotateLeft(k1, 15);
@@ -179,7 +179,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 				Mix(ref tempHashValue);
 
 				return new HashValue(
-					BitConverter.GetBytes(tempHashValue),
+					Endianness.GetBytesLittleEndian(tempHashValue),
 					32);
 			}
 
@@ -245,8 +245,8 @@ namespace HashifyNet.Algorithms.MurmurHash
 
 				for (var currentOffset = dataOffset; currentOffset < endOffset; currentOffset += 16)
 				{
-					ulong k1 = BitConverter.ToUInt64(dataArray, currentOffset);
-					ulong k2 = BitConverter.ToUInt64(dataArray, currentOffset + 8);
+					ulong k1 = Endianness.ToUInt64LittleEndian(dataArray, currentOffset);
+					ulong k2 = Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 8);
 
 					k1 *= c1_128;
 					k1 = RotateLeft(k1, 31);
@@ -306,7 +306,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 							goto case 8;
 
 						case 8:
-							k1 ^= BitConverter.ToUInt64(remainder, 0);
+							k1 ^= Endianness.ToUInt64LittleEndian(remainder, 0);
 							break;
 
 						case 7: k1 ^= (ulong)remainder[6] << 48; goto case 6;
@@ -340,8 +340,8 @@ namespace HashifyNet.Algorithms.MurmurHash
 				tempHashValue1 += tempHashValue2;
 				tempHashValue2 += tempHashValue1;
 
-				var hashValueBytes = BitConverter.GetBytes(tempHashValue1)
-					.Concat(BitConverter.GetBytes(tempHashValue2))
+				var hashValueBytes = Endianness.GetBytesLittleEndian(tempHashValue1)
+					.Concat(Endianness.GetBytesLittleEndian(tempHashValue2))
 					.ToArray();
 
 				return new HashValue(hashValueBytes, 128);
