@@ -130,7 +130,7 @@ namespace HashifyNet
 		/// <summary>
 		/// Converts the hash value to a 32-bit integer representation.
 		/// </summary>
-		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to an  <see
+		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to an <see
 		/// cref="int"/>. If the hash value exceeds 4 bytes, an exception is thrown.</remarks>
 		/// <returns>A 32-bit integer representation of the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash value exceeds 4 bytes in length.</exception>
@@ -148,7 +148,7 @@ namespace HashifyNet
 		/// <summary>
 		/// Converts the hash value to a 64-bit signed integer.
 		/// </summary>
-		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to a  64-bit
+		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to a 64-bit
 		/// signed integer. If the hash value exceeds 8 bytes, an exception is thrown.</remarks>
 		/// <returns>A 64-bit signed integer representation of the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash value is larger than 8 bytes.</exception>
@@ -157,7 +157,7 @@ namespace HashifyNet
 		/// <summary>
 		/// Converts the hash value to a 16-bit signed integer.
 		/// </summary>
-		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to a  16-bit
+		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to a 16-bit
 		/// signed integer. If the hash value exceeds 2 bytes in length, an exception is thrown.</remarks>
 		/// <returns>A 16-bit signed integer representation of the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash value exceeds 2 bytes in length.</exception>
@@ -194,7 +194,7 @@ namespace HashifyNet
 		/// <summary>
 		/// Converts the hash value to a <see cref="double"/> representation.
 		/// </summary>
-		/// <remarks>The hash must be exactly 8 bytes in length to perform the conversion. If the hash length  is not
+		/// <remarks>The hash must be exactly 8 bytes in length to perform the conversion. If the hash length is not
 		/// 8 bytes, an exception is thrown.</remarks>
 		/// <returns>A <see cref="double"/> representation of the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash is not exactly 8 bytes in length.</exception>
@@ -203,7 +203,7 @@ namespace HashifyNet
 		/// <summary>
 		/// Converts the hash value to a <see cref="decimal"/> representation.
 		/// </summary>
-		/// <remarks>The hash must be exactly 16 bytes in length to be converted to a <see cref="decimal"/>.  If the
+		/// <remarks>The hash must be exactly 16 bytes in length to be converted to a <see cref="decimal"/>. If the
 		/// hash length is not 16 bytes, an exception is thrown.</remarks>
 		/// <returns>A <see cref="decimal"/> representation of the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash is not exactly 16 bytes in length.</exception>
@@ -212,7 +212,7 @@ namespace HashifyNet
 		/// <summary>
 		/// Converts the hash value to a <see cref="DateTime"/> instance.
 		/// </summary>
-		/// <remarks>The hash must be exactly 8 bytes long to represent a valid <see cref="DateTime"/>.  If the hash
+		/// <remarks>The hash must be exactly 8 bytes long to represent a valid <see cref="DateTime"/>. If the hash
 		/// length is not 8 bytes, an exception is thrown.</remarks>
 		/// <returns>A <see cref="DateTime"/> instance created from the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash is not exactly 8 bytes long.</exception>
@@ -221,7 +221,7 @@ namespace HashifyNet
 		/// <summary>
 		/// Converts the hash value to a <see cref="DateTimeOffset"/>.
 		/// </summary>
-		/// <remarks>The hash must be exactly 8 bytes long to perform the conversion. The resulting  <see
+		/// <remarks>The hash must be exactly 8 bytes long to perform the conversion. The resulting <see
 		/// cref="DateTimeOffset"/> is created with a UTC offset of <see cref="TimeSpan.Zero"/>.</remarks>
 		/// <returns>A <see cref="DateTimeOffset"/> representation of the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash is not exactly 8 bytes long.</exception>
@@ -230,7 +230,7 @@ namespace HashifyNet
 		/// <summary>
 		/// Converts the hash value to a <see cref="TimeSpan"/> instance.
 		/// </summary>
-		/// <remarks>The hash value must be exactly 8 bytes long to be converted to a <see cref="TimeSpan"/>.  If the
+		/// <remarks>The hash value must be exactly 8 bytes long to be converted to a <see cref="TimeSpan"/>. If the
 		/// hash length is not 8 bytes, an exception is thrown.</remarks>
 		/// <returns>A <see cref="TimeSpan"/> representing the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash value is not exactly 8 bytes long.</exception>
