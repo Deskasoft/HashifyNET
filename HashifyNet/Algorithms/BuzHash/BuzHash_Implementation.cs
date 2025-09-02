@@ -197,7 +197,7 @@ namespace HashifyNet.Algorithms.BuzHash
 				_hashValue = tempHashValue;
 			}
 			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(BitConverter.GetBytes(_hashValue), 16);
+				new HashValue(Endianness.GetBytesLittleEndian(_hashValue), 16);
 		}
 		private class BlockTransformer_32Bit
 		: BlockTransformerBase<BlockTransformer_32Bit>
@@ -246,7 +246,7 @@ namespace HashifyNet.Algorithms.BuzHash
 			}
 
 			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(BitConverter.GetBytes(_hashValue), 32);
+				new HashValue(Endianness.GetBytesLittleEndian(_hashValue), 32);
 		}
 
 		private class BlockTransformer_64Bit
@@ -295,7 +295,7 @@ namespace HashifyNet.Algorithms.BuzHash
 				_hashValue = tempHashValue;
 			}
 			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(BitConverter.GetBytes(_hashValue), 64);
+				new HashValue(Endianness.GetBytesLittleEndian(_hashValue), 64);
 		}
 
 		#region CShift
@@ -423,3 +423,4 @@ namespace HashifyNet.Algorithms.BuzHash
 		#endregion
 	}
 }
+
