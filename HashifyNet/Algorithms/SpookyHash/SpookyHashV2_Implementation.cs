@@ -222,23 +222,22 @@ namespace HashifyNet.Algorithms.SpookyHash
 				{
 					case 32:
 						return new HashValue(
-							BitConverter.GetBytes((uint)finalHashValue[0]),
+							Endianness.GetBytesLittleEndian((uint)finalHashValue[0]),
 							32);
 
 					case 64:
 						return new HashValue(
-							BitConverter.GetBytes(finalHashValue[0]),
+							Endianness.GetBytesLittleEndian(finalHashValue[0]),
 							64);
 
 					case 128:
 						var hashValueResult = new byte[16];
 
-						BitConverter.GetBytes(finalHashValue[0])
+						Endianness.GetBytesLittleEndian(finalHashValue[0])
 							.CopyTo(hashValueResult, 0);
 
-						BitConverter.GetBytes(finalHashValue[1])
+						Endianness.GetBytesLittleEndian(finalHashValue[1])
 							.CopyTo(hashValueResult, 8);
-
 
 						return new HashValue(hashValueResult, 128);
 
@@ -283,7 +282,6 @@ namespace HashifyNet.Algorithms.SpookyHash
 				if (dataArray != null)
 				{
 					var currentOffset = 0;
-
 					var remainderCount = dataCount % 32;
 
 					// Process 32-byte groups
@@ -292,13 +290,13 @@ namespace HashifyNet.Algorithms.SpookyHash
 
 						while (currentOffset < endOffset)
 						{
-							tempHashValue[2] += BitConverter.ToUInt64(dataArray, currentOffset);
-							tempHashValue[3] += BitConverter.ToUInt64(dataArray, currentOffset + 8);
+							tempHashValue[2] += Endianness.ToUInt64LittleEndian(dataArray, currentOffset);
+							tempHashValue[3] += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 8);
 
 							ShortMix(tempHashValue);
 
-							tempHashValue[0] += BitConverter.ToUInt64(dataArray, currentOffset + 16);
-							tempHashValue[1] += BitConverter.ToUInt64(dataArray, currentOffset + 24);
+							tempHashValue[0] += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 16);
+							tempHashValue[1] += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 24);
 
 							currentOffset += 32;
 						}
@@ -307,8 +305,8 @@ namespace HashifyNet.Algorithms.SpookyHash
 					// Process 16-byte group (if available)
 					if (remainderCount >= 16)
 					{
-						tempHashValue[2] += BitConverter.ToUInt64(dataArray, currentOffset);
-						tempHashValue[3] += BitConverter.ToUInt64(dataArray, currentOffset + 8);
+						tempHashValue[2] += Endianness.ToUInt64LittleEndian(dataArray, currentOffset);
+						tempHashValue[3] += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 8);
 
 						ShortMix(tempHashValue);
 
@@ -323,16 +321,14 @@ namespace HashifyNet.Algorithms.SpookyHash
 						var finalRemainderBuffer = new byte[16];
 						Array.Copy(dataArray, currentOffset, finalRemainderBuffer, 0, remainderCount);
 
-						tempHashValue[3] += BitConverter.ToUInt64(finalRemainderBuffer, 8);
-						tempHashValue[2] += BitConverter.ToUInt64(finalRemainderBuffer, 0);
-
+						tempHashValue[3] += Endianness.ToUInt64LittleEndian(finalRemainderBuffer, 8);
+						tempHashValue[2] += Endianness.ToUInt64LittleEndian(finalRemainderBuffer, 0);
 					}
 					else
 					{
 						tempHashValue[3] += 0XDEADBEEFDEADBEEF;
 						tempHashValue[2] += 0XDEADBEEFDEADBEEF;
 					}
-
 				}
 				else
 				{
@@ -346,21 +342,21 @@ namespace HashifyNet.Algorithms.SpookyHash
 				{
 					case 32:
 						return new HashValue(
-							BitConverter.GetBytes((uint)tempHashValue[0]),
+							Endianness.GetBytesLittleEndian((uint)tempHashValue[0]),
 							32);
 
 					case 64:
 						return new HashValue(
-							BitConverter.GetBytes(tempHashValue[0]),
+							Endianness.GetBytesLittleEndian(tempHashValue[0]),
 							64);
 
 					case 128:
 						var finalHashValue = new byte[16];
 
-						BitConverter.GetBytes(tempHashValue[0])
+						Endianness.GetBytesLittleEndian(tempHashValue[0])
 							.CopyTo(finalHashValue, 0);
 
-						BitConverter.GetBytes(tempHashValue[1])
+						Endianness.GetBytesLittleEndian(tempHashValue[1])
 							.CopyTo(finalHashValue, 8);
 
 						return new HashValue(
@@ -384,7 +380,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 				{
 					for (var i = 0; i < 12; ++i)
 					{
-						hashValue[i] += BitConverter.ToUInt64(dataArray, currentOffset + (i * 8));
+						hashValue[i] += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + (i * 8));
 						hashValue[(i + 2) % 12] ^= hashValue[(i + 10) % 12];
 						hashValue[(i + 11) % 12] ^= hashValue[i];
 						hashValue[i] = RotateLeft(hashValue[i], _MixRotationParameters[i]);
@@ -397,7 +393,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 			{
 				for (int i = 0; i < 12; ++i)
 				{
-					hashValue[i] += BitConverter.ToUInt64(dataArray, i * 8);
+					hashValue[i] += Endianness.ToUInt64LittleEndian(dataArray, i * 8);
 				}
 
 				EndPartial(hashValue);
