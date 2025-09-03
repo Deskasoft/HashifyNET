@@ -38,6 +38,7 @@ namespace HashifyNet.Algorithms.XxHash3
 		/// Gets the seed value used to populate the secret key.
 		/// <para>If not specified, defaults to 0, which means the default secret key will be used.</para>
 		/// </summary>
-		ulong Seed { get; }
+		long Seed { get; }
 	}
+
 }
