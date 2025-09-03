@@ -43,12 +43,12 @@ namespace HashifyNet.Algorithms.BuzHash
 		new int HashSizeInBits { get; }
 
 		/// <summary>
-		/// Gets a list of <c>256</c> (preferably random and distinct) <see cref="ulong"/> values.
+		/// Gets a list of <c>256</c> (preferably random and distinct) <see cref="long"/> values.
 		/// </summary>
 		/// <value>
-		/// List of 256 <see cref="ulong"/> values.
+		/// List of 256 <see cref="long"/> values.
 		/// </value>
-		IReadOnlyList<ulong> Rtab { get; }
+		IReadOnlyList<long> Rtab { get; }
 
 		/// <summary>
 		/// Gets the seed value.
@@ -57,9 +57,9 @@ namespace HashifyNet.Algorithms.BuzHash
 		/// The seed value.
 		/// </value>
 		/// <remarks>
-		/// Only the bottom <see cref="IHashConfigBase.HashSizeInBits"/> bits shoudl be used for a given configuration.
+		/// Only the bottom <see cref="IHashConfigBase.HashSizeInBits"/> bits should be used for a given configuration.
 		/// </remarks>
-		ulong Seed { get; }
+		long Seed { get; }
 
 		/// <summary>
 		/// Gets the shift direction.
