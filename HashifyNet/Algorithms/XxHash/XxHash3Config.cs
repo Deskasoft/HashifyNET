@@ -45,7 +45,7 @@ namespace HashifyNet.Algorithms.XxHash3
 		/// <value>
 		/// The seed.
 		/// </value>
-		public ulong Seed { get; set; } = 0UL;
+		public long Seed { get; set; }
 
 		/// <summary>
 		/// <inheritdoc/>
@@ -58,4 +58,5 @@ namespace HashifyNet.Algorithms.XxHash3
 				Seed = Seed
 			};
 	}
+
 }
