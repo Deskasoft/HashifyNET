@@ -106,6 +106,7 @@ namespace HashifyNet.Core.Utilities
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
 		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
+		[CLSCompliant(false)]
 		public ulong AsUInt64()
 		{
 			byte[] data = AsByteArray();
@@ -162,6 +163,7 @@ namespace HashifyNet.Core.Utilities
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
 		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
+		[CLSCompliant(false)]
 		public uint AsUInt32()
 		{
 			byte[] data = AsByteArray();
@@ -222,6 +224,7 @@ namespace HashifyNet.Core.Utilities
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
 		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
+		[CLSCompliant(false)]
 		public ushort AsUInt16()
 		{
 			byte[] data = AsByteArray();
