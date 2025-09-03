@@ -204,6 +204,8 @@ foreach (IHashFunctionBase function in functions)
 There are a lot more changes made to the library, and feel free to explore them by adding to your project.
 We'd love to see what you are going to do or have done with our library, so feel free to share them with us at https://discord.gg/PrKery9.
 
+Please visit [wiki/Release-Notes](https://github.com/Deskasoft/HashifyNET/wiki/Release-Notes) for more information about usage examples and the latest features available.
+
 ## Versioning Guarantees
 
 This library generally abides by [Semantic Versioning](https://semver.org). Packages are published in `MAJOR.MINOR.PATCH` version format.
@@ -236,13 +238,3 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
-
-
-
-
-
-
-
-
-
-
