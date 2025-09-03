@@ -122,7 +122,7 @@ public class Program
 {
     static void Main()
     {
-        IAdler32 adler32 = HashFactory<IAdler32>.Instance.Create();
+        IAdler32 adler32 = HashFactory<IAdler32>.Create();
         IHashValue computedHash = adler32.ComputeHash("foobar");
 
         Console.WriteLine(computedHash.AsHexString()); 
@@ -140,11 +140,64 @@ public class Program
 {
     static void Main()
     {
-        IHashFunctionBase adler32 = HashFactory.Instance.Create(typeof(IAdler32));
+        IHashFunctionBase adler32 = HashFactory.Create(typeof(IAdler32));
         IHashValue computedHash = adler32.ComputeHash("foobar");
 
         Console.WriteLine(computedHash.AsHexString()); 
     }
+}
+```
+
+## Batch Computation Examples
+Thanks to our latest design, we can now calculate multiple hashes at once, in case, for some reason, they need all cryptographic or non-cryptographic hashes.
+
+### Example using 'System.Type' to compute all non-cryptographic hashes:
+``` CSharp
+IHashFunctionBase[] functions = HashFactory.GetHashFunctions(HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>() 
+{
+
+    // Only adding configs that require us to pick or define one, for the rest of the hash algorithms, the default provided configs will be used instead.
+	{ typeof(ICRC), CRCConfig.CRC32 },
+	{ typeof(IPearson), new WikipediaPearsonConfig() },
+	{ typeof(IFNV1), FNVConfig.GetPredefinedConfig(32) },
+	{ typeof(IFNV1a), FNVConfig.GetPredefinedConfig(32) },
+	{ typeof(IBuzHash), new DefaultBuzHashConfig() },
+
+});
+
+Assert.NotNull(functions);
+Assert.NotEmpty(functions);
+Assert.All(functions, item => Assert.NotNull(item));
+
+foreach (IHashFunctionBase function in functions)
+{
+	IHashValue hv = function.ComputeHash(TestConstants.FooBar);
+	Assert.NotNull(hv);
+	Assert.NotEmpty(hv.Hash);
+}
+```
+
+### Example using 'System.Type' to compute all cryptographic hashes except `IHashAlgorithmWrapper`:
+``` CSharp
+IHashFunctionBase[] functions = HashFactory.GetHashFunctions(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
+{
+
+    // Only adding configs that require us to pick or define one, for the rest of the hash algorithms, the default provided configs will be used instead.
+	{ typeof(IArgon2id), Argon2idConfig.OWASP_Standard }
+
+}, typeof(IHashAlgorithmWrapper)); // We do not want IHashAlgorithmWrapper, though you can add as many as you want to ignore, including base interfaces to ignore all derived interfaces (such as IFNV to also ignore IFNV1 and IFNV1a).
+
+Assert.NotNull(functions);
+Assert.NotEmpty(functions);
+Assert.All(functions, item => Assert.NotNull(item));
+
+foreach (IHashFunctionBase function in functions)
+{
+	IHashValue hv = function.ComputeHash(TestConstants.FooBar);
+	Assert.NotNull(hv);
+	Assert.NotEmpty(hv.Hash);
+
+	(function as ICryptographicHashFunctionBase).Dispose();
 }
 ```
 
@@ -183,6 +236,7 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
