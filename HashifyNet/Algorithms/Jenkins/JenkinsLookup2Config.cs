@@ -46,10 +46,10 @@ namespace HashifyNet.Algorithms.Jenkins
 		/// <value>
 		/// The seed.
 		/// </value>
-		public uint Seed { get; set; } = 0U;
+		public int Seed { get; set; }
 
 		/// <summary>
-		/// Makes a deep clone of current instance.
+		/// Makes a deep clone of the current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public IJenkinsLookup2Config Clone() =>
