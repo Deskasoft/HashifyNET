@@ -45,7 +45,7 @@ namespace HashifyNet.Algorithms.BuzHash
 		/// <value>
 		/// List of 256 <see cref="long"/> values.
 		/// </value>
-		public IReadOnlyList<ulong> Rtab { get; set; } = null;
+		public IReadOnlyList<long> Rtab { get; set; } = null;
 
 		/// <summary>
 		/// Gets the desired hash size, in bits.
@@ -94,4 +94,3 @@ namespace HashifyNet.Algorithms.BuzHash
 			};
 	}
 }
-
