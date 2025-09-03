@@ -46,7 +46,7 @@ namespace HashifyNet.UnitTests.Algorithms.XxHash3
 					.Returns(64);
 
 				xxHashConfigMock.SetupGet(xhc => xhc.Seed)
-					.Returns(0UL);
+					.Returns(0L);
 
 				xxHashConfigMock.Setup(xhc => xhc.Clone())
 					.Returns(() => xxHashConfigMock.Object);
@@ -179,4 +179,5 @@ namespace HashifyNet.UnitTests.Algorithms.XxHash3
 					});
 		}
 	}
+
 }
