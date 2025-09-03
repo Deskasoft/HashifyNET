@@ -240,8 +240,8 @@ namespace HashifyNet.UnitTests.Algorithms.Jenkins
 					new JenkinsLookup3Config()
 					{
 						HashSizeInBits = hashSize,
-						Seed = 0x7da236b9U,
-						Seed2 = 0x87930b75U
+						Seed = 0x7da236b9,
+						Seed2 = unchecked((int)0x87930b75)
 					});
 		}
 
@@ -257,8 +257,8 @@ namespace HashifyNet.UnitTests.Algorithms.Jenkins
 				new JenkinsLookup3_Implementation(
 					new JenkinsLookup3Config()
 					{
-						Seed = 0x7da236b9U,
-						Seed2 = 0x87930b75U
+						Seed = 0x7da236b9,
+						Seed2 = unchecked((int)0x87930b75)
 					});
 		}
 	}
