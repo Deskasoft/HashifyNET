@@ -27,7 +27,7 @@
 // ******************************************************************************
 // *
 
-using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace HashifyNet.Algorithms.BuzHash
@@ -39,15 +39,15 @@ namespace HashifyNet.Algorithms.BuzHash
 		: IBuzHashConfig
 	{
 		/// <summary>
-		/// Gets a list of <c>256</c> (preferably random and distinct) <see cref="ulong"/> values.
+		/// Gets a list of <c>256</c> (preferably random and distinct) <see cref="long"/> values.
 		/// </summary>
 		/// <value>
-		/// List of 256 <see cref="ulong"/> values.
+		/// List of 256 <see cref="long"/> values.
 		/// </value>
 		/// <remarks>
 		/// Defaults to a statically defined, random chosen of values.
 		/// </remarks>
-		public IReadOnlyList<ulong> Rtab { get; } = _Rtab;
+		public IReadOnlyList<long> Rtab { get; } = _Rtab.Select(u => unchecked((long)u)).ToArray();
 
 		/// <summary>
 		/// Gets the desired hash size, in bits.
@@ -69,7 +69,7 @@ namespace HashifyNet.Algorithms.BuzHash
 		/// <remarks>
 		/// Defaults to <c>0x3CD05367FD0337D3UL</c>
 		/// </remarks>
-		public ulong Seed { get; set; } = 0x3CD05367FD0337D3UL;
+		public long Seed { get; set; } = 0x3CD05367FD0337D3L;
 
 		/// <summary>
 		/// Gets the shift direction.
@@ -151,7 +151,7 @@ namespace HashifyNet.Algorithms.BuzHash
 			};
 
 		/// <summary>
-		/// Makes a deep clone of current instance.
+		/// Makes a deep clone of the current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public IBuzHashConfig Clone() =>
