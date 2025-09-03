@@ -51,7 +51,7 @@ namespace HashifyNet.Algorithms.CRC
 		/// <value>
 		/// The divisor that will be used when calculating the CRC value.
 		/// </value>
-		public UInt64 Polynomial { get; set; }
+		public long Polynomial { get; set; }
 
 		/// <summary>
 		/// Value to initialize the CRC register to before calculating the CRC.
@@ -59,7 +59,7 @@ namespace HashifyNet.Algorithms.CRC
 		/// <value>
 		/// The value that will be used to initialize the CRC register before the calculation of the CRC value.
 		/// </value>
-		public UInt64 InitialValue { get; set; }
+		public long InitialValue { get; set; }
 
 		/// <summary>
 		/// If true, the CRC calculation processes input as big endian bit order.
@@ -83,7 +83,7 @@ namespace HashifyNet.Algorithms.CRC
 		/// <value>
 		/// The value to xor with the final CRC value.
 		/// </value>
-		public UInt64 XOrOut { get; set; }
+		public long XOrOut { get; set; }
 
 		#region Standards
 
@@ -1341,10 +1341,10 @@ namespace HashifyNet.Algorithms.CRC
 		{
 			HashSizeInBits = 64,
 			Polynomial = 0x42f0e1eba9ea3693,
-			InitialValue = 0xffffffffffffffff,
+			InitialValue = unchecked((long)0xffffffffffffffff),
 			ReflectIn = false,
 			ReflectOut = false,
-			XOrOut = 0xffffffffffffffff,
+			XOrOut = unchecked((long)0xffffffffffffffff),
 		}.Clone();
 
 		/// <summary>
@@ -1359,16 +1359,16 @@ namespace HashifyNet.Algorithms.CRC
 		{
 			HashSizeInBits = 64,
 			Polynomial = 0x42f0e1eba9ea3693,
-			InitialValue = 0xffffffffffffffff,
+			InitialValue = unchecked((long)0xffffffffffffffff),
 			ReflectIn = true,
 			ReflectOut = true,
-			XOrOut = 0xffffffffffffffff,
+			XOrOut = unchecked((long)0xffffffffffffffff),
 		}.Clone();
 
 		#endregion
 
 		/// <summary>
-		/// Makes a deep clone of current instance.
+		/// Makes a deep clone of the current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public ICRCConfig Clone() =>
