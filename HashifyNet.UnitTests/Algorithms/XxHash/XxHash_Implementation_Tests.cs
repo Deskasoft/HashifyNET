@@ -269,11 +269,8 @@ namespace HashifyNet.UnitTests.Algorithms.XxHash
 					new XxHashConfig()
 					{
 						HashSizeInBits = hashSize,
-						Seed = 0x78fef705b7c769faU
+						Seed = 0x78fef705b7c769fa
 					});
 		}
 	}
-
 }
-
-
