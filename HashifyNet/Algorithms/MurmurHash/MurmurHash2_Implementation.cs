@@ -153,7 +153,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 			var endOffset = dataOffset + dataCount;
 			var remainderCount = dataCount % 8;
 
-			ulong hashValue = _config.Seed ^ ((ulong)dataCount * _mixConstant64);
+			ulong hashValue = (ulong)_config.Seed ^ ((ulong)dataCount * _mixConstant64);
 
 			// Process 8-byte groups
 			{
