@@ -39,7 +39,7 @@ namespace HashifyNet.UnitTests.Algorithms.MurmurHash
 			var murmurHash2Config = new MurmurHash2Config();
 
 			Assert.Equal(64, murmurHash2Config.HashSizeInBits);
-			Assert.Equal(0UL, murmurHash2Config.Seed);
+			Assert.Equal(0L, murmurHash2Config.Seed);
 		}
 
 		[Fact]
@@ -48,7 +48,7 @@ namespace HashifyNet.UnitTests.Algorithms.MurmurHash
 			var murmurHash2Config = new MurmurHash2Config()
 			{
 				HashSizeInBits = 32,
-				Seed = 1337UL,
+				Seed = 1337L,
 			};
 
 			var murmurHash2ConfigClone = murmurHash2Config.Clone();
