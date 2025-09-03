@@ -38,7 +38,7 @@ namespace HashifyNet.UnitTests.Algorithms.MetroHash
 		{
 			var metroHashConfig = new MetroHashConfig();
 
-			Assert.Equal(0UL, metroHashConfig.Seed);
+			Assert.Equal(0L, metroHashConfig.Seed);
 		}
 
 		[Fact]
