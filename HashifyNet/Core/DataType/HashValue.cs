@@ -578,7 +578,11 @@ namespace HashifyNet.Core.Utilities
 				return false;
 			}
 
-			return Hash.SequenceEqual(other.Hash);
+			// Since we currently do not know if this hash value belongs to a cryptographic hasher or a non-cryptographic hasher,
+			// we should always check equality with fixed time equality checker.
+			//
+			// TODO: Maybe we can add an owner parameter to .ctor for a way to know if this is a cryptographic or non-cryptographic hash.
+			return HashComparer.FixedTimeEquals(Hash, other.Hash);
 		}
 
 		/// <summary>
@@ -640,3 +644,4 @@ namespace HashifyNet.Core.Utilities
 		}
 	}
 }
+
