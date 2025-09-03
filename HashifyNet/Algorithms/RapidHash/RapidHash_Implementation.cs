@@ -71,11 +71,11 @@ namespace HashifyNet.Algorithms.RapidHash
 			switch (_config.Mode)
 			{
 				case RapidHashMode.Original:
-					return new BlockTransformer_MOriginal(_config.Seed);
+					return new BlockTransformer_MOriginal((ulong)_config.Seed);
 				case RapidHashMode.Micro:
-					return new BlockTransformer_MMicro(_config.Seed);
+					return new BlockTransformer_MMicro((ulong)_config.Seed);
 				case RapidHashMode.Nano:
-					return new BlockTransformer_MNano(_config.Seed);
+					return new BlockTransformer_MNano((ulong)_config.Seed);
 				default:
 					throw new NotImplementedException();
 			}
@@ -671,4 +671,5 @@ namespace HashifyNet.Algorithms.RapidHash
 			}
 		}
 	}
+
 }
