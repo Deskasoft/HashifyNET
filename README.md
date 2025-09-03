@@ -1,7 +1,7 @@
 HashifyNET
 =================
 
-HashifyNET is a C# library designed to offer a common interface for a wide range of [cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions) and [non-cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions) hashing algorithms, while also providing built-in implementations of numerous well-known hash functions.
+HashifyNET is a CLS-Compliant .NET library designed to offer a common interface for a wide range of [cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions) and [non-cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions) hashing algorithms, while also providing built-in implementations of numerous well-known hash functions.
 
 All functionality of the library is tested using [xUnit](https://github.com/xunit/xunit). A primary requirement for each release is 100% code coverage by these tests.
 All code within the library is commented using Visual Studio-compatible XML comments.
@@ -28,6 +28,9 @@ As an addition, we introduced 11 more hash algorithms, sorted below:
 - SM3
 - Keccak
 - Argon2id
+- xxHash3
+- xxHash3_128
+- RapidHash
 
 > [!NOTE]
 > Please check Implementations for the full list of available hash algorithms.
@@ -86,6 +89,8 @@ The following hash functions have been implemented from the most reliable refere
 * [Pearson hashing](http://en.wikipedia.org/wiki/Pearson_hashing)
   * PearsonBase - Abstract implementation; there is no authoritative implementation
   * WikipediaPearson - Concrete implementation, uses values from the Wikipedia article
+* [RapidHash](https://github.com/Nicoshev/rapidhash)
+  * Supports Original, Micro, and Nano modes.
 * [SipHash](https://en.wikipedia.org/wiki/SipHash)
 * [SM3](https://en.wikipedia.org/wiki/SM3_(hash_function))
 * [SpookyHash](http://burtleburtle.net/bob/hash/spooky.html)
@@ -97,6 +102,8 @@ The following hash functions have been implemented from the most reliable refere
 * [Whirlpool](https://en.wikipedia.org/wiki/Whirlpool_(hash_function))
 * [xxHash](https://code.google.com/p/xxhash/)
   * xxHash - Original and 64-bit version.
+  * xxHash3 - Wraps around System.IO.Hashes.
+  * xxHash128 - Wraps around System.IO.Hashes.
 
 Usage
 -----
@@ -176,6 +183,7 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
