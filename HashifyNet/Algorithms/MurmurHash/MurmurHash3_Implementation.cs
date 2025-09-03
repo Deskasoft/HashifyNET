@@ -81,10 +81,10 @@ namespace HashifyNet.Algorithms.MurmurHash
 			switch (_config.HashSizeInBits)
 			{
 				case 32:
-					return new BlockTransformer32(_config.Seed);
+					return new BlockTransformer32((uint)_config.Seed);
 
 				case 128:
-					return new BlockTransformer128(_config.Seed);
+					return new BlockTransformer128((uint)_config.Seed);
 
 				default:
 					throw new NotImplementedException();
