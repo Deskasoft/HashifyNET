@@ -91,8 +91,8 @@
     <Company>Deskasoft International</Company>
     <Product>HashifyNET</Product>
     <Copyright>Copyright © Deskasoft International</Copyright>
-    <Version>4.0.1</Version>
-    <PackageTags>hash;hashing</PackageTags>
+    <Version>5.0.0</Version>
+    <PackageTags>hashing;hash;algorithms;security;crypto;non-crypto;CLS-compliant;VB.NET;F#</PackageTags>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <EnableNETAnalyzers>False</EnableNETAnalyzers>
@@ -101,7 +101,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/Deskasoft/HashifyNET</RepositoryUrl>
     <PackageProjectUrl>https://github.com/Deskasoft/HashifyNET</PackageProjectUrl>
-    <Description>A comprehensive API for well-known hash algorithms.</Description>
+    <Description>A comprehensive .NET API for well-known hash algorithms.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageIcon>logo.png</PackageIcon>
     <AssemblyOriginatorKeyFile>..\HashifyNET.publickey</AssemblyOriginatorKeyFile>
@@ -109,8 +109,3 @@
   </PropertyGroup>
 
 </Project>
-
-
-
-
-
