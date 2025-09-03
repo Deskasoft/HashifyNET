@@ -40,7 +40,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 		/// <value>
 		/// The seed.
 		/// </value>
-		ulong Seed { get; }
+		long Seed { get; }
 
 		/// <summary>
 		/// Gets the second seed.
@@ -48,6 +48,6 @@ namespace HashifyNet.Algorithms.SpookyHash
 		/// <value>
 		/// The second seed.
 		/// </value>
-		ulong Seed2 { get; }
+		long Seed2 { get; }
 	}
 }
