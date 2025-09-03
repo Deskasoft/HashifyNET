@@ -118,7 +118,7 @@ namespace HashifyNet.Algorithms.BuzHash
 			public BlockTransformer_8Bit(IBuzHashConfig config)
 				: this()
 			{
-				_rtab = config.Rtab;
+				_rtab = config.Rtab?.Select(u => unchecked((ulong)u)).ToArray();
 				_shiftDirection = config.ShiftDirection;
 
 				_hashValue = (byte)config.Seed;
@@ -166,7 +166,7 @@ namespace HashifyNet.Algorithms.BuzHash
 			public BlockTransformer_16Bit(IBuzHashConfig config)
 				: this()
 			{
-				_rtab = config.Rtab;
+				_rtab = config.Rtab?.Select(u => unchecked((ulong)u)).ToArray();
 				_shiftDirection = config.ShiftDirection;
 
 				_hashValue = (ushort)config.Seed;
@@ -214,7 +214,7 @@ namespace HashifyNet.Algorithms.BuzHash
 			public BlockTransformer_32Bit(IBuzHashConfig config)
 				: this()
 			{
-				_rtab = config.Rtab;
+				_rtab = config.Rtab?.Select(u => unchecked((ulong)u)).ToArray();
 				_shiftDirection = config.ShiftDirection;
 
 				_hashValue = (uint)config.Seed;
@@ -264,10 +264,10 @@ namespace HashifyNet.Algorithms.BuzHash
 			public BlockTransformer_64Bit(IBuzHashConfig config)
 				: this()
 			{
-				_rtab = config.Rtab;
+				_rtab = config.Rtab?.Select(u => unchecked((ulong)u)).ToArray();
 				_shiftDirection = config.ShiftDirection;
 
-				_hashValue = config.Seed;
+				_hashValue = (ulong)config.Seed;
 			}
 
 			protected override void CopyStateTo(BlockTransformer_64Bit other)
@@ -423,4 +423,3 @@ namespace HashifyNet.Algorithms.BuzHash
 		#endregion
 	}
 }
-
