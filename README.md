@@ -16,7 +16,7 @@ Every hash algorithm is now collected under one single assembly and package name
 The former factory-based implementation, which assigned a unique factory to each hash function, has been superseded by a more modular and centralized factory.
 This new model provides superior accessibility and efficiency.
 
-As an addition, we introduced 11 more hash algorithms, sorted below:
+As an addition, we introduced 14 more hash algorithms, sorted below:
 - Adler32
 - Blake3
 - Gost
@@ -236,6 +236,7 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
