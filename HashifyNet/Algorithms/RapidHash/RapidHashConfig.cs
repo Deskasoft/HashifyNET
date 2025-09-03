@@ -33,7 +33,7 @@ namespace HashifyNet.Algorithms.RapidHash
 	/// Represents the configuration settings for the RapidHash algorithm.
 	/// </summary>
 	/// <remarks>This class provides options to configure the behavior of the RapidHash algorithm, including the
-	/// hash size and an optional seed value. It also supports cloning to create independent configuration
+	/// hash size and an optional seed value. It also supports cloning to create an independent configuration
 	/// instances.</remarks>
 	public class RapidHashConfig : IRapidHashConfig
 	{
@@ -46,7 +46,7 @@ namespace HashifyNet.Algorithms.RapidHash
 		/// <inheritdoc/>
 		/// <para>Defaults to 0.</para>
 		/// </summary>
-		public ulong Seed { get; set; } = 0;
+		public long Seed { get; set; }
 
 		/// <summary>
 		/// <inheritdoc/>
@@ -61,3 +61,4 @@ namespace HashifyNet.Algorithms.RapidHash
 		public IRapidHashConfig Clone() => new RapidHashConfig() { Seed = this.Seed, Mode = this.Mode };
 	}
 }
+
