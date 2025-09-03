@@ -27,6 +27,9 @@
 // ******************************************************************************
 // *
 
+using System.Collections.Immutable;
+using System.Linq;
+
 namespace HashifyNet
 {
 	/// <summary>
@@ -98,6 +101,7 @@ namespace HashifyNet
 		}
 	}
 }
+
 
 
 
