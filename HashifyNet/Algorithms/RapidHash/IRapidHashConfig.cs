@@ -46,7 +46,7 @@ namespace HashifyNet.Algorithms.RapidHash
 		/// <summary>
 		/// Gets the seed value used to customize the underlying key.
 		/// </summary>
-		ulong Seed { get; }
+		long Seed { get; }
 
 		/// <summary>
 		/// Gets the mode of operation for the RapidHash algorithm.
@@ -54,3 +54,4 @@ namespace HashifyNet.Algorithms.RapidHash
 		RapidHashMode Mode { get; }
 	}
 }
+
