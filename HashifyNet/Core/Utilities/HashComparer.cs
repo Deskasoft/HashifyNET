@@ -49,7 +49,7 @@ namespace HashifyNet
 		/// <param name="right">The second byte array to compare. Cannot be <see langword="null"/>.</param>
 		/// <returns><see langword="true"/> if the two byte arrays are equal; otherwise, <see langword="false"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">Thrown if either <paramref name="left"/> or <paramref name="right"/> is <see langword="null"/>.</exception>
-		public static bool FixedTimeCompare(byte[] left, byte[] right)
+		public static bool FixedTimeEquals(byte[] left, byte[] right)
 		{
 			if (left == null)
 			{
@@ -92,10 +92,11 @@ namespace HashifyNet
 		/// <param name="right">The second byte array to compare. Cannot be <see langword="null"/>.</param>
 		/// <returns><see langword="true"/> if the two immutable byte arrays are equal; otherwise, <see langword="false"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">Thrown if either <paramref name="left"/> or <paramref name="right"/> is <see langword="null"/>.</exception>
-		public static bool FixedTimeCompare(ImmutableArray<byte> left, ImmutableArray<byte> right)
+		public static bool FixedTimeEquals(ImmutableArray<byte> left, ImmutableArray<byte> right)
 		{
 			return FixedTimeCompare(left.ToArray(), right.ToArray());
 		}
 	}
 }
+
 
