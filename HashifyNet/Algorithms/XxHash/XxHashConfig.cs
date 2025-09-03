@@ -49,10 +49,10 @@ namespace HashifyNet.Algorithms.XxHash
 		/// <value>
 		/// The seed.
 		/// </value>
-		public long Seed { get; set; } = 0UL;
+		public long Seed { get; set; }
 
 		/// <summary>
-		/// Makes a deep clone of current instance.
+		/// Makes a deep clone of the current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public IXxHashConfig Clone() =>
@@ -62,5 +62,5 @@ namespace HashifyNet.Algorithms.XxHash
 				Seed = Seed
 			};
 	}
-
 }
+
