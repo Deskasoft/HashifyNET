@@ -34,19 +34,13 @@ using HashifyNet.Algorithms.FNV;
 using HashifyNet.Algorithms.Pearson;
 using HashifyNet.Core.HashAlgorithm;
 using HashifyNet.UnitTests.Utilities;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HashifyNet.UnitTests.Core
 {
 	/// <summary>
 	/// Written for testing every single available hash algorithm by using the universal factory. This ensures that at least all of the hash algorithms are returning valid buffers with the correct length and bit sizes.
-	/// This test does not check for correctness of the output, only that the output is valid.
+	/// This test does not check for the correctness of the output, only that the output is valid.
 	/// </summary>
 	public class UniversalTest
 	{
@@ -698,3 +692,4 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
+
