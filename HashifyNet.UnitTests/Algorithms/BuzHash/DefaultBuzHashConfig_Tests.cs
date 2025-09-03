@@ -38,9 +38,9 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 		{
 			var defaultBuzHashConfig = new DefaultBuzHashConfig();
 
-			Assert.Equal(_expectedRtab, defaultBuzHashConfig.Rtab);
+			Assert.Equal(_expectedRtab.Select(u => unchecked((long)u)).ToArray(), defaultBuzHashConfig.Rtab);
 			Assert.Equal(64, defaultBuzHashConfig.HashSizeInBits);
-			Assert.Equal(0x3CD05367FD0337D3UL, defaultBuzHashConfig.Seed);
+			Assert.Equal(0x3CD05367FD0337D3L, defaultBuzHashConfig.Seed);
 			Assert.Equal(CircularShiftDirection.Left, defaultBuzHashConfig.ShiftDirection);
 		}
 
@@ -50,7 +50,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 			var defaultBuzHashConfig = new DefaultBuzHashConfig()
 			{
 				HashSizeInBits = 32,
-				Seed = 1337UL,
+				Seed = 1337L,
 				ShiftDirection = CircularShiftDirection.Right
 			};
 
@@ -64,8 +64,8 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 			Assert.Equal(defaultBuzHashConfig.ShiftDirection, defaultBuzHashConfigClone.ShiftDirection);
 		}
 
-		private static readonly IReadOnlyList<UInt64> _expectedRtab =
-			new UInt64[] {
+		private static readonly IReadOnlyList<ulong> _expectedRtab =
+			new ulong[] {
 				0xBDBF3FFFDEEF8A14, 0xFFB5AC3C0DB31F7F, 0x7BF7207BF73C4D2E, 0xADBFFF96358377F6,
 				0xC6BF8D442C4FD166, 0x7EB1EFF12B7D81F9, 0x88024802AB9F22C2, 0x2191221208E98495,
 				0xA9377F55EBA6AE60, 0x2954721569FD66AE, 0xB109C13854720646, 0x42088A01BE975A1D,
