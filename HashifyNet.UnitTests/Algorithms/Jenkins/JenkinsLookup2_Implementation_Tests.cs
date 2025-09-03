@@ -112,7 +112,7 @@ namespace HashifyNet.UnitTests.Algorithms.Jenkins
 				new JenkinsLookup2_Implementation(
 					new JenkinsLookup2Config()
 					{
-						Seed = 0x7da236b9U
+						Seed = 0x7da236b9
 					});
 		}
 	}
