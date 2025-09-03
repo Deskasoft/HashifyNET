@@ -40,6 +40,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 		/// <value>
 		/// The seed.
 		/// </value>
-		ulong Seed { get; }
+		long Seed { get; }
 	}
+
 }
