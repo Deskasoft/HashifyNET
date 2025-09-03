@@ -84,7 +84,7 @@ namespace HashifyNet.Algorithms.Jenkins
 			{
 				_a = 0x9e3779b9;
 				_b = 0x9e3779b9;
-				_c = config.Seed;
+				_c = (uint)config.Seed;
 
 				_bytesProcessed = 0;
 			}
