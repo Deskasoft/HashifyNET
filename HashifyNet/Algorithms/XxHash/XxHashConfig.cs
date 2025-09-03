@@ -49,7 +49,7 @@ namespace HashifyNet.Algorithms.XxHash
 		/// <value>
 		/// The seed.
 		/// </value>
-		public ulong Seed { get; set; } = 0UL;
+		public long Seed { get; set; } = 0UL;
 
 		/// <summary>
 		/// Makes a deep clone of current instance.
@@ -62,4 +62,5 @@ namespace HashifyNet.Algorithms.XxHash
 				Seed = Seed
 			};
 	}
+
 }
