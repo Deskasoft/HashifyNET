@@ -47,10 +47,10 @@ namespace HashifyNet.UnitTests.Algorithms.SpookyHash
 					.Returns(32);
 
 				spookyHashConfigMock.SetupGet(xhc => xhc.Seed)
-					.Returns(0UL);
+					.Returns(0L);
 
 				spookyHashConfigMock.SetupGet(xhc => xhc.Seed2)
-					.Returns(0UL);
+					.Returns(0L);
 
 				spookyHashConfigMock.Setup(xhc => xhc.Clone())
 					.Returns(() => spookyHashConfigMock.Object);
@@ -309,8 +309,8 @@ namespace HashifyNet.UnitTests.Algorithms.SpookyHash
 					new SpookyHashConfig()
 					{
 						HashSizeInBits = hashSize,
-						Seed = 0x7da236b987930b75U,
-						Seed2 = 0x2eb994a3851d2f54U
+						Seed = 0x7da236b987930b75,
+						Seed2 = 0x2eb994a3851d2f54
 					});
 		}
 
@@ -330,8 +330,8 @@ namespace HashifyNet.UnitTests.Algorithms.SpookyHash
 				new SpookyHashV2_Implementation(
 					new SpookyHashConfig()
 					{
-						Seed = 0x7da236b987930b75U,
-						Seed2 = 0x2eb994a3851d2f54U
+						Seed = 0x7da236b987930b75,
+						Seed2 = 0x2eb994a3851d2f54
 					});
 		}
 	}
