@@ -44,7 +44,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 			var buzHashConfigMock = new Mock<IBuzHashConfig>();
 			{
 				buzHashConfigMock.SetupGet(bhc => bhc.Rtab)
-					.Returns(new UInt64[256]);
+					.Returns(new long[256]);
 
 				buzHashConfigMock.SetupGet(bhc => bhc.HashSizeInBits)
 					.Returns(64);
@@ -104,7 +104,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 			var buzHashConfigMock = new Mock<IBuzHashConfig>();
 			{
 				buzHashConfigMock.SetupGet(bhc => bhc.Rtab)
-					.Returns((IReadOnlyList<UInt64>)null);
+					.Returns((IReadOnlyList<long>)null);
 
 				buzHashConfigMock.Setup(bhc => bhc.Clone())
 					.Returns(() => buzHashConfigMock.Object);
@@ -127,7 +127,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 				var buzHashConfigMock = new Mock<IBuzHashConfig>();
 				{
 					buzHashConfigMock.SetupGet(bhc => bhc.Rtab)
-						.Returns(new UInt64[length]);
+						.Returns(new long[length]);
 
 					buzHashConfigMock.Setup(bhc => bhc.Clone())
 						.Returns(() => buzHashConfigMock.Object);
@@ -155,7 +155,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 				var buzHashConfigMock = new Mock<IBuzHashConfig>();
 				{
 					buzHashConfigMock.SetupGet(bhc => bhc.Rtab)
-						.Returns(new UInt64[256]);
+						.Returns(new long[256]);
 
 					buzHashConfigMock.SetupGet(bhc => bhc.HashSizeInBits)
 						.Returns(length);
@@ -182,7 +182,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 				var buzHashConfigMock = new Mock<IBuzHashConfig>();
 				{
 					buzHashConfigMock.SetupGet(bhc => bhc.Rtab)
-						.Returns(new UInt64[256]);
+						.Returns(new long[256]);
 
 					buzHashConfigMock.SetupGet(bhc => bhc.HashSizeInBits)
 						.Returns(length);
@@ -206,14 +206,14 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 		[Fact]
 		public void BuzHash_Implementation_Constructor_Config_Seed_IsValid_Works()
 		{
-			var validValues = new[] { 0UL, 1UL, 65536UL, 0xFFFFFFFFFFFFFFFFUL };
+			long[] validValues = new[] { 0, 1, 65536, unchecked((long)0xFFFFFFFFFFFFFFFF) };
 
 			foreach (var value in validValues)
 			{
 				var buzHashConfigMock = new Mock<IBuzHashConfig>();
 				{
 					buzHashConfigMock.SetupGet(bhc => bhc.Rtab)
-						.Returns(new UInt64[256]);
+						.Returns(new long[256]);
 
 					buzHashConfigMock.SetupGet(bhc => bhc.HashSizeInBits)
 						.Returns(64);
@@ -243,7 +243,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 			var buzHashConfigMock = new Mock<IBuzHashConfig>();
 			{
 				buzHashConfigMock.SetupGet(bhc => bhc.Rtab)
-					.Returns(new UInt64[256]);
+					.Returns(new long[256]);
 
 				buzHashConfigMock.SetupGet(bhc => bhc.HashSizeInBits)
 					.Returns(64);
@@ -272,7 +272,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 				var buzHashConfigMock = new Mock<IBuzHashConfig>();
 				{
 					buzHashConfigMock.SetupGet(bhc => bhc.Rtab)
-						.Returns(new UInt64[256]);
+						.Returns(new long[256]);
 
 					buzHashConfigMock.SetupGet(bhc => bhc.HashSizeInBits)
 						.Returns(64);
@@ -301,7 +301,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 		public void BuzHash_Implementation_Config_IsCloneOfClone()
 		{
 			var buzHashConfig3 = Mock.Of<IBuzHashConfig>();
-			var buzHashConfig2 = Mock.Of<IBuzHashConfig>(bhc => bhc.Rtab == new UInt64[256] && bhc.HashSizeInBits == 32 && bhc.ShiftDirection == CircularShiftDirection.Left && bhc.Clone() == buzHashConfig3);
+			var buzHashConfig2 = Mock.Of<IBuzHashConfig>(bhc => bhc.Rtab == new long[256] && bhc.HashSizeInBits == 32 && bhc.ShiftDirection == CircularShiftDirection.Left && bhc.Clone() == buzHashConfig3);
 			var buzHashConfig = Mock.Of<IBuzHashConfig>(bhc => bhc.Clone() == buzHashConfig2);
 
 			var buzHashHash = new BuzHash_Implementation(buzHashConfig);
@@ -323,7 +323,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 				var buzHashConfigMock = new Mock<IBuzHashConfig>();
 				{
 					buzHashConfigMock.SetupGet(bhc => bhc.Rtab)
-						.Returns(new UInt64[256]);
+						.Returns(new long[256]);
 
 					buzHashConfigMock.SetupGet(bhc => bhc.HashSizeInBits)
 						.Returns(hashSize);
@@ -356,7 +356,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 					.Returns(() => shouldReturnValidHashSize ? 32 : 1);
 
 				buzHashConfigMock.SetupGet(bhc => bhc.Rtab)
-					.Returns(new UInt64[256]);
+					.Returns(new long[256]);
 
 				buzHashConfigMock.Setup(bhc => bhc.Clone())
 					.Returns(() => buzHashConfigMock.Object);
