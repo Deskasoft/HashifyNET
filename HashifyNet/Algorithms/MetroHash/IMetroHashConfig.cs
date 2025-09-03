@@ -46,6 +46,6 @@ namespace HashifyNet.Algorithms.MetroHash
 		/// <value>
 		/// The seed value.
 		/// </value>
-		ulong Seed { get; }
+		long Seed { get; }
 	}
 }
