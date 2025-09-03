@@ -71,13 +71,13 @@ namespace HashifyNet.Algorithms.Jenkins
 
 		protected override IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
 		{
-			uint a = 0xdeadbeef + (uint)data.Count + _config.Seed;
+			uint a = 0xdeadbeef + (uint)data.Count + (uint)_config.Seed;
 			uint b = a;
 			uint c = a;
 
 			if (_config.HashSizeInBits == 64)
 			{
-				c += _config.Seed2;
+				c += (uint)_config.Seed2;
 			}
 
 			var dataArray = data.Array;
