@@ -74,18 +74,18 @@ namespace HashifyNet.Algorithms.SpookyHash
 			switch (_config.HashSizeInBits)
 			{
 				case 32:
-					_seed1 = _config.Seed & 0xFFFFFFFF;
+					_seed1 = (ulong)_config.Seed & 0xFFFFFFFF;
 					_seed2 = _seed1;
 					break;
 
 				case 64:
-					_seed1 = _config.Seed;
+					_seed1 = (ulong)_config.Seed;
 					_seed2 = _seed1;
 					break;
 
 				case 128:
-					_seed1 = _config.Seed;
-					_seed2 = _config.Seed2;
+					_seed1 = (ulong)_config.Seed;
+					_seed2 = (ulong)_config.Seed2;
 					break;
 			}
 		}
