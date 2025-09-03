@@ -66,15 +66,15 @@ namespace HashifyNet.Algorithms.XxHash3
 			public BlockTransformer3() : base(inputBlockSize: 64) { }
 
 			private System.IO.Hashing.NonCryptographicHashAlgorithm _hash;
-			public BlockTransformer3(int hashSize, ulong seed) : this()
+			public BlockTransformer3(int hashSize, long seed) : this()
 			{
 				switch (hashSize)
 				{
 					case 64:
-						_hash = new System.IO.Hashing.XxHash3((long)seed);
+						_hash = new System.IO.Hashing.XxHash3(seed);
 						break;
 					case 128:
-						_hash = new System.IO.Hashing.XxHash128((long)seed);
+						_hash = new System.IO.Hashing.XxHash128(seed);
 						break;
 					default:
 						throw new NotImplementedException();
@@ -101,4 +101,5 @@ namespace HashifyNet.Algorithms.XxHash3
 			}
 		}
 	}
+
 }
