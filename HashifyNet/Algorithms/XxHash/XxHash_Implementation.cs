@@ -75,7 +75,7 @@ namespace HashifyNet.Algorithms.XxHash
 					return new BlockTransformer32((uint)_config.Seed);
 
 				case 64:
-					return new BlockTransformer64(_config.Seed);
+					return new BlockTransformer64((ulong)_config.Seed);
 
 				default:
 					throw new NotImplementedException();
@@ -446,3 +446,4 @@ namespace HashifyNet.Algorithms.XxHash
 		}
 	}
 }
+
