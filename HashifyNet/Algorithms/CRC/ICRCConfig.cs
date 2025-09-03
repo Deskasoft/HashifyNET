@@ -40,7 +40,7 @@ namespace HashifyNet.Algorithms.CRC
 		/// <value>
 		/// The divisor that will be used when calculating the CRC value.
 		/// </value>
-		ulong Polynomial { get; }
+		long Polynomial { get; }
 
 		/// <summary>
 		/// Value to initialize the CRC register to before calculating the CRC.
@@ -48,7 +48,7 @@ namespace HashifyNet.Algorithms.CRC
 		/// <value>
 		/// The value that will be used to initialize the CRC register before the calculation of the CRC value.
 		/// </value>
-		ulong InitialValue { get; }
+		long InitialValue { get; }
 
 		/// <summary>
 		/// If true, the CRC calculation processes input as big endian bit order.
@@ -72,6 +72,6 @@ namespace HashifyNet.Algorithms.CRC
 		/// <value>
 		/// The value to xor with the final CRC value.
 		/// </value>
-		ulong XOrOut { get; }
+		long XOrOut { get; }
 	}
 }
