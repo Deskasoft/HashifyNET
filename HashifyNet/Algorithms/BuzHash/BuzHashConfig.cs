@@ -40,10 +40,10 @@ namespace HashifyNet.Algorithms.BuzHash
 		: IBuzHashConfig
 	{
 		/// <summary>
-		/// Gets a list of <c>256</c> (preferably random and distinct) <see cref="ulong"/> values.
+		/// Gets a list of <c>256</c> (preferably random and distinct) <see cref="long"/> values.
 		/// </summary>
 		/// <value>
-		/// List of 256 <see cref="ulong"/> values.
+		/// List of 256 <see cref="long"/> values.
 		/// </value>
 		public IReadOnlyList<ulong> Rtab { get; set; } = null;
 
@@ -65,9 +65,9 @@ namespace HashifyNet.Algorithms.BuzHash
 		/// The seed value.
 		/// </value>
 		/// <remarks>
-		/// Defaults to <c>0UL</c>
+		/// Defaults to <c>0</c>
 		/// </remarks>
-		public ulong Seed { get; set; } = 0UL;
+		public long Seed { get; set; }
 
 		/// <summary>
 		/// Gets the shift direction.
@@ -81,7 +81,7 @@ namespace HashifyNet.Algorithms.BuzHash
 		public CircularShiftDirection ShiftDirection { get; set; } = CircularShiftDirection.Left;
 
 		/// <summary>
-		/// Makes a deep clone of current instance.
+		/// Makes a deep clone of the current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public IBuzHashConfig Clone() =>
@@ -94,3 +94,4 @@ namespace HashifyNet.Algorithms.BuzHash
 			};
 	}
 }
+
