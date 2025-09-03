@@ -39,8 +39,8 @@ namespace HashifyNet.UnitTests.Algorithms.SpookyHash
 			var spookyHashConfig = new SpookyHashConfig();
 
 			Assert.Equal(128, spookyHashConfig.HashSizeInBits);
-			Assert.Equal(0UL, spookyHashConfig.Seed);
-			Assert.Equal(0UL, spookyHashConfig.Seed2);
+			Assert.Equal(0L, spookyHashConfig.Seed);
+			Assert.Equal(0L, spookyHashConfig.Seed2);
 		}
 
 		[Fact]
@@ -49,8 +49,8 @@ namespace HashifyNet.UnitTests.Algorithms.SpookyHash
 			var spookyHashConfig = new SpookyHashConfig()
 			{
 				HashSizeInBits = 32,
-				Seed = 1337UL,
-				Seed2 = 7331UL
+				Seed = 1337L,
+				Seed2 = 7331L
 			};
 
 			var spookyHashConfigClone = spookyHashConfig.Clone();
