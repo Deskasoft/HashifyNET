@@ -39,8 +39,8 @@ namespace HashifyNet.UnitTests.Algorithms.Jenkins
 			var jenkinsLookup3Config = new JenkinsLookup3Config();
 
 			Assert.Equal(32, jenkinsLookup3Config.HashSizeInBits);
-			Assert.Equal(0U, jenkinsLookup3Config.Seed);
-			Assert.Equal(0U, jenkinsLookup3Config.Seed2);
+			Assert.Equal(0, jenkinsLookup3Config.Seed);
+			Assert.Equal(0, jenkinsLookup3Config.Seed2);
 		}
 
 		[Fact]
@@ -49,8 +49,8 @@ namespace HashifyNet.UnitTests.Algorithms.Jenkins
 			var jenkinsLookup3Config = new JenkinsLookup3Config()
 			{
 				HashSizeInBits = 64,
-				Seed = 1337U,
-				Seed2 = 7331U
+				Seed = 1337,
+				Seed2 = 7331
 			};
 
 			var jenkinsLookup3ConfigClone = jenkinsLookup3Config.Clone();
