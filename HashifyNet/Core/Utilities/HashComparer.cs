@@ -80,5 +80,22 @@ namespace HashifyNet
 			return accumulator == 0;
 #endif
 		}
+
+		/// <summary>
+		/// Compares two immutable byte arrays for equality in a way that is resistant to timing attacks.
+		/// </summary>
+		/// <remarks>This method performs a constant-time comparison to prevent timing attacks, which can occur when
+		/// the time taken to compare two values leaks information about their contents. The method ensures that the
+		/// comparison time depends only on the length of the immutable  arrays, not their contents. <para> If the immutable arrays have different
+		/// lengths, the method returns <see langword="false"/> immediately. </para></remarks>
+		/// <param name="left">The first byte array to compare. Cannot be <see langword="null"/>.</param>
+		/// <param name="right">The second byte array to compare. Cannot be <see langword="null"/>.</param>
+		/// <returns><see langword="true"/> if the two immutable byte arrays are equal; otherwise, <see langword="false"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">Thrown if either <paramref name="left"/> or <paramref name="right"/> is <see langword="null"/>.</exception>
+		public static bool FixedTimeCompare(ImmutableArray<byte> left, ImmutableArray<byte> right)
+		{
+			return FixedTimeCompare(left.ToArray(), right.ToArray());
+		}
 	}
 }
+
