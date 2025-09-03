@@ -116,6 +116,7 @@ namespace HashifyNet
 		/// cref="ulong"/>. If the hash value exceeds 8 bytes, an exception is thrown.</remarks>
 		/// <returns>A 64-bit unsigned integer representation of the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash value is larger than 8 bytes.</exception>
+		[CLSCompliant(false)]
 		ulong AsUInt64();
 
 		/// <summary>
@@ -143,6 +144,7 @@ namespace HashifyNet
 		/// cref="uint"/>. If the hash value exceeds 4 bytes, an exception is thrown.</remarks>
 		/// <returns>A 32-bit unsigned integer representation of the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash value is larger than 4 bytes.</exception>
+		[CLSCompliant(false)]
 		uint AsUInt32();
 
 		/// <summary>
@@ -161,6 +163,7 @@ namespace HashifyNet
 		/// signed integer. If the hash value exceeds 2 bytes in length, an exception is thrown.</remarks>
 		/// <returns>A 16-bit signed integer representation of the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash value exceeds 2 bytes in length.</exception>
+		[CLSCompliant(false)]
 		short AsInt16();
 
 		/// <summary>
