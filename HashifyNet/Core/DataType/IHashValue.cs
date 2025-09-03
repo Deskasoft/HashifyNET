@@ -110,16 +110,6 @@ namespace HashifyNet
 		BigInteger AsBigInteger();
 
 		/// <summary>
-		/// Converts the hash value to a 64-bit unsigned integer.
-		/// </summary>
-		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to a <see
-		/// cref="ulong"/>. If the hash value exceeds 8 bytes, an exception is thrown.</remarks>
-		/// <returns>A 64-bit unsigned integer representation of the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash value is larger than 8 bytes.</exception>
-		[CLSCompliant(false)]
-		ulong AsUInt64();
-
-		/// <summary>
 		/// Converts the hash value to a <see cref="Guid"/>.
 		/// </summary>
 		/// <remarks>The hash must be exactly 16 bytes in length to be converted to a <see cref="Guid"/>. If the hash
@@ -138,16 +128,6 @@ namespace HashifyNet
 		int AsInt32();
 
 		/// <summary>
-		/// Converts the hash value to a 32-bit unsigned integer.
-		/// </summary>
-		/// <remarks>The method interprets the hash value as a little-endian byte array and converts it to a <see
-		/// cref="uint"/>. If the hash value exceeds 4 bytes, an exception is thrown.</remarks>
-		/// <returns>A 32-bit unsigned integer representation of the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash value is larger than 4 bytes.</exception>
-		[CLSCompliant(false)]
-		uint AsUInt32();
-
-		/// <summary>
 		/// Converts the hash value to a 64-bit signed integer.
 		/// </summary>
 		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to a 64-bit
@@ -163,18 +143,7 @@ namespace HashifyNet
 		/// signed integer. If the hash value exceeds 2 bytes in length, an exception is thrown.</remarks>
 		/// <returns>A 16-bit signed integer representation of the hash value.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if the hash value exceeds 2 bytes in length.</exception>
-		[CLSCompliant(false)]
 		short AsInt16();
-
-		/// <summary>
-		/// Converts the hash value to a 16-bit unsigned integer.
-		/// </summary>
-		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to a  <see
-		/// cref="ushort"/>. If the hash value exceeds 2 bytes, an exception is thrown.</remarks>
-		/// <returns>A 16-bit unsigned integer representation of the hash value. If the hash value is less than 2 bytes, the result is
-		/// padded with zeros.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash value exceeds 2 bytes, as it cannot be represented as a <see cref="ushort"/>.</exception>
-		ushort AsUInt16();
 
 		/// <summary>
 		/// Converts the hash value to a <see cref="char"/> representation.
