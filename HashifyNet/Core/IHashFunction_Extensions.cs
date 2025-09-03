@@ -150,6 +150,7 @@ namespace HashifyNet
 		/// <returns>
 		/// Hash value of the data as byte array.
 		/// </returns>
+		[CLSCompliant(false)]
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, sbyte data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
@@ -195,6 +196,7 @@ namespace HashifyNet
 		/// <returns>
 		/// Hash value of the data as byte array.
 		/// </returns>
+		[CLSCompliant(false)]
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, uint data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
@@ -209,6 +211,7 @@ namespace HashifyNet
 		/// <returns>
 		/// Hash value of the data as byte array.
 		/// </returns>
+		[CLSCompliant(false)]
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, ulong data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
@@ -223,6 +226,7 @@ namespace HashifyNet
 		/// <returns>
 		/// Hash value of the data as byte array.
 		/// </returns>
+		[CLSCompliant(false)]
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, ushort data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
@@ -354,6 +358,7 @@ namespace HashifyNet
 		/// <returns>
 		/// Hash value of the data as byte array.
 		/// </returns>
+		[CLSCompliant(false)]
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, sbyte data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
@@ -405,6 +410,7 @@ namespace HashifyNet
 		/// <returns>
 		/// Hash value of the data as byte array.
 		/// </returns>
+		[CLSCompliant(false)]
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, uint data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
@@ -421,6 +427,7 @@ namespace HashifyNet
 		/// <returns>
 		/// Hash value of the data as byte array.
 		/// </returns>
+		[CLSCompliant(false)]
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, ulong data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
@@ -437,6 +444,7 @@ namespace HashifyNet
 		/// <returns>
 		/// Hash value of the data as byte array.
 		/// </returns>
+		[CLSCompliant(false)]
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, ushort data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
