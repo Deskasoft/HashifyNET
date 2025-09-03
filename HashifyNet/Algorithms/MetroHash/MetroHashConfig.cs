@@ -46,10 +46,10 @@ namespace HashifyNet.Algorithms.MetroHash
 		/// <value>
 		/// The seed value.
 		/// </value>
-		public ulong Seed { get; set; } = 0;
+		public long Seed { get; set; }
 
 		/// <summary>
-		/// Makes a deep clone of current instance.
+		/// Makes a deep clone of the current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public IMetroHashConfig Clone() =>
