@@ -94,9 +94,10 @@ namespace HashifyNet
 		/// <exception cref="System.ArgumentNullException">Thrown if either <paramref name="left"/> or <paramref name="right"/> is <see langword="null"/>.</exception>
 		public static bool FixedTimeEquals(ImmutableArray<byte> left, ImmutableArray<byte> right)
 		{
-			return FixedTimeCompare(left.ToArray(), right.ToArray());
+			return FixedTimeEquals(left.ToArray(), right.ToArray());
 		}
 	}
 }
+
 
 
