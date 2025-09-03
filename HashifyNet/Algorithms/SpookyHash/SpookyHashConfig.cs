@@ -49,7 +49,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 		/// <value>
 		/// The seed.
 		/// </value>
-		public ulong Seed { get; set; } = 0UL;
+		public long Seed { get; set; }
 
 		/// <summary>
 		/// Gets the second seed.
@@ -57,10 +57,10 @@ namespace HashifyNet.Algorithms.SpookyHash
 		/// <value>
 		/// The second seed.
 		/// </value>
-		public ulong Seed2 { get; set; } = 0UL;
+		public long Seed2 { get; set; }
 
 		/// <summary>
-		/// Makes a deep clone of current instance.
+		/// Makes a deep clone of the current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public ISpookyHashConfig Clone() =>
