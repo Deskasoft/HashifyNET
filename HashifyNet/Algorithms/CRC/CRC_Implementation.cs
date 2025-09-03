@@ -91,7 +91,7 @@ namespace HashifyNet.Algorithms.CRC
 				: this()
 			{
 				_hashSizeInBits = config.HashSizeInBits;
-				_crcTable = GetDataDivisionTable(_hashSizeInBits, config.Polynomial, config.ReflectIn);
+				_crcTable = GetDataDivisionTable(_hashSizeInBits, (ulong)config.Polynomial, config.ReflectIn);
 
 				// _mostSignificantShift
 				{
@@ -108,11 +108,11 @@ namespace HashifyNet.Algorithms.CRC
 
 				_reflectIn = config.ReflectIn;
 				_reflectOut = config.ReflectOut;
-				_xOrOut = config.XOrOut;
+				_xOrOut = (ulong)config.XOrOut;
 
 				// _hashValue
 				{
-					var initialValue = config.InitialValue;
+					var initialValue = (ulong)config.InitialValue;
 
 					if (config.ReflectIn)
 					{
@@ -294,7 +294,7 @@ namespace HashifyNet.Algorithms.CRC
 
 				return valueBytes;
 			}
-   
+
 			private static ulong ReflectBits(ulong value, int bitLength)
 			{
 				ulong reflectedValue = 0UL;
@@ -313,4 +313,3 @@ namespace HashifyNet.Algorithms.CRC
 		}
 	}
 }
-
