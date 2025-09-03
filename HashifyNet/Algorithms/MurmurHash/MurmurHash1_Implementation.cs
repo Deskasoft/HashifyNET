@@ -72,7 +72,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 			var endOffset = dataOffset + dataCount;
 			var remainderCount = dataCount % 4;
 
-			uint hashValue = _config.Seed ^ ((uint)dataCount * _m);
+			uint hashValue = (uint)_config.Seed ^ ((uint)dataCount * _m);
 
 			// Process 4-byte groups
 			{
