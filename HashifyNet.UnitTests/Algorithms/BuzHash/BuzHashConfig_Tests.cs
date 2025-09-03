@@ -41,7 +41,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 			Assert.Null(buzHashConfig.Rtab);
 
 			Assert.Equal(64, buzHashConfig.HashSizeInBits);
-			Assert.Equal(0UL, buzHashConfig.Seed);
+			Assert.Equal(0L, buzHashConfig.Seed);
 			Assert.Equal(CircularShiftDirection.Left, buzHashConfig.ShiftDirection);
 		}
 
@@ -50,9 +50,9 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 		{
 			var buzHashConfig = new BuzHashConfig()
 			{
-				Rtab = new UInt64[256],
+				Rtab = new long[256],
 				HashSizeInBits = 32,
-				Seed = 1337UL,
+				Seed = 1337L,
 				ShiftDirection = CircularShiftDirection.Right
 			};
 
@@ -73,7 +73,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 			{
 				Rtab = null,
 				HashSizeInBits = 32,
-				Seed = 1337UL,
+				Seed = 1337L,
 				ShiftDirection = CircularShiftDirection.Right
 			};
 
