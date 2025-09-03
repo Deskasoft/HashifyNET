@@ -49,7 +49,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 		/// <value>
 		/// The seed.
 		/// </value>
-		public int Seed { get; set; } = 0U;
+		public int Seed { get; set; }
 
 		/// <summary>
 		/// Makes a deep clone of the current instance.
@@ -63,3 +63,4 @@ namespace HashifyNet.Algorithms.MurmurHash
 			};
 	}
 }
+
