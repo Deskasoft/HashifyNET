@@ -38,7 +38,7 @@ namespace HashifyNet.UnitTests.Algorithms.Jenkins
 		{
 			var jenkinsLookup2Config = new JenkinsLookup2Config();
 
-			Assert.Equal(0U, jenkinsLookup2Config.Seed);
+			Assert.Equal(0, jenkinsLookup2Config.Seed);
 		}
 
 		[Fact]
@@ -46,7 +46,7 @@ namespace HashifyNet.UnitTests.Algorithms.Jenkins
 		{
 			var jenkinsLookup2Config = new JenkinsLookup2Config()
 			{
-				Seed = 1337U,
+				Seed = 1337,
 			};
 			var jenkinsLookup2ConfigClone = jenkinsLookup2Config.Clone();
 
