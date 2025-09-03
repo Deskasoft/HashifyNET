@@ -49,7 +49,7 @@ namespace HashifyNet.Algorithms.Jenkins
 		/// <value>
 		/// The seed.
 		/// </value>
-		public uint Seed { get; set; } = 0U;
+		public int Seed { get; set; }
 
 		/// <summary>
 		/// Gets the second seed.
@@ -57,7 +57,7 @@ namespace HashifyNet.Algorithms.Jenkins
 		/// <value>
 		/// The second seed.
 		/// </value>
-		public uint Seed2 { get; set; } = 0U;
+		public int Seed2 { get; set; }
 
 		/// <summary>
 		/// Makes a deep clone of current instance.
