@@ -42,5 +42,5 @@ namespace HashifyNet.Algorithms.MurmurHash
 		/// </value>
 		long Seed { get; }
 	}
-
 }
+
