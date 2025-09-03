@@ -49,10 +49,10 @@ namespace HashifyNet.Algorithms.MurmurHash
 		/// <value>
 		/// The seed.
 		/// </value>
-		public uint Seed { get; set; } = 0U;
+		public int Seed { get; set; } = 0U;
 
 		/// <summary>
-		/// Makes a deep clone of current instance.
+		/// Makes a deep clone of the current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public IMurmurHash3Config Clone() =>
