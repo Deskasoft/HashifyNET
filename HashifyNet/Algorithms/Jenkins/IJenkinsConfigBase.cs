@@ -42,6 +42,7 @@ namespace HashifyNet.Algorithms.Jenkins
 		/// <value>
 		/// The seed.
 		/// </value>
-		uint Seed { get; }
+		int Seed { get; }
 	}
 }
+
