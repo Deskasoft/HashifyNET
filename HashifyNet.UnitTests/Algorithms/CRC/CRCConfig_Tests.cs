@@ -40,11 +40,11 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 
 
 			Assert.Equal(0, crcConfig.HashSizeInBits);
-			Assert.Equal(0UL, crcConfig.InitialValue);
-			Assert.Equal(0UL, crcConfig.Polynomial);
+			Assert.Equal(0L, crcConfig.InitialValue);
+			Assert.Equal(0L, crcConfig.Polynomial);
 			Assert.False(crcConfig.ReflectIn);
 			Assert.False(crcConfig.ReflectOut);
-			Assert.Equal(0UL, crcConfig.XOrOut);
+			Assert.Equal(0L, crcConfig.XOrOut);
 		}
 
 		[Fact]
@@ -847,10 +847,10 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					new CRCConfig {
 						HashSizeInBits = 64,
 						Polynomial = 0x42f0e1eba9ea3693,
-						InitialValue = 0xffffffffffffffff,
+						InitialValue = unchecked ((long)0xffffffffffffffff),
 						ReflectIn = false,
 						ReflectOut = false,
-						XOrOut = 0xffffffffffffffff,
+						XOrOut = unchecked ((long)0xffffffffffffffff),
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
@@ -858,10 +858,10 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					new CRCConfig {
 						HashSizeInBits = 64,
 						Polynomial = 0x42f0e1eba9ea3693,
-						InitialValue = 0xffffffffffffffff,
+						InitialValue = unchecked ((long)0xffffffffffffffff),
 						ReflectIn = true,
 						ReflectOut = true,
-						XOrOut = 0xffffffffffffffff,
+						XOrOut = unchecked ((long)0xffffffffffffffff),
 					}
 				),
 			};
