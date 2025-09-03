@@ -70,9 +70,9 @@ namespace HashifyNet.Algorithms.MetroHash
 			switch (_config.HashSizeInBits)
 			{
 				case 128:
-					return new BlockTransformer128(_config.Seed);
+					return new BlockTransformer128((ulong)_config.Seed);
 				case 64:
-					return new BlockTransformer64(_config.Seed);
+					return new BlockTransformer64((ulong)_config.Seed);
 				default:
 					throw new NotSupportedException($"Hash size of {_config.HashSizeInBits} bits is not supported by MetroHash.");
 			}
