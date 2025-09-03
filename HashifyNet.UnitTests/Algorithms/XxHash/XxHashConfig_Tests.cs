@@ -39,7 +39,7 @@ namespace HashifyNet.UnitTests.Algorithms.XxHash
 			var xxHashConfigInstance = new XxHashConfig();
 
 			Assert.Equal(32, xxHashConfigInstance.HashSizeInBits);
-			Assert.Equal(0UL, xxHashConfigInstance.Seed);
+			Assert.Equal(0L, xxHashConfigInstance.Seed);
 		}
 
 		[Fact]
@@ -48,7 +48,7 @@ namespace HashifyNet.UnitTests.Algorithms.XxHash
 			var xxHashConfigInstance = new XxHashConfig()
 			{
 				HashSizeInBits = 64,
-				Seed = 1337UL,
+				Seed = 1337L,
 			};
 
 			var xxHashConfigClone = xxHashConfigInstance.Clone();
