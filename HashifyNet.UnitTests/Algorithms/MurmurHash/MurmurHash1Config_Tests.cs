@@ -38,7 +38,7 @@ namespace HashifyNet.UnitTests.Algorithms.MurmurHash
 		{
 			var murmurHash1Config = new MurmurHash1Config();
 
-			Assert.Equal(0U, murmurHash1Config.Seed);
+			Assert.Equal(0, murmurHash1Config.Seed);
 		}
 
 		[Fact]
@@ -46,7 +46,7 @@ namespace HashifyNet.UnitTests.Algorithms.MurmurHash
 		{
 			var murmurHash1Config = new MurmurHash1Config()
 			{
-				Seed = 1337U
+				Seed = 1337
 			};
 
 			var murmurHash1ConfigClone = murmurHash1Config.Clone();
