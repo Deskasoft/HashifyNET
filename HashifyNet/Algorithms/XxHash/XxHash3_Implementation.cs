@@ -34,6 +34,15 @@ using System.Threading;
 
 namespace HashifyNet.Algorithms.XxHash3
 {
+	/// <summary>
+	/// Provides an implementation of the XXH3 (XXHash3) hashing algorithm, supporting both 64-bit and 128-bit hash sizes.
+	/// </summary>
+	/// <remarks>This class is designed to compute non-cryptographic hash values using the XXH3 algorithm. It
+	/// supports streaming input data and is configurable via an <see cref="IXxHash3Config"/> instance. The hash size is
+	/// fixed at either 64 or 128 bits, as specified in the configuration. <para> This implementation is optimized for
+	/// performance and is suitable for scenarios requiring fast, high-quality non-cryptographic hashing, such as checksums
+	/// or hash-based data structures. </para></remarks>
+	[HashAlgorithmImplementation(typeof(IXxHash3), typeof(XxHash3Config))]
 	internal class XxHash3_Implementation
 		: StreamableHashFunctionBase<IXxHash3Config>,
 			IXxHash3
@@ -103,3 +112,4 @@ namespace HashifyNet.Algorithms.XxHash3
 	}
 
 }
+
