@@ -41,208 +41,150 @@ namespace HashifyNet
 		: IEquatable<IHashValue>, IComparable<IHashValue>
 	{
 		/// <summary>
-		/// Gets the length of the hash value in bits.
+		/// Gets the length of the hash in bits.
 		/// </summary>
-		/// <value>
-		/// The length of the hash value in bits.
-		/// </value>
 		int BitLength { get; }
 
 		/// <summary>
-		/// Gets resulting byte array.
+		/// Gets the hash value as an immutable array of bytes.
 		/// </summary>
-		/// <value>
-		/// The hash value.
-		/// </value>
-		/// <remarks>
-		/// Implementations should coerce the input hash value to be <see cref="BitLength"/> size in bits.
-		/// </remarks>
 		ImmutableArray<byte> Hash { get; }
 
 		/// <summary>
-		/// Converts the hash value to a bit array.
+		/// Gets the hash value as a <see cref="Guid"/>. If the bit length is greater than 128, an exception is thrown.
 		/// </summary>
-		/// <returns>A <see cref="BitArray"/> instance to represent this hash value.</returns>
-		BitArray AsBitArray();
-
-		/// <summary>
-		/// Converts the immutable array to a byte array representation.
-		/// </summary>
-		/// <returns>A byte array that represents the current immutable array.</returns>
-		byte[] AsByteArray();
-
-		/// <summary>
-		/// Converts the hash value to a hexadecimal string.
-		/// </summary>
-		/// <returns>A hex string representing this hash value.</returns>
-		string AsHexString();
-
-		/// <summary>
-		/// Converts the hash value to a hexadecimal string.
-		/// </summary>
-		/// <param name="uppercase"><c>true</c> if the result should use uppercase hex values; otherwise <c>false</c>.</param>
-		/// <returns>A hex string representing this hash value.</returns>
-		string AsHexString(bool uppercase);
-
-		/// <summary>
-		/// Converts the hash value to a the base64 string.
-		/// </summary>
-		/// <param name="formattingOptions">Formatting options for the generated base64 string.</param>
-		/// <returns>A base64 string representing this hash value.</returns>
-		string AsBase64String(Base64FormattingOptions formattingOptions = Base64FormattingOptions.None);
-
-		/// <summary>
-		/// Converts the hash value to a representation with the specified bit length.
-		/// </summary>
-		/// <remarks>This method allows the caller to adjust the bit length of the hash value to meet specific
-		/// requirements. The resulting hash value may be truncated or padded, depending on the specified bit
-		/// length.</remarks>
-		/// <param name="bitLength">The desired bit length of the resulting hash value. Must be a positive integer.</param>
-		/// <returns>An <see cref="IHashValue"/> instance representing the hash value with the specified bit length.</returns>
-		IHashValue Coerce(int bitLength);
-
-		/// <summary>
-		/// Converts the current hash to its equivalent <see cref="BigInteger"/> representation.
-		/// </summary>
-		/// <remarks>This method uses the byte array representation of the hash to construct the <see
-		/// cref="BigInteger"/>.</remarks>
-		/// <returns>A <see cref="BigInteger"/> that represents the current hash.</returns>
-		BigInteger AsBigInteger();
-
-		/// <summary>
-		/// Converts the hash value to a <see cref="Guid"/>.
-		/// </summary>
-		/// <remarks>The hash must be exactly 16 bytes in length to be converted to a <see cref="Guid"/>. If the hash
-		/// length is not 16 bytes, an exception is thrown.</remarks>
-		/// <returns>A <see cref="Guid"/> representation of the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash is not exactly 16 bytes in length.</exception>
+		/// <returns>A Guid representation of the underlying hash value.</returns>
+		/// <exception cref="InvalidOperationException">Thrown if <see cref="BitLength"/> is greater than 128.</exception>
 		Guid AsGuid();
 
 		/// <summary>
-		/// Converts the hash value to a 32-bit integer representation.
+		/// Gets the hash value as a <see cref="BigInteger"/>.
 		/// </summary>
-		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to an <see
-		/// cref="int"/>. If the hash value exceeds 4 bytes, an exception is thrown.</remarks>
-		/// <returns>A 32-bit integer representation of the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash value exceeds 4 bytes in length.</exception>
+		/// <returns>The created <see cref="BigInteger"/> instance.</returns>
+		BigInteger AsBigInteger();
+
+		/// <summary>
+		/// Gets the hash value as a signed 32-bit integer. If the bit length is greater than 32, an exception is thrown.
+		/// </summary>
+		/// <returns>A signed 32-bit integer.</returns>
 		int AsInt32();
 
 		/// <summary>
-		/// Converts the hash value to a 64-bit signed integer.
+		/// Gets the hash value as a signed 64-bit integer. If the bit length is greater than 64, an exception is thrown.
 		/// </summary>
-		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to a 64-bit
-		/// signed integer. If the hash value exceeds 8 bytes, an exception is thrown.</remarks>
-		/// <returns>A 64-bit signed integer representation of the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash value is larger than 8 bytes.</exception>
+		/// <returns>A signed 64-bit integer.</returns>
 		long AsInt64();
 
 		/// <summary>
-		/// Converts the hash value to a 16-bit signed integer.
+		/// Gets the hash value as a signed 16-bit integer. If the bit length is greater than 16, an exception is thrown.
 		/// </summary>
-		/// <remarks>This method interprets the hash value as a little-endian byte array and converts it to a 16-bit
-		/// signed integer. If the hash value exceeds 2 bytes in length, an exception is thrown.</remarks>
-		/// <returns>A 16-bit signed integer representation of the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash value exceeds 2 bytes in length.</exception>
+		/// <returns>A signed 16-bit integer.</returns>
 		short AsInt16();
 
 		/// <summary>
-		/// Converts the hash value to a <see cref="char"/> representation.
+		/// Gets the hash value as a Unicode character. If the bit length is greater than 16, an exception is thrown.
 		/// </summary>
-		/// <remarks>This method interprets the hash as a sequence of bytes and converts it into a <see cref="char"/>.
-		/// If the hash contains more than two bytes, an exception is thrown.</remarks>
-		/// <returns>A <see cref="char"/> representation of the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash contains more than two bytes, as it cannot be represented as a <see cref="char"/>.</exception>
+		/// <returns>A unicode character.</returns>
 		char AsChar();
 
 		/// <summary>
-		/// Converts the hash value to a single-precision floating-point number.
+		/// Gets the hash value as a single-precision floating point number. If the bit length is greater than 32, an exception is thrown.
 		/// </summary>
-		/// <remarks>The hash must be exactly 4 bytes in length to perform the conversion. If the hash length is not 4
-		/// bytes, an <see cref="InvalidOperationException"/> is thrown.</remarks>
-		/// <returns>A <see cref="float"/> representation of the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash is not exactly 4 bytes in length.</exception>
+		/// <returns>A single-precision floating point number.</returns>
 		float AsSingle();
 
 		/// <summary>
-		/// Converts the hash value to a <see cref="double"/> representation.
+		/// Gets the hash value as a double-precision floating point number. If the bit length is greater than 64, an exception is thrown.
 		/// </summary>
-		/// <remarks>The hash must be exactly 8 bytes in length to perform the conversion. If the hash length is not
-		/// 8 bytes, an exception is thrown.</remarks>
-		/// <returns>A <see cref="double"/> representation of the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash is not exactly 8 bytes in length.</exception>
+		/// <returns>A double-precision floating point number.</returns>
 		double AsDouble();
 
 		/// <summary>
-		/// Converts the hash value to a <see cref="decimal"/> representation.
+		/// Gets the hash value as a decimal number. If the bit length is greater than 96, an exception is thrown.
 		/// </summary>
-		/// <remarks>The hash must be exactly 16 bytes in length to be converted to a <see cref="decimal"/>. If the
-		/// hash length is not 16 bytes, an exception is thrown.</remarks>
-		/// <returns>A <see cref="decimal"/> representation of the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash is not exactly 16 bytes in length.</exception>
+		/// <returns>A decimal number.</returns>
 		decimal AsDecimal();
 
 		/// <summary>
-		/// Converts the hash value to a <see cref="DateTime"/> instance.
+		/// Gets the hash value as a <see cref="DateTime"/>. The hash value is interpreted as the number of ticks (100-nanosecond intervals) since 12:00:00 midnight, January 1, 0001.
 		/// </summary>
-		/// <remarks>The hash must be exactly 8 bytes long to represent a valid <see cref="DateTime"/>. If the hash
-		/// length is not 8 bytes, an exception is thrown.</remarks>
-		/// <returns>A <see cref="DateTime"/> instance created from the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash is not exactly 8 bytes long.</exception>
+		/// <returns>The generated <see cref="DateTime"/> instance.</returns>
 		DateTime AsDateTime();
 
 		/// <summary>
-		/// Converts the hash value to a <see cref="DateTimeOffset"/>.
+		/// Gets the hash value as a <see cref="DateTimeOffset"/>. The hash value is interpreted as the number of ticks (100-nanosecond intervals) since 12:00:00 midnight, January 1, 0001.
 		/// </summary>
-		/// <remarks>The hash must be exactly 8 bytes long to perform the conversion. The resulting <see
-		/// cref="DateTimeOffset"/> is created with a UTC offset of <see cref="TimeSpan.Zero"/>.</remarks>
-		/// <returns>A <see cref="DateTimeOffset"/> representation of the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash is not exactly 8 bytes long.</exception>
+		/// <returns>The generated <see cref="DateTimeOffset"/> instance.</returns>
 		DateTimeOffset AsDateTimeOffset();
 
 		/// <summary>
-		/// Converts the hash value to a <see cref="TimeSpan"/> instance.
+		/// Gets the hash value as a <see cref="TimeSpan"/>. The hash value is interpreted as the number of ticks (100-nanosecond intervals).
 		/// </summary>
-		/// <remarks>The hash value must be exactly 8 bytes long to be converted to a <see cref="TimeSpan"/>. If the
-		/// hash length is not 8 bytes, an exception is thrown.</remarks>
-		/// <returns>A <see cref="TimeSpan"/> representing the hash value.</returns>
-		/// <exception cref="InvalidOperationException">Thrown if the hash value is not exactly 8 bytes long.</exception>
+		/// <returns>The generated <see cref="TimeSpan"/> instance.</returns>
 		TimeSpan AsTimeSpan();
 
 		/// <summary>
-		/// Converts the current hash to its binary string representation.
+		/// Gets the hash value as a binary string. Each byte is represented by 8 bits, with leading zeros if necessary.
 		/// </summary>
-		/// <remarks>This method generates a binary string where each byte of the hash is represented  as an
-		/// 8-character binary value, padded with leading zeros if necessary. The resulting string concatenates the binary
-		/// representations of all bytes in sequence.</remarks>
-		/// <returns>A string containing the binary representation of the hash.</returns>
+		/// <returns>The generated binary string.</returns>
 		string AsBinaryString();
 
 		/// <summary>
-		/// Encodes the current hash as a Base85-encoded string.
+		/// Gets the hash value as a Base85-encoded string. If the bit length is not a multiple of 8, the last byte is padded with zeros.
 		/// </summary>
-		/// <remarks>This method converts the hash's data, represented as a byte array, into a Base85-encoded string
-		/// using the ASCII85 encoding scheme. Base85 encoding is a compact representation of binary data that uses a set of
-		/// 85 printable ASCII characters.</remarks>
-		/// <returns>A Base85-encoded string representation of the hash's data. Returns an empty string if the byte array is empty.</returns>
-		string AsBase85();
+		/// <returns>The generated base85 string.</returns>
+		string AsBase85String();
 
 		/// <summary>
-		/// Converts the current hash to its Base58-encoded string representation.
+		/// Gets the hash value as a Base64-encoded string. If the bit length is not a multiple of 8, the last byte is padded with zeros.
 		/// </summary>
-		/// <remarks>This method uses the Base58 encoding scheme, which is commonly used in applications such as
-		/// cryptocurrency addresses. The encoding excludes visually ambiguous characters such as '0', 'O', 'I', and
-		/// 'l'.</remarks>
-		/// <returns>A Base58-encoded string representation of the current hash.</returns>
-		string AsBase58();
+		/// <param name="formattingOptions">The formatting options for generating base64 encoded string.</param>
+		/// <returns>The generated base64 encoded string.</returns>
+		string AsBase64String(Base64FormattingOptions formattingOptions = Base64FormattingOptions.None);
 
 		/// <summary>
-		/// Converts the current hash to a Base32-encoded string representation.
+		/// Gets the hash value as a Base58-encoded string. If the bit length is not a multiple of 8, the last byte is padded with zeros.
 		/// </summary>
-		/// <remarks>The Base32 encoding uses the alphabet "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567" and appends padding 
-		/// characters ('=') to ensure the output length is a multiple of 8. This method processes the hash's data as a
-		/// byte array and encodes it into Base32 format.</remarks>
-		/// <returns>A Base32-encoded string representation of the hash's data. Returns an empty string if the hash's data is
-		/// empty.</returns>
-		string AsBase32();
+		/// <returns>The generated base58 string.</returns>
+		string AsBase58String();
+
+		/// <summary>
+		/// Gets the hash value as a Base32-encoded string. If the bit length is not a multiple of 8, the last byte is padded with zeros.
+		/// </summary>
+		/// <returns>The generated base32 string.</returns>
+		string AsBase32String();
+
+		/// <summary>
+		/// Gets the hash value as a hexadecimal string, using lowercase letters for 'a' to 'f'.
+		/// </summary>
+		/// <returns>The hexadecimal string.</returns>
+		string AsHexString();
+
+		/// <summary>
+		/// Gets the hash value as a hexadecimal string.
+		/// </summary>
+		/// <param name="uppercase">Indicating to use uppercase letters.</param>
+		/// <returns>The hexadecimal string.</returns>
+		string AsHexString(bool uppercase);
+
+		/// <summary>
+		/// Gets the hash value as a <see cref="BitArray"/>.
+		/// </summary>
+		/// <returns>The created <see cref="BitArray"/> instance.</returns>
+		BitArray AsBitArray();
+
+		/// <summary>
+		/// Gets the hash value as a modifiable byte array.
+		/// </summary>
+		/// <returns>The modifiable byte array.</returns>
+		byte[] AsByteArray();
+
+		/// <summary>
+		/// Converts the current hash value to a new representation with the specified bit length.
+		/// </summary>
+		/// <param name="bitLength">The desired bit length of the resulting hash value. Must be greater than or equal to 1.</param>
+		/// <returns>An <see cref="IHashValue"/> instance representing the hash value coerced to the specified bit length.</returns>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="bitLength"/> is less than 1.</exception>
+		IHashValue Coerce(int bitLength);
 	}
 }
