@@ -38,8 +38,12 @@ using System.Numerics;
 namespace HashifyNet.Core.Utilities
 {
 	/// <summary>
-	/// Implementation of <see cref="IHashValue"/>
+	/// Represents a hash value and its associated bit length.
 	/// </summary>
+	/// <remarks>This class provides a representation of a hash value as an immutable sequence of bytes, along with
+	/// its bit length. It includes methods to convert the hash value into various formats, such as Base64, hexadecimal,
+	/// and numeric types. The hash value is immutable and ensures that the provided bit length matches the actual length
+	/// of the hash in bits.</remarks>
 	public class HashValue
 		: IHashValue
 	{
@@ -54,12 +58,12 @@ namespace HashifyNet.Core.Utilities
 		public int BitLength { get; }
 
 		/// <summary>
-		/// Initializes a new instance of <see cref="HashValue"/>.
+		/// Creates a new instance of the <see cref="HashValue"/> class that is a representation of a hash value and its bit length computed by a hasher.
 		/// </summary>
-		/// <param name="hash">The hash.</param>
-		/// <param name="bitLength">Length of the hash, in bits.</param>
-		/// <exception cref="ArgumentNullException"><paramref name="hash"/></exception>
-		/// <exception cref="ArgumentOutOfRangeException"><paramref name="bitLength"/>;bitLength must be greater than or equal to 1.</exception>
+		/// <param name="hash">The hash computed by a hasher.</param>
+		/// <param name="bitLength">The expected bit length of the given <paramref name="hash"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the given hash is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="bitLength"/> parameter is smaller than 1.</exception>
 		public HashValue(IEnumerable<byte> hash, int bitLength)
 		{
 			if (hash == null)
@@ -85,16 +89,6 @@ namespace HashifyNet.Core.Utilities
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="formattingOptions"><inheritdoc/></param>
-		/// <returns><inheritdoc/></returns>
-		public string AsBase64String(Base64FormattingOptions formattingOptions = Base64FormattingOptions.None)
-		{
-			return Convert.ToBase64String(Hash.ToArray(), formattingOptions);
-		}
-
-		/// <summary>
-		/// <inheritdoc/>
-		/// </summary>
 		/// <returns><inheritdoc/></returns>
 		public BigInteger AsBigInteger()
 		{
@@ -106,223 +100,216 @@ namespace HashifyNet.Core.Utilities
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
 		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
-		[CLSCompliant(false)]
-		public ulong AsUInt64()
-		{
-			byte[] data = AsByteArray();
-			if (data.Length > 8)
-			{
-				throw new InvalidOperationException("Hash is too large to fit in a UInt64.");
-			}
-			ulong result = 0;
-			for (int i = 0; i < data.Length; i++)
-			{
-				result |= (ulong)data[i] << (8 * i);
-			}
-			return result;
-		}
-
-		/// <summary>
-		/// <inheritdoc/>
-		/// </summary>
-		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
 		public Guid AsGuid()
 		{
-			byte[] data = AsByteArray();
-			if (data.Length != 16)
+			if (BitLength > 128)
 			{
-				throw new InvalidOperationException("Hash must be exactly 16 bytes to convert to a GUID.");
+				throw new InvalidOperationException("Hash must be smaller than or equal to 16 bytes.");
+			}
+
+			byte[] data = AsByteArray();
+			if (data.Length < 16)
+			{
+				byte[] paddedData = new byte[16];
+				Array.Copy(data, paddedData, data.Length);
+				data = paddedData;
 			}
 
 			return new Guid(data);
 		}
 
+		#region Non-CLS-Compliant API
 		/// <summary>
-		/// <inheritdoc/>
+		/// Gets the hash value as an unsigned 64-bit integer. If the bit length is greater than 64, an exception is thrown.
+		/// <para>This API is not CLS-Compliant.</para>
 		/// </summary>
-		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
-		public int AsInt32()
+		/// <returns>An unsigned 64-bit integer value.</returns>
+		[CLSCompliant(false)]
+		public ulong AsUInt64()
 		{
-			byte[] data = AsByteArray();
-			if (data.Length > 4)
-			{
-				throw new InvalidOperationException("Hash is too large to fit in an Int32.");
-			}
-			int result = 0;
-			for (int i = 0; i < data.Length; i++)
-			{
-				result |= data[i] << (8 * i);
-			}
-			return result;
+			return (ulong)AsNumber64();
 		}
 
 		/// <summary>
-		/// <inheritdoc/>
+		/// Gets the hash value as an unsigned 32-bit integer. If the bit length is greater than 32, an exception is thrown.
+		/// <para>This API is not CLS-Compliant.</para>
 		/// </summary>
-		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
+		/// <returns>An unsigned 32-bit integer.</returns>
 		[CLSCompliant(false)]
 		public uint AsUInt32()
 		{
-			byte[] data = AsByteArray();
-			if (data.Length > 4)
-			{
-				throw new InvalidOperationException("Hash is too large to fit in a UInt32.");
-			}
-			uint result = 0;
-			for (int i = 0; i < data.Length; i++)
-			{
-				result |= (uint)data[i] << (8 * i);
-			}
-			return result;
+			return (uint)AsNumber32();
 		}
 
 		/// <summary>
-		/// <inheritdoc/>
+		/// Gets the hash value as a unsigned 16-bit integer. If the bit length is greater than 16, an exception is thrown.
+		/// <para>This API is not CLS-Compliant.</para>
 		/// </summary>
-		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
-		public long AsInt64()
-		{
-			byte[] data = AsByteArray();
-			if (data.Length > 8)
-			{
-				throw new InvalidOperationException("Hash is too large to fit in an Int64.");
-			}
-			long result = 0;
-			for (int i = 0; i < data.Length; i++)
-			{
-				result |= (long)data[i] << (8 * i);
-			}
-			return result;
-		}
-
-		/// <summary>
-		/// <inheritdoc/>
-		/// </summary>
-		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
-		public short AsInt16()
-		{
-			byte[] data = AsByteArray();
-			if (data.Length > 2)
-			{
-				throw new InvalidOperationException("Hash is too large to fit in an Int16.");
-			}
-			short result = 0;
-			for (int i = 0; i < data.Length; i++)
-			{
-				result |= (short)(data[i] << (8 * i));
-			}
-			return result;
-		}
-
-		/// <summary>
-		/// <inheritdoc/>
-		/// </summary>
-		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
+		/// <returns>An unsigned 16-bit integer.</returns>
 		[CLSCompliant(false)]
 		public ushort AsUInt16()
 		{
-			byte[] data = AsByteArray();
-			if (data.Length > 2)
-			{
-				throw new InvalidOperationException("Hash is too large to fit in a UInt16.");
-			}
-			ushort result = 0;
-			for (int i = 0; i < data.Length; i++)
-			{
-				result |= (ushort)(data[i] << (8 * i));
-			}
-			return result;
+			return (ushort)AsNumber16();
+		}
+		#endregion
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public int AsInt32()
+		{
+			return AsNumber32();
 		}
 
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
+		public long AsInt64()
+		{
+			return AsNumber64();
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public short AsInt16()
+		{
+			return AsNumber16();
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
 		public char AsChar()
 		{
-			byte[] data = AsByteArray();
-			if (data.Length > 2)
-			{
-				throw new InvalidOperationException("Hash is too large to fit in a Char.");
-			}
-			char result = (char)0;
-			for (int i = 0; i < data.Length; i++)
-			{
-				result |= (char)(data[i] << (8 * i));
-			}
-			return result;
+			return (char)AsNumber16();
 		}
 
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
 		public float AsSingle()
 		{
-			byte[] data = AsByteArray();
-			if (data.Length != 4)
+			int l = AsNumber32();
+			unsafe
 			{
-				throw new InvalidOperationException("Hash must be exactly 4 bytes to convert to a Single.");
+				return *(float*)&l;
 			}
-			return BitConverter.ToSingle(data, 0);
 		}
 
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
 		public double AsDouble()
 		{
-			byte[] data = AsByteArray();
-			if (data.Length != 8)
+			long l = AsNumber64();
+			unsafe
 			{
-				throw new InvalidOperationException("Hash must be exactly 8 bytes to convert to a Double.");
+				return *(double*)&l;
 			}
-			return BitConverter.ToDouble(data, 0);
 		}
 
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
 		public decimal AsDecimal()
 		{
+			return AsNumber128_96();
+		}
+
+		private decimal AsNumber128_96()
+		{
+			if (BitLength < 1)
+				throw new ArgumentException("Bit Length cannot be smaller than 1.");
+
+			if (BitLength > 96)
+				throw new NotSupportedException("Bit Length greater than 96 is not supported.");
+
 			byte[] data = AsByteArray();
-			if (data.Length != 16)
+
+			byte[] dataPadded = new byte[12];
+			Array.Copy(data, dataPadded, data.Length);
+
+			int lo = (int)Endianness.ToUInt32LittleEndian(dataPadded, 0);
+			int mid = (int)Endianness.ToUInt32LittleEndian(dataPadded, 4);
+			int hi = (int)Endianness.ToUInt32LittleEndian(dataPadded, 8);
+			return new decimal(lo, mid, hi, false, 0);
+		}
+
+		private long AsNumber64()
+		{
+			if (BitLength < 1)
+				throw new ArgumentException("Bit Length cannot be smaller than 1.");
+
+			if (BitLength > 64)
+				throw new NotSupportedException("Bit Length greater than 64 is not supported.");
+
+			byte[] data = AsByteArray();
+
+			long num = 0;
+			for (int i = 0; i < data.Length; ++i)
 			{
-				throw new InvalidOperationException("Hash must be exactly 16 bytes to convert to a Decimal.");
+				num |= (long)data[i] << (8 * i);
 			}
-			int[] bits = new int[4];
-			for (int i = 0; i < 4; i++)
+
+			return num;
+		}
+
+		private int AsNumber32()
+		{
+			if (BitLength > 32)
 			{
-				bits[i] = BitConverter.ToInt32(data, i * 4);
+				throw new NotSupportedException("Bit Length greater than 32 is not supported.");
 			}
-			return new decimal(bits);
+
+			return (int)AsNumber64();
+		}
+
+		private short AsNumber16()
+		{
+			if (BitLength > 16)
+			{
+				throw new NotSupportedException("Bit Length greater than 16 is not supported.");
+			}
+
+			return (short)AsNumber64();
 		}
 
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
 		public DateTime AsDateTime()
 		{
-			byte[] data = AsByteArray();
-			if (data.Length != 8)
+			long ticks = AsNumber64();
+			if (ticks < 0)
 			{
-				throw new InvalidOperationException("Hash must be exactly 8 bytes to convert to a DateTime.");
+				ticks = -(ticks / 2);
 			}
-			long ticks = BitConverter.ToInt64(data, 0);
+
+			if (BitLength < 64)
+			{
+				double maxHashValue = (double)(1L << BitLength);
+				ticks = (long)(ticks / maxHashValue * DateTime.MaxValue.Ticks);
+			}
+
+			if (ticks < DateTime.MinValue.Ticks)
+			{
+				ticks = DateTime.MinValue.Ticks;
+			}
+
+			if (ticks > DateTime.MaxValue.Ticks)
+			{
+				ticks = DateTime.MaxValue.Ticks;
+			}
+
 			return new DateTime(ticks);
 		}
 
@@ -330,15 +317,30 @@ namespace HashifyNet.Core.Utilities
 		/// <inheritdoc/>
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
 		public DateTimeOffset AsDateTimeOffset()
 		{
-			byte[] data = AsByteArray();
-			if (data.Length != 8)
+			long ticks = AsNumber64();
+			if (ticks < 0)
 			{
-				throw new InvalidOperationException("Hash must be exactly 8 bytes to convert to a DateTimeOffset.");
+				ticks = -(ticks / 2);
 			}
-			long ticks = BitConverter.ToInt64(data, 0);
+
+			if (BitLength < 64)
+			{
+				double maxHashValue = (double)(1L << BitLength);
+				ticks = (long)(ticks / maxHashValue * DateTime.MaxValue.Ticks);
+			}
+
+			if (ticks < DateTimeOffset.MinValue.Ticks)
+			{
+				ticks = DateTimeOffset.MinValue.Ticks;
+			}
+
+			if (ticks > DateTimeOffset.MaxValue.Ticks)
+			{
+				ticks = DateTimeOffset.MaxValue.Ticks;
+			}
+
 			return new DateTimeOffset(ticks, TimeSpan.Zero);
 		}
 
@@ -346,15 +348,30 @@ namespace HashifyNet.Core.Utilities
 		/// <inheritdoc/>
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
-		/// <exception cref="InvalidOperationException"><inheritdoc/></exception>
 		public TimeSpan AsTimeSpan()
 		{
-			byte[] data = AsByteArray();
-			if (data.Length != 8)
+			long ticks = AsNumber64();
+			if (ticks < 0)
 			{
-				throw new InvalidOperationException("Hash must be exactly 8 bytes to convert to a TimeSpan.");
+				ticks = -(ticks / 2);
 			}
-			long ticks = BitConverter.ToInt64(data, 0);
+
+			if (BitLength < 64)
+			{
+				double maxHashValue = (double)(1L << BitLength);
+				ticks = (long)(ticks / maxHashValue * DateTime.MaxValue.Ticks);
+			}
+
+			if (ticks < TimeSpan.MinValue.Ticks)
+			{
+				ticks = TimeSpan.MinValue.Ticks;
+			}
+
+			if (ticks > TimeSpan.MaxValue.Ticks)
+			{
+				ticks = TimeSpan.MaxValue.Ticks;
+			}
+
 			return new TimeSpan(ticks);
 		}
 
@@ -377,14 +394,17 @@ namespace HashifyNet.Core.Utilities
 		/// <inheritdoc/>
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
-		public string AsBase85()
+		public string AsBase85String()
 		{
+			if (BitLength < 1)
+				return "";
+
 			const string Base85Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|}~";
 			byte[] data = AsByteArray();
-			if (data.Length == 0) return "";
 			var builder = new StringBuilder();
 			int value = 0;
 			int count = 0;
+
 			foreach (byte b in data)
 			{
 				value = (value << 8) | b;
@@ -413,9 +433,22 @@ namespace HashifyNet.Core.Utilities
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
+		/// <param name="formattingOptions"><inheritdoc/></param>
 		/// <returns><inheritdoc/></returns>
-		public string AsBase58()
+		public string AsBase64String(Base64FormattingOptions formattingOptions = Base64FormattingOptions.None)
 		{
+			return Convert.ToBase64String(Hash.ToArray(), formattingOptions);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public string AsBase58String()
+		{
+			if (BitLength < 1)
+				return "";
+
 			const string Base58Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 			byte[] data = AsByteArray();
 
@@ -442,12 +475,13 @@ namespace HashifyNet.Core.Utilities
 		/// <inheritdoc/>
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
-		public string AsBase32()
+		public string AsBase32String()
 		{
+			if (BitLength < 1)
+				return "";
+
 			const string Base32Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 			byte[] data = AsByteArray();
-
-			if (data.Length == 0) return "";
 
 			var builder = new StringBuilder();
 			int bitsRead = 0;
@@ -481,9 +515,31 @@ namespace HashifyNet.Core.Utilities
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
-		/// <returns>
+		/// <returns><inheritdoc/></returns>
+		public string AsHexString() => AsHexString(false);
+
+		/// <summary>
 		/// <inheritdoc/>
-		/// </returns>
+		/// </summary>
+		/// <param name="uppercase"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		public string AsHexString(bool uppercase)
+		{
+			var stringBuilder = new StringBuilder(Hash.Length);
+			var formatString = uppercase ? "X2" : "x2";
+
+			foreach (var byteValue in Hash)
+			{
+				stringBuilder.Append(byteValue.ToString(formatString));
+			}
+
+			return stringBuilder.ToString();
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
 		public BitArray AsBitArray()
 		{
 			return new BitArray(Hash.ToArray())
@@ -504,37 +560,26 @@ namespace HashifyNet.Core.Utilities
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
-		/// <returns>
-		/// <inheritdoc/>
-		/// </returns>
-		public string AsHexString() => AsHexString(false);
-
-		/// <summary>
-		/// <inheritdoc/>
-		/// </summary>
-		/// <param name="uppercase"><inheritdoc/></param>
-		/// <returns>
-		/// <inheritdoc/>
-		/// </returns>
-		public string AsHexString(bool uppercase)
+		/// <param name="bitLength"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		/// <exception cref="ArgumentOutOfRangeException"><inheritdoc/></exception>
+		public virtual IHashValue Coerce(int bitLength)
 		{
-			var stringBuilder = new StringBuilder(Hash.Length);
-			var formatString = uppercase ? "X2" : "x2";
-
-			foreach (var byteValue in Hash)
+			if (bitLength < 1)
 			{
-				stringBuilder.Append(byteValue.ToString(formatString));
+				throw new ArgumentOutOfRangeException(nameof(bitLength), $"{nameof(bitLength)} must be greater than or equal to 1.");
 			}
 
-			return stringBuilder.ToString();
+			return new HashValue(ArrayHelpers.CoerceToArray(Hash.ToArray(), bitLength), bitLength);
 		}
 
 		/// <summary>
-		/// Returns a hash code for this instance.
+		/// Computes a hash code for the current object.
 		/// </summary>
-		/// <returns>
-		/// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-		/// </returns>
+		/// <remarks>The hash code is calculated based on the values of the <see cref="BitLength"/> property and the
+		/// elements of the <see cref="Hash"/> collection. This ensures that objects with  the same data produce the same hash
+		/// code.</remarks>
+		/// <returns>An integer representing the hash code for the current object.</returns>
 		public override int GetHashCode()
 		{
 			unchecked
@@ -553,24 +598,24 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
-		/// Determines whether the specified <see cref="Object" />, is equal to this instance.
+		/// Determines whether the specified object is equal to the current object.
 		/// </summary>
-		/// <param name="obj">The <see cref="Object" /> to compare with this instance.</param>
-		/// <returns>
-		///   <c>true</c> if the specified <see cref="Object" /> is equal to this instance; otherwise, <c>false</c>.
-		/// </returns>
+		/// <param name="obj">The object to compare with the current object. This can be <see langword="null"/>.</param>
+		/// <returns><see langword="true"/> if the specified object is an <see cref="IHashValue"/> and is equal to the current object;
+		/// otherwise, <see langword="false"/>.</returns>
 		public override bool Equals(object obj)
 		{
 			return Equals(obj as IHashValue);
 		}
 
 		/// <summary>
-		/// Indicates whether the current object is equal to another object of the same type.
+		/// Determines whether the current hash value is equal to the specified <see cref="IHashValue"/> instance.
 		/// </summary>
-		/// <param name="other">An object to compare with this object.</param>
-		/// <returns>
-		/// <c>true</c> if the current object is equal to the <paramref name="other" /> parameter; otherwise, <c>false</c>.
-		/// </returns>
+		/// <remarks>This method performs a fixed-time comparison of the hash values to mitigate timing attacks.  The
+		/// comparison takes into account the bit length of the hash and the hash data itself.</remarks>
+		/// <param name="other">The <see cref="IHashValue"/> instance to compare with the current instance.</param>
+		/// <returns><see langword="true"/> if the current hash value is equal to <paramref name="other"/>; otherwise, <see
+		/// langword="false"/>.</returns>
 		public bool Equals(IHashValue other)
 		{
 			if (other == null || other.BitLength != BitLength)
@@ -586,10 +631,19 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
-		/// <inheritdoc/>
+		/// Compares the current hash value to another hash value and determines their relative order.
 		/// </summary>
-		/// <param name="other"><inheritdoc/></param>
-		/// <returns><inheritdoc/></returns>
+		/// <remarks>The comparison is performed based on the bit length of the hash values and their byte-by-byte
+		/// content. If the bit lengths differ, the hash with the smaller bit length is considered less. If the bit lengths
+		/// are equal, the comparison proceeds byte by byte, and any remaining bits in the final byte are compared using a bit
+		/// mask.</remarks>
+		/// <param name="other">The hash value to compare with the current instance. Cannot be <see langword="null"/>.</param>
+		/// <returns>A signed integer that indicates the relative order of the hash values: <list type="bullet">
+		/// <item><description>Less than zero if the current instance is less than <paramref
+		/// name="other"/>.</description></item> <item><description>Zero if the current instance is equal to <paramref
+		/// name="other"/>.</description></item> <item><description>Greater than zero if the current instance is greater than
+		/// <paramref name="other"/>.</description></item> </list></returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="other"/> is <see langword="null"/>.</exception>
 		public int CompareTo(IHashValue other)
 		{
 			_ = other ?? throw new ArgumentNullException(nameof(other));
@@ -627,21 +681,5 @@ namespace HashifyNet.Core.Utilities
 
 			return 0;
 		}
-
-		/// <summary>
-		/// <inheritdoc/>
-		/// </summary>
-		/// <param name="bitLength"><inheritdoc/></param>
-		/// <returns><inheritdoc/></returns>
-		public virtual IHashValue Coerce(int bitLength)
-		{
-			if (bitLength < 1)
-			{
-				throw new ArgumentOutOfRangeException(nameof(bitLength), $"{nameof(bitLength)} must be greater than or equal to 1.");
-			}
-
-			return new HashValue(ArrayHelpers.CoerceToArray(Hash.ToArray(), bitLength), bitLength);
-		}
 	}
 }
-
