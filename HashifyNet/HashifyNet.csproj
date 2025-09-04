@@ -12,6 +12,7 @@
     <Title>HashifyNET</Title>
     <Platforms>AnyCPU;x64;x86</Platforms>
     <CLSCompliant>true</CLSCompliant>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -112,4 +113,5 @@
   </PropertyGroup>
 
 </Project>
+
 
