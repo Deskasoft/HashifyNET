@@ -291,7 +291,7 @@ namespace HashifyNet.Core.Utilities
 			long ticks = AsNumber64();
 			if (ticks < 0)
 			{
-				ticks = -(ticks / 2);
+				ticks &= long.MaxValue;
 			}
 
 			if (BitLength < 64)
@@ -322,13 +322,13 @@ namespace HashifyNet.Core.Utilities
 			long ticks = AsNumber64();
 			if (ticks < 0)
 			{
-				ticks = -(ticks / 2);
+				ticks &= long.MaxValue;
 			}
 
 			if (BitLength < 64)
 			{
 				double maxHashValue = (double)(1L << BitLength);
-				ticks = (long)(ticks / maxHashValue * DateTime.MaxValue.Ticks);
+				ticks = (long)(ticks / maxHashValue * DateTimeOffset.MaxValue.Ticks);
 			}
 
 			if (ticks < DateTimeOffset.MinValue.Ticks)
@@ -353,13 +353,13 @@ namespace HashifyNet.Core.Utilities
 			long ticks = AsNumber64();
 			if (ticks < 0)
 			{
-				ticks = -(ticks / 2);
+				ticks &= long.MaxValue;
 			}
 
 			if (BitLength < 64)
 			{
 				double maxHashValue = (double)(1L << BitLength);
-				ticks = (long)(ticks / maxHashValue * DateTime.MaxValue.Ticks);
+				ticks = (long)(ticks / maxHashValue * TimeSpan.MaxValue.Ticks);
 			}
 
 			if (ticks < TimeSpan.MinValue.Ticks)
