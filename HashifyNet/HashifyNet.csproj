@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
@@ -94,9 +94,8 @@
     <Company>Deskasoft International</Company>
     <Product>HashifyNET</Product>
     <Copyright>Copyright © Deskasoft International</Copyright>
-    <Version>5.0.0</Version>
+    <Version>5.0.1</Version>
     <PackageTags>hashing;hash;algorithms;security;crypto;non-crypto;CLS-compliant;VB.NET;F#</PackageTags>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <EnableNETAnalyzers>False</EnableNETAnalyzers>
     <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
@@ -109,9 +108,8 @@
     <PackageIcon>logo.png</PackageIcon>
     <AssemblyOriginatorKeyFile>..\HashifyNET.publickey</AssemblyOriginatorKeyFile>
     <AssemblyName>$(MSBuildProjectName.Replace("Net", "NET"))</AssemblyName>
+    <Authors>$(Company)</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>
-
-
-
