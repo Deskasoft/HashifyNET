@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -60,6 +60,7 @@ namespace HashifyNet
 			}
 		}
 
+		private static readonly Hashtable _concreteConfigTypes;
 		private static readonly Hashtable _implementations;
 		/// <summary>
 		/// Initializes the static state of the <see cref="HashFactory"/> class by discovering and registering available hash
@@ -77,6 +78,7 @@ namespace HashifyNet
 		static HashFactory()
 		{
 			_implementations = new Hashtable();
+			_concreteConfigTypes = new Hashtable();
 
 			Type[] types = ReflectionHelper.GetClasses(typeof(Core.HashAlgorithmImplementationAttribute), false);
 			if (types == null || types.Length < 1)
@@ -87,11 +89,11 @@ namespace HashifyNet
 			List<Tuple<Type, Core.HashAlgorithmImplementationAttribute>> validTypes = new List<Tuple<Type, Core.HashAlgorithmImplementationAttribute>>();
 			foreach (Type type in types)
 			{
-   				if (type.GetCustomAttribute<ObsoleteAttribute>() != null)
+				if (type.GetCustomAttribute<ObsoleteAttribute>() != null)
 				{
 					continue;
 				}
-	
+
 				IEnumerable<Core.HashAlgorithmImplementationAttribute> attrs = type.GetCustomAttributes<Core.HashAlgorithmImplementationAttribute>(false);
 				if (attrs == null)
 				{
@@ -130,6 +132,8 @@ namespace HashifyNet
 				Func<object[], object> factory = ReflectionHelper.CreateInstanceWithParameters(factoryCtor, factoryCtor.GetParameters()[0].ParameterType);
 
 				Type configType = t.Item2.ConcreteConfig;
+
+				_concreteConfigTypes.Add(t.Item2.ImplementedInterface, configType);
 
 				// If the concrete config has no parameterless constructor, we cannot create a default instance. In this case, the parameterless Create function will throw.
 				Func<object[], object> configFactory = null;
@@ -227,4 +231,3 @@ namespace HashifyNet
 		}
 	}
 }
-
