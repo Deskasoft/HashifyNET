@@ -28,8 +28,6 @@
 // *
 
 using HashifyNet.Core;
-using HashifyNet.Core.HashAlgorithm;
-using System;
 
 namespace HashifyNet.Algorithms.SHA384
 {

@@ -35,14 +35,8 @@ namespace HashifyNet.Algorithms.SHA3_256
 	/// Represents the SHA3_256 cryptographic hash function, providing functionality to compute SHA3_256 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface ISHA3_256 : ICryptographicStreamableHashFunction<ISHA3_256Config>
+	public interface ISHA3_256 : ICryptographicStreamableHashFunction<ISHA3_256Config>, IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_256>
 	{
-#if NET8_0_OR_GREATER
-		/// <summary>
-		/// <inheritdoc cref="System.Security.Cryptography.SHA3_256.IsSupported"/>
-		/// </summary>
-		public static bool IsSupported { get; } = System.Security.Cryptography.SHA3_256.IsSupported;
-#endif
 	}
 }
 

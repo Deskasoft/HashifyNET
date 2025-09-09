@@ -33,7 +33,7 @@ namespace HashifyNet.Algorithms.SHA1
 	/// Represents the SHA1 cryptographic hash function, providing functionality to compute SHA1 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface ISHA1 : ICryptographicStreamableHashFunction<ISHA1Config>
+	public interface ISHA1 : ICryptographicStreamableHashFunction<ISHA1Config>, IHashAlgorithmWrapperAlgorithm<System.Security.Cryptography.SHA1>
 	{
 	}
 }

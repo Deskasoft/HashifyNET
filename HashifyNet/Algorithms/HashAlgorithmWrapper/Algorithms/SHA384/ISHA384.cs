@@ -33,7 +33,7 @@ namespace HashifyNet.Algorithms.SHA384
 	/// Represents the SHA384 cryptographic hash function, providing functionality to compute SHA384 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface ISHA384 : ICryptographicStreamableHashFunction<ISHA384Config>
+	public interface ISHA384 : ICryptographicStreamableHashFunction<ISHA384Config>, IHashAlgorithmWrapperAlgorithm<System.Security.Cryptography.SHA384>
 	{
 	}
 }

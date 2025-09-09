@@ -35,14 +35,8 @@ namespace HashifyNet.Algorithms.SHA3_512
 	/// Represents the SHA3_512 cryptographic hash function, providing functionality to compute SHA3_512 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface ISHA3_512 : ICryptographicStreamableHashFunction<ISHA3_512Config>
+	public interface ISHA3_512 : ICryptographicStreamableHashFunction<ISHA3_512Config>, IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_512>
 	{
-#if NET8_0_OR_GREATER
-		/// <summary>
-		/// <inheritdoc cref="System.Security.Cryptography.SHA3_512.IsSupported"/>
-		/// </summary>
-		public static bool IsSupported { get; } = System.Security.Cryptography.SHA3_512.IsSupported;
-#endif
 	}
 }
 

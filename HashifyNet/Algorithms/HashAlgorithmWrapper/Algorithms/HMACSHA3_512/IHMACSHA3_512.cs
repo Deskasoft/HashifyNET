@@ -35,14 +35,8 @@ namespace HashifyNet.Algorithms.HMACSHA3_512
 	/// Represents the HMACSHA3_512 cryptographic hash function, providing functionality to compute HMACSHA3_512 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface IHMACSHA3_512 : ICryptographicStreamableHashFunction<IHMACSHA3_512Config>
+	public interface IHMACSHA3_512 : ICryptographicStreamableHashFunction<IHMACSHA3_512Config>, IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_512>
 	{
-#if NET8_0_OR_GREATER
-		/// <summary>
-		/// <inheritdoc cref="System.Security.Cryptography.HMACSHA3_512.IsSupported"/>
-		/// </summary>
-		public static bool IsSupported { get; } = System.Security.Cryptography.HMACSHA3_512.IsSupported;
-#endif
 	}
 }
 

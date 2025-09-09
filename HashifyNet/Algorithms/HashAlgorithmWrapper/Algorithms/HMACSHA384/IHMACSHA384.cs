@@ -33,7 +33,7 @@ namespace HashifyNet.Algorithms.HMACSHA384
 	/// Represents the HMACSHA384 cryptographic hash function, providing functionality to compute HMACSHA384 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface IHMACSHA384 : ICryptographicStreamableHashFunction<IHMACSHA384Config>
+	public interface IHMACSHA384 : ICryptographicStreamableHashFunction<IHMACSHA384Config>, IHashAlgorithmWrapperAlgorithm<System.Security.Cryptography.HMACSHA384>
 	{
 	}
 }

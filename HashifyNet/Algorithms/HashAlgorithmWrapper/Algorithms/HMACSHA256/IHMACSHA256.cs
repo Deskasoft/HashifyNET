@@ -33,7 +33,7 @@ namespace HashifyNet.Algorithms.HMACSHA256
 	/// Represents the HMACSHA256 cryptographic hash function, providing functionality to compute HMACSHA256 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface IHMACSHA256 : ICryptographicStreamableHashFunction<IHMACSHA256Config>
+	public interface IHMACSHA256 : ICryptographicStreamableHashFunction<IHMACSHA256Config>, IHashAlgorithmWrapperAlgorithm<System.Security.Cryptography.HMACSHA256>
 	{
 	}
 }

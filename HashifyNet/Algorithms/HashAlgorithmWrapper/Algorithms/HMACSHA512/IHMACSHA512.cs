@@ -33,7 +33,7 @@ namespace HashifyNet.Algorithms.HMACSHA512
 	/// Represents the HMACSHA512 cryptographic hash function, providing functionality to compute HMACSHA512 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface IHMACSHA512 : ICryptographicStreamableHashFunction<IHMACSHA512Config>
+	public interface IHMACSHA512 : ICryptographicStreamableHashFunction<IHMACSHA512Config>, IHashAlgorithmWrapperAlgorithm<System.Security.Cryptography.HMACSHA512>
 	{
 	}
 }

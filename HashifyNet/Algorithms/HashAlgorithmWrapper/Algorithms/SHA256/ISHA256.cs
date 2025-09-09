@@ -33,7 +33,7 @@ namespace HashifyNet.Algorithms.SHA256
 	/// Represents the SHA256 cryptographic hash function, providing functionality to compute SHA256 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface ISHA256 : ICryptographicStreamableHashFunction<ISHA256Config>
+	public interface ISHA256 : ICryptographicStreamableHashFunction<ISHA256Config>, IHashAlgorithmWrapperAlgorithm<System.Security.Cryptography.SHA256>
 	{
 	}
 }

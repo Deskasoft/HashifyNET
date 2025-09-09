@@ -33,7 +33,7 @@ namespace HashifyNet.Algorithms.HMACSHA1
 	/// Represents the HMACSHA1 cryptographic hash function, providing functionality to compute HMACSHA1 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface IHMACSHA1 : ICryptographicStreamableHashFunction<IHMACSHA1Config>
+	public interface IHMACSHA1 : ICryptographicStreamableHashFunction<IHMACSHA1Config>, IHashAlgorithmWrapperAlgorithm<System.Security.Cryptography.HMACSHA1>
 	{
 	}
 }

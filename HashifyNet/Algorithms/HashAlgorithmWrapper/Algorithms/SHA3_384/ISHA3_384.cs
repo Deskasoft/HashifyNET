@@ -35,14 +35,8 @@ namespace HashifyNet.Algorithms.SHA3_384
 	/// Represents the SHA3_384 cryptographic hash function, providing functionality to compute SHA3_384 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface ISHA3_384 : ICryptographicStreamableHashFunction<ISHA3_384Config>
+	public interface ISHA3_384 : ICryptographicStreamableHashFunction<ISHA3_384Config>, IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_384>
 	{
-#if NET8_0_OR_GREATER
-		/// <summary>
-		/// <inheritdoc cref="System.Security.Cryptography.SHA3_384.IsSupported"/>
-		/// </summary>
-		public static bool IsSupported { get; } = System.Security.Cryptography.SHA3_384.IsSupported;
-#endif
 	}
 }
 

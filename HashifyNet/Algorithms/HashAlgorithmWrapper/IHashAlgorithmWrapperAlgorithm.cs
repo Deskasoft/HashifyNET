@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,13 +27,12 @@
 // ******************************************************************************
 // *
 
-namespace HashifyNet.Algorithms.HMACMD5
+namespace HashifyNet.Algorithms
 {
 	/// <summary>
-	/// Represents the HMACMD5 cryptographic hash function, providing functionality to compute HMACMD5 hashes for data streams and
-	/// other inputs.
+	/// Any hash algorithm deriving from this points to an existing underlying .NET implementation that gets wrapped by HashifyNET.
 	/// </summary>
-	public interface IHMACMD5 : ICryptographicStreamableHashFunction<IHMACMD5Config>, IHashAlgorithmWrapperAlgorithm<System.Security.Cryptography.HMACMD5>
+	public interface IHashAlgorithmWrapperAlgorithm<TAlgorithm> where TAlgorithm : System.Security.Cryptography.HashAlgorithm
 	{
 	}
 }

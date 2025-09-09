@@ -33,7 +33,7 @@ namespace HashifyNet.Algorithms.MD5
 	/// Represents the MD5 cryptographic hash function, providing functionality to compute MD5 hashes for data streams and
 	/// other inputs.
 	/// </summary>
-	public interface IMD5 : ICryptographicStreamableHashFunction<IMD5Config>
+	public interface IMD5 : ICryptographicStreamableHashFunction<IMD5Config>, IHashAlgorithmWrapperAlgorithm<System.Security.Cryptography.MD5>
 	{
 	}
 }
