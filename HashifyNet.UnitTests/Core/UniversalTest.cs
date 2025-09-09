@@ -577,22 +577,6 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void RunUniversalTest()
 		{
-			List<Tuple<Type, bool>> possibleUnavailableAlgorithms = new List<Tuple<Type, bool>>()
-			{
-				Tuple.Create(typeof(IHMACSHA3_256), IHMACSHA3_256.IsSupported),
-				Tuple.Create(typeof(IHMACSHA3_384), IHMACSHA3_384.IsSupported),
-				Tuple.Create(typeof(IHMACSHA3_512), IHMACSHA3_512.IsSupported),
-
-				Tuple.Create(typeof(ISHA3_256), ISHA3_256.IsSupported),
-				Tuple.Create(typeof(ISHA3_384), ISHA3_384.IsSupported),
-				Tuple.Create(typeof(ISHA3_512), ISHA3_512.IsSupported),
-			};
-
-			Type[] unavailableAlgorithms = possibleUnavailableAlgorithms
-																		.Where(t => !t.Item2)
-																		.Select(t => t.Item1)
-																		.ToArray();
-
 			IHashFunctionBase[] all = HashFactory.CreateHashAlgorithms(HashFunctionType.Cryptographic | HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>()
 			{
 				// Non-cryptographic Forced Defaults
@@ -604,7 +588,7 @@ namespace HashifyNet.UnitTests.Core
 				
 				// Cryptographic Forced Defaults
 				{ typeof(IArgon2id), Argon2idConfig.OWASP_Standard }
-			}, unavailableAlgorithms);
+			}, HashFactory.GetUnavailableHashAlgorithms());
 
 			Assert.NotNull(all);
 			Assert.NotEmpty(all);
@@ -713,4 +697,5 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
+
 
