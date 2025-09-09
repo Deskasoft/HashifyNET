@@ -35,7 +35,7 @@ namespace HashifyNet.Core.HashAlgorithm
 	/// <summary>
 	/// Defines a configuration for a <see cref="IHashAlgorithmWrapper"/> implementation.
 	/// </summary>
-	public interface IHashAlgorithmWrapperConfig : ICryptographicHashConfig<IHashAlgorithmWrapperConfig>
+	internal interface IHashAlgorithmWrapperConfig : ICryptographicHashConfig<IHashAlgorithmWrapperConfig>
 	{
 		/// <summary>
 		/// Expected size of the hash in bits. If <see cref="InstanceFactory"/> does not return the same hash size as declared here, this will throw a <see cref="InvalidOperationException"/> when creating a new instance."/>
@@ -50,5 +50,4 @@ namespace HashifyNet.Core.HashAlgorithm
 		/// </value>
 		Func<SystemHashAlgorithm> InstanceFactory { get; }
 	}
-
 }
