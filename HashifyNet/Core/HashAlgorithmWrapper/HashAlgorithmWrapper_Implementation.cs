@@ -29,19 +29,18 @@
 
 using HashifyNet.Core.Utilities;
 using System;
-using System.IO;
 using System.Threading;
 
 namespace HashifyNet.Core.HashAlgorithm
 {
-	[HashAlgorithmImplementation(typeof(IHashAlgorithmWrapper), typeof(HashAlgorithmWrapperConfig))]
 	internal class HashAlgorithmWrapper_Implementation
-		: CryptographicHashFunctionBase<IHashAlgorithmWrapperConfig>,
+		: CryptographicStreamableHashFunctionBase<IHashAlgorithmWrapperConfig>,
 			IHashAlgorithmWrapper
 	{
 		public override IHashAlgorithmWrapperConfig Config => _config.Clone();
 
 		private readonly IHashAlgorithmWrapperConfig _config;
+		private readonly System.Security.Cryptography.HashAlgorithm hashAlgorithm;
 		public HashAlgorithmWrapper_Implementation(IHashAlgorithmWrapperConfig config)
 		{
 			if (config == null)
@@ -52,37 +51,68 @@ namespace HashifyNet.Core.HashAlgorithm
 			_config = config.Clone();
 			if (_config.InstanceFactory == null)
 			{
-				throw new ArgumentException($"{nameof(config)}.{nameof(config.InstanceFactory)} has not been set.", $"{nameof(config)}.{nameof(config.InstanceFactory)}");
+				throw new ArgumentException($"{nameof(_config)}.{nameof(_config.InstanceFactory)} has not been set.", $"{nameof(_config)}.{nameof(_config.InstanceFactory)}");
 			}
 
-			using (var hashAlgorithm = _config.InstanceFactory())
+			hashAlgorithm = _config.InstanceFactory() ?? throw new InvalidOperationException("The hash algorithm factory returned null.");
+
+			if (_config.HashSizeInBits != hashAlgorithm.HashSize)
 			{
-				if (_config.HashSizeInBits != hashAlgorithm.HashSize)
+				throw new InvalidOperationException($"{nameof(_config)}.{nameof(_config.HashSizeInBits)} does not match the underlying {nameof(_config.InstanceFactory)} hash algorithm's size. Expected {_config.HashSizeInBits} bits but got {hashAlgorithm.HashSize} bits.");
+			}
+		}
+
+		public override IBlockTransformer CreateBlockTransformer()
+		{
+			return new BlockTransformer(hashAlgorithm);
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				hashAlgorithm?.Dispose();
+			}
+
+			base.Dispose(disposing);
+		}
+
+		private class BlockTransformer : BlockTransformerBase<BlockTransformer>
+		{
+			public BlockTransformer()
+			{
+			}
+
+			private System.Security.Cryptography.HashAlgorithm _algo;
+			public BlockTransformer(System.Security.Cryptography.HashAlgorithm algorithm) : this()
+			{
+				_algo = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
+			}
+
+			protected override void CopyStateTo(BlockTransformer other)
+			{
+				other._algo = _algo;
+			}
+
+			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			{
+				if (_algo.TransformBlock(data.Array, data.Offset, data.Count, null, 0) != data.Count)
 				{
-					throw new InvalidOperationException($"{nameof(config)}.{nameof(config.HashSizeInBits)} does not match the underlying {nameof(config.InstanceFactory)} hash algorithm's size. Expected {config.HashSizeInBits} bits but got {hashAlgorithm.HashSize} bits.");
+					throw new Exception("Hash algorithm did not process all input data.");
 				}
 			}
-		}
 
-		public IHashValue ComputeHash(Stream data)
-		{
-			using (var hashAlgorithm = _config.InstanceFactory())
+			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
 			{
-				return new HashValue(
-					hashAlgorithm.ComputeHash(data),
-					_config.HashSizeInBits);
-			}
-		}
+				byte[] lastBytes = FinalizeInputBuffer ?? Array.Empty<byte>();
+				byte[] lastResult = _algo.TransformFinalBlock(lastBytes, 0, lastBytes.Length);
+				if (lastResult == null || lastResult.Length != lastBytes.Length)
+				{
+					throw new Exception("Hash algorithm did not process all input data.");
+				}
 
-		protected override IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
-		{
-			using (var hashAlgorithm = _config.InstanceFactory())
-			{
-				return new HashValue(
-					hashAlgorithm.ComputeHash(data.Array, data.Offset, data.Count),
-					_config.HashSizeInBits);
+				return new HashValue(_algo.Hash, _algo.HashSize);
 			}
 		}
 	}
-
 }
