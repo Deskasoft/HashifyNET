@@ -27,28 +27,13 @@
 // ******************************************************************************
 // *
 
-using System;
-using System.IO;
-
 namespace HashifyNet.Core.HashAlgorithm
 {
 	/// <summary>
 	/// Implementation of <see cref="IHashFunction{FName}" /> that wraps cryptographic hash functions known as <see cref="System.Security.Cryptography.HashAlgorithm" />.
 	/// </summary>
-	public interface IHashAlgorithmWrapper
-		: ICryptographicHashFunction<IHashAlgorithmWrapperConfig>
+	internal interface IHashAlgorithmWrapper
+		: ICryptographicStreamableHashFunction<IHashAlgorithmWrapperConfig>
 	{
-		/// <summary>
-		/// Computes hash value for the given stream.
-		/// </summary>
-		/// <param name="data">Stream of data to hash.</param>
-		/// <returns>
-		/// Hash value of the data.
-		/// </returns>
-		/// <exception cref="ArgumentNullException"><paramref name="data"/></exception>
-		/// <exception cref="ArgumentException">Stream must be readable.;<paramref name="data"/></exception>
-		/// <exception cref="ArgumentException">Stream must be seekable for this type of hash function.;<paramref name="data"/></exception>
-		IHashValue ComputeHash(Stream data);
 	}
-
 }
