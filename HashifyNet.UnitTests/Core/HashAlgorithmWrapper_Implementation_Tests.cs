@@ -27,34 +27,19 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Algorithms.SHA1;
+using HashifyNet.Algorithms.SHA256;
+using HashifyNet.Algorithms.SHA384;
+using HashifyNet.Algorithms.SHA512;
+using HashifyNet.Algorithms.MD5;
 using HashifyNet.Core.HashAlgorithm;
 using HashifyNet.UnitTests.Utilities;
-using Moq;
-using System.Security.Cryptography;
 
 namespace HashifyNet.UnitTests.Core.HashAlgorithm
 {
 	public class HashAlgorithmWrapper_Implementation_Tests
 	{
 		#region Constructor
-
-		[Fact]
-		public void HashAlgorithmWrapper_Implementation_Constructor_ValidInputs_Works()
-		{
-			var hashAlgorithmWrapperConfigMock = new Mock<IHashAlgorithmWrapperConfig>();
-			{
-				hashAlgorithmWrapperConfigMock.SetupGet(hawc => hawc.HashSizeInBits)
-					.Returns(256);
-				hashAlgorithmWrapperConfigMock.SetupGet(hawc => hawc.InstanceFactory)
-					.Returns(new Func<System.Security.Cryptography.HashAlgorithm>(SHA256.Create));
-
-				hashAlgorithmWrapperConfigMock.Setup(hawc => hawc.Clone())
-					.Returns(() => hashAlgorithmWrapperConfigMock.Object);
-			}
-
-			GC.KeepAlive(
-				new HashAlgorithmWrapper_Implementation(hashAlgorithmWrapperConfigMock.Object));
-		}
 
 		#region Config
 
@@ -68,51 +53,12 @@ namespace HashifyNet.UnitTests.Core.HashAlgorithm
 				.ParamName);
 		}
 
-		[Fact]
-		public void HashAlgorithmWrapper_Implementation_Constructor_Config_IsCloned()
-		{
-			var hashAlgorithmWrapperConfigMock = new Mock<IHashAlgorithmWrapperConfig>();
-			{
-				hashAlgorithmWrapperConfigMock.Setup(hawc => hawc.Clone())
-					.Returns(
-						new HashAlgorithmWrapperConfig(static () => SHA256.Create(), 256));
-			}
-
-			GC.KeepAlive(
-				new HashAlgorithmWrapper_Implementation(hashAlgorithmWrapperConfigMock.Object));
-
-			hashAlgorithmWrapperConfigMock.Verify(fc => fc.Clone(), Times.Once);
-
-			hashAlgorithmWrapperConfigMock.VerifyGet(hawc => hawc.InstanceFactory, Times.Never);
-		}
-
-		#region InstanceFactory
-
-		[Fact]
-		public void HashAlgorithmWrapper_Implementation_Constructor_Config_InstanceFactory_IsNull_Throws()
-		{
-			var hashAlgorithmWrapperConfigMock = new Mock<IHashAlgorithmWrapperConfig>();
-			{
-				hashAlgorithmWrapperConfigMock.Setup(hawc => hawc.Clone())
-					.Returns(
-						new HashAlgorithmWrapperConfig(null, -1));
-			}
-
-			Assert.Equal(
-				"config.InstanceFactory",
-				Assert.Throws<ArgumentException>(
-					() => new HashAlgorithmWrapper_Implementation(hashAlgorithmWrapperConfigMock.Object))
-				.ParamName);
-		}
-
-		#endregion
-
 		#endregion
 
 		#endregion
 
 		public class IHashFunction_Tests_SHA1
-			: IHashFunction_TestBase<IHashAlgorithmWrapper, IHashAlgorithmWrapperConfig>
+			: IHashFunction_TestBase<ISHA1, ISHA1Config>
 		{
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
@@ -123,59 +69,51 @@ namespace HashifyNet.UnitTests.Core.HashAlgorithm
 					new KnownValue(160, TestConstants.RandomLong, "e5901cb4679133729c5555210c3cfe3e5851a2aa"),
 				};
 
-			protected override IHashAlgorithmWrapper CreateHashFunction(int hashSize) =>
-				new HashAlgorithmWrapper_Implementation(new HashAlgorithmWrapperConfig(static () => SHA1.Create(), 160));
+			protected override ISHA1 CreateHashFunction(int hashSize) => new SHA1_Implementation(new SHA1Config());
 		}
 
 		public class IHashFunction_Tests_SHA256
-			: IHashFunction_TestBase<IHashAlgorithmWrapper, IHashAlgorithmWrapperConfig>
+			: IHashFunction_TestBase<ISHA256, ISHA256Config>
 		{
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(256, TestConstants.FooBar, "c3ab8ff13720e8ad9047dd39466b3c8974e592c2fa383d4a3960714caef0c4f2"),
 				};
 
-			protected override IHashAlgorithmWrapper CreateHashFunction(int hashSize) =>
-				new HashAlgorithmWrapper_Implementation(new HashAlgorithmWrapperConfig(static () => SHA256.Create(), 256));
+			protected override ISHA256 CreateHashFunction(int hashSize) => new SHA256_Implementation(new SHA256Config());
 		}
 
 		public class IHashFunction_Tests_SHA384
-			: IHashFunction_TestBase<IHashAlgorithmWrapper, IHashAlgorithmWrapperConfig>
+			: IHashFunction_TestBase<ISHA384, ISHA384Config>
 		{
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(384, TestConstants.FooBar, "3c9c30d9f665e74d515c842960d4a451c83a0125fd3de7392d7b37231af10c72ea58aedfcdf89a5765bf902af93ecf06"),
 				};
 
-			protected override IHashAlgorithmWrapper CreateHashFunction(int hashSize) =>
-				new HashAlgorithmWrapper_Implementation(
-					new HashAlgorithmWrapperConfig(static () => SHA384.Create(), 384));
+			protected override ISHA384 CreateHashFunction(int hashSize) => new SHA384_Implementation(new SHA384Config());
 		}
 
 		public class IHashFunction_Tests_SHA512
-			: IHashFunction_TestBase<IHashAlgorithmWrapper, IHashAlgorithmWrapperConfig>
+			: IHashFunction_TestBase<ISHA512, ISHA512Config>
 		{
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(512, TestConstants.FooBar, "0a50261ebd1a390fed2bf326f2673c145582a6342d523204973d0219337f81616a8069b012587cf5635f6925f1b56c360230c19b273500ee013e030601bf2425"),
 				};
 
-			protected override IHashAlgorithmWrapper CreateHashFunction(int hashSize) =>
-				new HashAlgorithmWrapper_Implementation(
-					new HashAlgorithmWrapperConfig(static () => SHA512.Create(), 512));
+			protected override ISHA512 CreateHashFunction(int hashSize) => new SHA512_Implementation(new SHA512Config());
 		}
 
 		public class IHashFunction_Tests_MD5
-			: IHashFunction_TestBase<IHashAlgorithmWrapper, IHashAlgorithmWrapperConfig>
+			: IHashFunction_TestBase<IMD5, IMD5Config>
 		{
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(128, TestConstants.FooBar, "3858f62230ac3c915f300c664312c63f"),
 				};
 
-			protected override IHashAlgorithmWrapper CreateHashFunction(int hashSize) =>
-				new HashAlgorithmWrapper_Implementation(
-					new HashAlgorithmWrapperConfig(static () => MD5.Create(), 128));
+			protected override IMD5 CreateHashFunction(int hashSize) => new MD5_Implementation(new MD5Config());
 		}
 	}
 }
