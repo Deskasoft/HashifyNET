@@ -93,7 +93,7 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void Factory_ComputeNonCryptographicHashes_Works()
 		{
-			IHashFunctionBase[] functions = HashFactory.GetHashFunctions(HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>() 
+			IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>() 
 			{
 				{ typeof(ICRC), CRCConfig.CRC32 },
 				{ typeof(IPearson), new WikipediaPearsonConfig() },
@@ -117,7 +117,7 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void Factory_ComputeCryptographicHashes_Works()
 		{
-			IHashFunctionBase[] functions = HashFactory.GetHashFunctions(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
+			IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
 			{
 				{ typeof(IArgon2id), Argon2idConfig.OWASP_Standard }
 			}, typeof(IHashAlgorithmWrapper));
@@ -162,4 +162,3 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
-
