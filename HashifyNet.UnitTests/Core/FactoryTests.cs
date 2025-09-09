@@ -160,6 +160,37 @@ namespace HashifyNet.UnitTests.Core
 			Assert.Equal(CRCConfig.CRC7.ReflectOut, crc.Config.ReflectOut);
 			Assert.Equal(CRCConfig.CRC7.XOrOut, crc.Config.XOrOut);
 		}
+
+		[Fact]
+		public void Factory_GetConcreteConfigs_Works()
+		{
+			var configs = HashFactory.GetConcreteConfigs(HashFunctionType.Cryptographic | HashFunctionType.Noncryptographic);
+			Assert.NotNull(configs);
+			Assert.NotEmpty(configs);
+			Assert.All(configs, item => Assert.NotNull(item));
+			Assert.All(configs, item => Assert.Contains(typeof(IHashConfigBase), item.GetInterfaces()));
+		}
+
+		[Fact]
+		public void Factory_GetUnavailableHashAlgorithms_Works()
+		{
+			var unavailable = HashFactory.GetUnavailableHashAlgorithms();
+			Assert.NotNull(unavailable);
+		}
+
+		[Fact]
+		public void Factory_CreateDefaultConcreteConfig_Null_Throws()
+		{
+			Assert.Throws<ArgumentNullException>(() =>
+			{
+				HashFactory.CreateDefaultConcreteConfig(null);
+			});
+		}
+
+		[Fact]
+		public void Factory_TryCreateDefaultConcreteConfig_NeverThrows()
+		{
+			HashFactory.TryCreateDefaultConcreteConfig(typeof(ICRC), out _);
+		}
 	}
 }
-
