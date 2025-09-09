@@ -120,7 +120,7 @@ namespace HashifyNet.UnitTests.Core
 			IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
 			{
 				{ typeof(IArgon2id), Argon2idConfig.OWASP_Standard }
-			}, typeof(IHashAlgorithmWrapper));
+			}, HashFactory.GetUnavailableHashAlgorithms());
 
 			Assert.NotNull(functions);
 			Assert.NotEmpty(functions);
@@ -162,3 +162,4 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
+
