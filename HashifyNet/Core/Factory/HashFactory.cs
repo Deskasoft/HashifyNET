@@ -87,6 +87,11 @@ namespace HashifyNet
 			List<Tuple<Type, Core.HashAlgorithmImplementationAttribute>> validTypes = new List<Tuple<Type, Core.HashAlgorithmImplementationAttribute>>();
 			foreach (Type type in types)
 			{
+   				if (type.GetCustomAttribute<ObsoleteAttribute>() != null)
+				{
+					continue;
+				}
+	
 				IEnumerable<Core.HashAlgorithmImplementationAttribute> attrs = type.GetCustomAttributes<Core.HashAlgorithmImplementationAttribute>(false);
 				if (attrs == null)
 				{
@@ -222,3 +227,4 @@ namespace HashifyNet
 		}
 	}
 }
+
