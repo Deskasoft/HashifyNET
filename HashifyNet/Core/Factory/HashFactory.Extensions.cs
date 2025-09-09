@@ -172,14 +172,13 @@ namespace HashifyNet
 			List<Type> retval = new List<Type>();
 			foreach (Type t in types)
 			{
-				Core.HashAlgorithmImplementationAttribute attr = t.GetCustomAttribute<Core.HashAlgorithmImplementationAttribute>(false);
-				if (attr == null)
+				if (!_concreteConfigTypes.ContainsKey(t))
 				{
-					// This should never happen but handle it gracefully.
+					// This should not happen but handle it gracefully.
 					continue;
 				}
 
-				retval.Add(attr.ConcreteConfig);
+				retval.Add((Type)_concreteConfigTypes[t]);
 			}
 
 			return retval.ToArray();
@@ -195,7 +194,7 @@ namespace HashifyNet
 		public static IHashConfigBase CreateDefaultConcreteConfig(Type type)
 		{
 			_ = type ?? throw new ArgumentNullException(nameof(type));
-			
+
 			if (!_implementations.ContainsKey(type))
 			{
 				throw new KeyNotFoundException($"No implementation registered for type '{type.FullName}'.");
@@ -318,4 +317,3 @@ namespace HashifyNet
 		}
 	}
 }
-
