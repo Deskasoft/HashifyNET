@@ -49,11 +49,11 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 {
 	public class Tests
 	{
-		#region HMACMD5_Tests
+#region HMACMD5_Tests
 
-		#region HMACMD5_Constructor
+#region HMACMD5_Constructor
 
-		#region HMACMD5_Config
+#region HMACMD5_Config
 
 		[Fact]
 		public void HMACMD5_Implementation_Constructor_Config_IsNull_Throws()
@@ -85,26 +85,26 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // HMACMD5_Config
+#endregion // HMACMD5_Config
 
-		#endregion // HMACMD5_Constructor
+#endregion // HMACMD5_Constructor
 
-		#region HMACMD5_ConfigValidation
+#region HMACMD5_ConfigValidation
 		[Fact]
 		public void HMACMD5Config_Defaults_HaventChanged()
 		{
 			var config = new HMACMD5Config();
 			Assert.Equal(128, config.HashSizeInBits);
 		}
-		#endregion // HMACMD5_ConfigValidation
+#endregion // HMACMD5_ConfigValidation
 
-		#endregion // HMACMD5_Tests
+#endregion // HMACMD5_Tests
 
-		#region HMACSHA1_Tests
+#region HMACSHA1_Tests
 
-		#region HMACSHA1_Constructor
+#region HMACSHA1_Constructor
 
-		#region HMACSHA1_Config
+#region HMACSHA1_Config
 
 		[Fact]
 		public void HMACSHA1_Implementation_Constructor_Config_IsNull_Throws()
@@ -136,26 +136,26 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // HMACSHA1_Config
+#endregion // HMACSHA1_Config
 
-		#endregion // HMACSHA1_Constructor
+#endregion // HMACSHA1_Constructor
 
-		#region HMACSHA1_ConfigValidation
+#region HMACSHA1_ConfigValidation
 		[Fact]
 		public void HMACSHA1Config_Defaults_HaventChanged()
 		{
 			var config = new HMACSHA1Config();
 			Assert.Equal(160, config.HashSizeInBits);
 		}
-		#endregion // HMACSHA1_ConfigValidation
+#endregion // HMACSHA1_ConfigValidation
 
-		#endregion // HMACSHA1_Tests
+#endregion // HMACSHA1_Tests
 
-		#region HMACSHA256_Tests
+#region HMACSHA256_Tests
 
-		#region HMACSHA256_Constructor
+#region HMACSHA256_Constructor
 
-		#region HMACSHA256_Config
+#region HMACSHA256_Config
 
 		[Fact]
 		public void HMACSHA256_Implementation_Constructor_Config_IsNull_Throws()
@@ -187,26 +187,26 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // HMACSHA256_Config
+#endregion // HMACSHA256_Config
 
-		#endregion // HMACSHA256_Constructor
+#endregion // HMACSHA256_Constructor
 
-		#region HMACSHA256_ConfigValidation
+#region HMACSHA256_ConfigValidation
 		[Fact]
 		public void HMACSHA256Config_Defaults_HaventChanged()
 		{
 			var config = new HMACSHA256Config();
 			Assert.Equal(256, config.HashSizeInBits);
 		}
-		#endregion // HMACSHA256_ConfigValidation
+#endregion // HMACSHA256_ConfigValidation
 
-		#endregion // HMACSHA256_Tests
+#endregion // HMACSHA256_Tests
 
-		#region HMACSHA384_Tests
+#region HMACSHA384_Tests
 
-		#region HMACSHA384_Constructor
+#region HMACSHA384_Constructor
 
-		#region HMACSHA384_Config
+#region HMACSHA384_Config
 
 		[Fact]
 		public void HMACSHA384_Implementation_Constructor_Config_IsNull_Throws()
@@ -238,26 +238,26 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // HMACSHA384_Config
+#endregion // HMACSHA384_Config
 
-		#endregion // HMACSHA384_Constructor
+#endregion // HMACSHA384_Constructor
 
-		#region HMACSHA384_ConfigValidation
+#region HMACSHA384_ConfigValidation
 		[Fact]
 		public void HMACSHA384Config_Defaults_HaventChanged()
 		{
 			var config = new HMACSHA384Config();
 			Assert.Equal(384, config.HashSizeInBits);
 		}
-		#endregion // HMACSHA384_ConfigValidation
+#endregion // HMACSHA384_ConfigValidation
 
-		#endregion // HMACSHA384_Tests
+#endregion // HMACSHA384_Tests
 
-		#region HMACSHA512_Tests
+#region HMACSHA512_Tests
 
-		#region HMACSHA512_Constructor
+#region HMACSHA512_Constructor
 
-		#region HMACSHA512_Config
+#region HMACSHA512_Config
 
 		[Fact]
 		public void HMACSHA512_Implementation_Constructor_Config_IsNull_Throws()
@@ -289,30 +289,32 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // HMACSHA512_Config
+#endregion // HMACSHA512_Config
 
-		#endregion // HMACSHA512_Constructor
+#endregion // HMACSHA512_Constructor
 
-		#region HMACSHA512_ConfigValidation
+#region HMACSHA512_ConfigValidation
 		[Fact]
 		public void HMACSHA512Config_Defaults_HaventChanged()
 		{
 			var config = new HMACSHA512Config();
 			Assert.Equal(512, config.HashSizeInBits);
 		}
-		#endregion // HMACSHA512_ConfigValidation
+#endregion // HMACSHA512_ConfigValidation
 
-		#endregion // HMACSHA512_Tests
+#endregion // HMACSHA512_Tests
 
-		#region HMACSHA3_256_Tests
+#region HMACSHA3_256_Tests
 
-		#region HMACSHA3_256_Constructor
+#region HMACSHA3_256_Constructor
 
-		#region HMACSHA3_256_Config
+#region HMACSHA3_256_Config
 
 		[Fact]
 		public void HMACSHA3_256_Implementation_Constructor_Config_IsNull_Throws()
 		{
+			if (!IHMACSHA3_256.IsSupported)	return;
+
 			Assert.Equal(
 				"config",
 				Assert.Throws<ArgumentNullException>(
@@ -323,6 +325,8 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 		[Fact]
 		public void HMACSHA3_256_Implementation_Constructor_Config_IsCloned()
 		{
+			if (!IHMACSHA3_256.IsSupported)	return;
+
 			var configMock = new Mock<IHMACSHA3_256Config>();
 			{
 				configMock.Setup(bc => bc.HashSizeInBits)
@@ -340,30 +344,34 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // HMACSHA3_256_Config
+#endregion // HMACSHA3_256_Config
 
-		#endregion // HMACSHA3_256_Constructor
+#endregion // HMACSHA3_256_Constructor
 
-		#region HMACSHA3_256_ConfigValidation
+#region HMACSHA3_256_ConfigValidation
 		[Fact]
 		public void HMACSHA3_256Config_Defaults_HaventChanged()
 		{
+			if (!IHMACSHA3_256.IsSupported)	return;
+
 			var config = new HMACSHA3_256Config();
 			Assert.Equal(256, config.HashSizeInBits);
 		}
-		#endregion // HMACSHA3_256_ConfigValidation
+#endregion // HMACSHA3_256_ConfigValidation
 
-		#endregion // HMACSHA3_256_Tests
+#endregion // HMACSHA3_256_Tests
 
-		#region HMACSHA3_384_Tests
+#region HMACSHA3_384_Tests
 
-		#region HMACSHA3_384_Constructor
+#region HMACSHA3_384_Constructor
 
-		#region HMACSHA3_384_Config
+#region HMACSHA3_384_Config
 
 		[Fact]
 		public void HMACSHA3_384_Implementation_Constructor_Config_IsNull_Throws()
 		{
+			if (!IHMACSHA3_384.IsSupported)	return;
+
 			Assert.Equal(
 				"config",
 				Assert.Throws<ArgumentNullException>(
@@ -374,6 +382,8 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 		[Fact]
 		public void HMACSHA3_384_Implementation_Constructor_Config_IsCloned()
 		{
+			if (!IHMACSHA3_384.IsSupported)	return;
+
 			var configMock = new Mock<IHMACSHA3_384Config>();
 			{
 				configMock.Setup(bc => bc.HashSizeInBits)
@@ -391,30 +401,34 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // HMACSHA3_384_Config
+#endregion // HMACSHA3_384_Config
 
-		#endregion // HMACSHA3_384_Constructor
+#endregion // HMACSHA3_384_Constructor
 
-		#region HMACSHA3_384_ConfigValidation
+#region HMACSHA3_384_ConfigValidation
 		[Fact]
 		public void HMACSHA3_384Config_Defaults_HaventChanged()
 		{
+			if (!IHMACSHA3_384.IsSupported)	return;
+
 			var config = new HMACSHA3_384Config();
 			Assert.Equal(384, config.HashSizeInBits);
 		}
-		#endregion // HMACSHA3_384_ConfigValidation
+#endregion // HMACSHA3_384_ConfigValidation
 
-		#endregion // HMACSHA3_384_Tests
+#endregion // HMACSHA3_384_Tests
 
-		#region HMACSHA3_512_Tests
+#region HMACSHA3_512_Tests
 
-		#region HMACSHA3_512_Constructor
+#region HMACSHA3_512_Constructor
 
-		#region HMACSHA3_512_Config
+#region HMACSHA3_512_Config
 
 		[Fact]
 		public void HMACSHA3_512_Implementation_Constructor_Config_IsNull_Throws()
 		{
+			if (!IHMACSHA3_512.IsSupported)	return;
+
 			Assert.Equal(
 				"config",
 				Assert.Throws<ArgumentNullException>(
@@ -425,6 +439,8 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 		[Fact]
 		public void HMACSHA3_512_Implementation_Constructor_Config_IsCloned()
 		{
+			if (!IHMACSHA3_512.IsSupported)	return;
+
 			var configMock = new Mock<IHMACSHA3_512Config>();
 			{
 				configMock.Setup(bc => bc.HashSizeInBits)
@@ -442,26 +458,28 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // HMACSHA3_512_Config
+#endregion // HMACSHA3_512_Config
 
-		#endregion // HMACSHA3_512_Constructor
+#endregion // HMACSHA3_512_Constructor
 
-		#region HMACSHA3_512_ConfigValidation
+#region HMACSHA3_512_ConfigValidation
 		[Fact]
 		public void HMACSHA3_512Config_Defaults_HaventChanged()
 		{
+			if (!IHMACSHA3_512.IsSupported)	return;
+
 			var config = new HMACSHA3_512Config();
 			Assert.Equal(512, config.HashSizeInBits);
 		}
-		#endregion // HMACSHA3_512_ConfigValidation
+#endregion // HMACSHA3_512_ConfigValidation
 
-		#endregion // HMACSHA3_512_Tests
+#endregion // HMACSHA3_512_Tests
 
-		#region MD5_Tests
+#region MD5_Tests
 
-		#region MD5_Constructor
+#region MD5_Constructor
 
-		#region MD5_Config
+#region MD5_Config
 
 		[Fact]
 		public void MD5_Implementation_Constructor_Config_IsNull_Throws()
@@ -493,26 +511,26 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // MD5_Config
+#endregion // MD5_Config
 
-		#endregion // MD5_Constructor
+#endregion // MD5_Constructor
 
-		#region MD5_ConfigValidation
+#region MD5_ConfigValidation
 		[Fact]
 		public void MD5Config_Defaults_HaventChanged()
 		{
 			var config = new MD5Config();
 			Assert.Equal(128, config.HashSizeInBits);
 		}
-		#endregion // MD5_ConfigValidation
+#endregion // MD5_ConfigValidation
 
-		#endregion // MD5_Tests
+#endregion // MD5_Tests
 
-		#region SHA1_Tests
+#region SHA1_Tests
 
-		#region SHA1_Constructor
+#region SHA1_Constructor
 
-		#region SHA1_Config
+#region SHA1_Config
 
 		[Fact]
 		public void SHA1_Implementation_Constructor_Config_IsNull_Throws()
@@ -544,26 +562,26 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // SHA1_Config
+#endregion // SHA1_Config
 
-		#endregion // SHA1_Constructor
+#endregion // SHA1_Constructor
 
-		#region SHA1_ConfigValidation
+#region SHA1_ConfigValidation
 		[Fact]
 		public void SHA1Config_Defaults_HaventChanged()
 		{
 			var config = new SHA1Config();
 			Assert.Equal(160, config.HashSizeInBits);
 		}
-		#endregion // SHA1_ConfigValidation
+#endregion // SHA1_ConfigValidation
 
-		#endregion // SHA1_Tests
+#endregion // SHA1_Tests
 
-		#region SHA256_Tests
+#region SHA256_Tests
 
-		#region SHA256_Constructor
+#region SHA256_Constructor
 
-		#region SHA256_Config
+#region SHA256_Config
 
 		[Fact]
 		public void SHA256_Implementation_Constructor_Config_IsNull_Throws()
@@ -595,26 +613,26 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // SHA256_Config
+#endregion // SHA256_Config
 
-		#endregion // SHA256_Constructor
+#endregion // SHA256_Constructor
 
-		#region SHA256_ConfigValidation
+#region SHA256_ConfigValidation
 		[Fact]
 		public void SHA256Config_Defaults_HaventChanged()
 		{
 			var config = new SHA256Config();
 			Assert.Equal(256, config.HashSizeInBits);
 		}
-		#endregion // SHA256_ConfigValidation
+#endregion // SHA256_ConfigValidation
 
-		#endregion // SHA256_Tests
+#endregion // SHA256_Tests
 
-		#region SHA384_Tests
+#region SHA384_Tests
 
-		#region SHA384_Constructor
+#region SHA384_Constructor
 
-		#region SHA384_Config
+#region SHA384_Config
 
 		[Fact]
 		public void SHA384_Implementation_Constructor_Config_IsNull_Throws()
@@ -646,26 +664,26 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // SHA384_Config
+#endregion // SHA384_Config
 
-		#endregion // SHA384_Constructor
+#endregion // SHA384_Constructor
 
-		#region SHA384_ConfigValidation
+#region SHA384_ConfigValidation
 		[Fact]
 		public void SHA384Config_Defaults_HaventChanged()
 		{
 			var config = new SHA384Config();
 			Assert.Equal(384, config.HashSizeInBits);
 		}
-		#endregion // SHA384_ConfigValidation
+#endregion // SHA384_ConfigValidation
 
-		#endregion // SHA384_Tests
+#endregion // SHA384_Tests
 
-		#region SHA512_Tests
+#region SHA512_Tests
 
-		#region SHA512_Constructor
+#region SHA512_Constructor
 
-		#region SHA512_Config
+#region SHA512_Config
 
 		[Fact]
 		public void SHA512_Implementation_Constructor_Config_IsNull_Throws()
@@ -697,30 +715,32 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // SHA512_Config
+#endregion // SHA512_Config
 
-		#endregion // SHA512_Constructor
+#endregion // SHA512_Constructor
 
-		#region SHA512_ConfigValidation
+#region SHA512_ConfigValidation
 		[Fact]
 		public void SHA512Config_Defaults_HaventChanged()
 		{
 			var config = new SHA512Config();
 			Assert.Equal(512, config.HashSizeInBits);
 		}
-		#endregion // SHA512_ConfigValidation
+#endregion // SHA512_ConfigValidation
 
-		#endregion // SHA512_Tests
+#endregion // SHA512_Tests
 
-		#region SHA3_256_Tests
+#region SHA3_256_Tests
 
-		#region SHA3_256_Constructor
+#region SHA3_256_Constructor
 
-		#region SHA3_256_Config
+#region SHA3_256_Config
 
 		[Fact]
 		public void SHA3_256_Implementation_Constructor_Config_IsNull_Throws()
 		{
+			if (!ISHA3_256.IsSupported)	return;
+
 			Assert.Equal(
 				"config",
 				Assert.Throws<ArgumentNullException>(
@@ -731,6 +751,8 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 		[Fact]
 		public void SHA3_256_Implementation_Constructor_Config_IsCloned()
 		{
+			if (!ISHA3_256.IsSupported)	return;
+
 			var configMock = new Mock<ISHA3_256Config>();
 			{
 				configMock.Setup(bc => bc.HashSizeInBits)
@@ -748,30 +770,34 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // SHA3_256_Config
+#endregion // SHA3_256_Config
 
-		#endregion // SHA3_256_Constructor
+#endregion // SHA3_256_Constructor
 
-		#region SHA3_256_ConfigValidation
+#region SHA3_256_ConfigValidation
 		[Fact]
 		public void SHA3_256Config_Defaults_HaventChanged()
 		{
+			if (!ISHA3_256.IsSupported)	return;
+
 			var config = new SHA3_256Config();
 			Assert.Equal(256, config.HashSizeInBits);
 		}
-		#endregion // SHA3_256_ConfigValidation
+#endregion // SHA3_256_ConfigValidation
 
-		#endregion // SHA3_256_Tests
+#endregion // SHA3_256_Tests
 
-		#region SHA3_384_Tests
+#region SHA3_384_Tests
 
-		#region SHA3_384_Constructor
+#region SHA3_384_Constructor
 
-		#region SHA3_384_Config
+#region SHA3_384_Config
 
 		[Fact]
 		public void SHA3_384_Implementation_Constructor_Config_IsNull_Throws()
 		{
+			if (!ISHA3_384.IsSupported)	return;
+
 			Assert.Equal(
 				"config",
 				Assert.Throws<ArgumentNullException>(
@@ -782,6 +808,8 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 		[Fact]
 		public void SHA3_384_Implementation_Constructor_Config_IsCloned()
 		{
+			if (!ISHA3_384.IsSupported)	return;
+
 			var configMock = new Mock<ISHA3_384Config>();
 			{
 				configMock.Setup(bc => bc.HashSizeInBits)
@@ -799,30 +827,34 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // SHA3_384_Config
+#endregion // SHA3_384_Config
 
-		#endregion // SHA3_384_Constructor
+#endregion // SHA3_384_Constructor
 
-		#region SHA3_384_ConfigValidation
+#region SHA3_384_ConfigValidation
 		[Fact]
 		public void SHA3_384Config_Defaults_HaventChanged()
 		{
+			if (!ISHA3_384.IsSupported)	return;
+
 			var config = new SHA3_384Config();
 			Assert.Equal(384, config.HashSizeInBits);
 		}
-		#endregion // SHA3_384_ConfigValidation
+#endregion // SHA3_384_ConfigValidation
 
-		#endregion // SHA3_384_Tests
+#endregion // SHA3_384_Tests
 
-		#region SHA3_512_Tests
+#region SHA3_512_Tests
 
-		#region SHA3_512_Constructor
+#region SHA3_512_Constructor
 
-		#region SHA3_512_Config
+#region SHA3_512_Config
 
 		[Fact]
 		public void SHA3_512_Implementation_Constructor_Config_IsNull_Throws()
 		{
+			if (!ISHA3_512.IsSupported)	return;
+
 			Assert.Equal(
 				"config",
 				Assert.Throws<ArgumentNullException>(
@@ -833,6 +865,8 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 		[Fact]
 		public void SHA3_512_Implementation_Constructor_Config_IsCloned()
 		{
+			if (!ISHA3_512.IsSupported)	return;
+
 			var configMock = new Mock<ISHA3_512Config>();
 			{
 				configMock.Setup(bc => bc.HashSizeInBits)
@@ -850,19 +884,22 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 			configMock.VerifyGet(bc => bc.HashSizeInBits, Times.Never);
 		}
 
-		#endregion // SHA3_512_Config
+#endregion // SHA3_512_Config
 
-		#endregion // SHA3_512_Constructor
+#endregion // SHA3_512_Constructor
 
-		#region SHA3_512_ConfigValidation
+#region SHA3_512_ConfigValidation
 		[Fact]
 		public void SHA3_512Config_Defaults_HaventChanged()
 		{
+			if (!ISHA3_512.IsSupported)	return;
+
 			var config = new SHA3_512Config();
 			Assert.Equal(512, config.HashSizeInBits);
 		}
-		#endregion // SHA3_512_ConfigValidation
+#endregion // SHA3_512_ConfigValidation
 
-		#endregion // SHA3_512_Tests
+#endregion // SHA3_512_Tests
 	}
 }
+
