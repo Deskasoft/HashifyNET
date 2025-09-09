@@ -1,4 +1,5 @@
-﻿// *
+#if NET8_0_OR_GREATER
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -36,7 +37,6 @@ namespace HashifyNet.Algorithms
 	/// </summary>
 	public interface IHashAlgorithmWrapperPlatformDependentAlgorithm<TAlgorithm> : IHashAlgorithmWrapperAlgorithm<TAlgorithm> where TAlgorithm : System.Security.Cryptography.HashAlgorithm
 	{
-#if NET8_0_OR_GREATER
 		/// <summary>
 		/// Gets a value that indicates whether the algorithm is supported on the current platform.
 		/// </summary>
@@ -73,6 +73,6 @@ namespace HashifyNet.Algorithms
 				return true;
 			}
 		}
-#endif
 	}
 }
+#endif
