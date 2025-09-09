@@ -59,14 +59,13 @@ namespace HashifyNet.Algorithms.HMACSHA3_512
 		/// Gets or sets the secret key for the hash algorithm.
 		/// </summary>
 #if NET8_0_OR_GREATER
-#nullable enable
+		#nullable enable
 		public byte[]?
-#nullable restore
+		#nullable restore
 #else
 		public byte[]
 #endif // NET8_0_OR_GREATER
-		Key
-		{ get; set; } = null;
+		Key { get; set; } = null;
 
 		/// <summary>
 		/// Creates a deep copy of the current <see cref="HMACSHA3_512Config"/> instance.

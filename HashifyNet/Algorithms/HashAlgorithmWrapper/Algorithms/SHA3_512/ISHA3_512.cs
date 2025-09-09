@@ -37,6 +37,12 @@ namespace HashifyNet.Algorithms.SHA3_512
 	/// </summary>
 	public interface ISHA3_512 : ICryptographicStreamableHashFunction<ISHA3_512Config>
 	{
+#if NET8_0_OR_GREATER
+		/// <summary>
+		/// <inheritdoc cref="System.Security.Cryptography.SHA3_512.IsSupported"/>
+		/// </summary>
+		public static bool IsSupported { get; } = System.Security.Cryptography.SHA3_512.IsSupported;
+#endif
 	}
 }
 

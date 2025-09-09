@@ -37,6 +37,12 @@ namespace HashifyNet.Algorithms.HMACSHA3_384
 	/// </summary>
 	public interface IHMACSHA3_384 : ICryptographicStreamableHashFunction<IHMACSHA3_384Config>
 	{
+#if NET8_0_OR_GREATER
+		/// <summary>
+		/// <inheritdoc cref="System.Security.Cryptography.HMACSHA3_384.IsSupported"/>
+		/// </summary>
+		public static bool IsSupported { get; } = System.Security.Cryptography.HMACSHA3_384.IsSupported;
+#endif
 	}
 }
 

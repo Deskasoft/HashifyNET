@@ -37,6 +37,12 @@ namespace HashifyNet.Algorithms.SHA3_256
 	/// </summary>
 	public interface ISHA3_256 : ICryptographicStreamableHashFunction<ISHA3_256Config>
 	{
+#if NET8_0_OR_GREATER
+		/// <summary>
+		/// <inheritdoc cref="System.Security.Cryptography.SHA3_256.IsSupported"/>
+		/// </summary>
+		public static bool IsSupported { get; } = System.Security.Cryptography.SHA3_256.IsSupported;
+#endif
 	}
 }
 
