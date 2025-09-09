@@ -194,6 +194,8 @@ namespace HashifyNet
 		/// <exception cref="NotSupportedException">Thrown if no default configuration is available for the specified <paramref name="type"/>.</exception>
 		public static IHashConfigBase CreateDefaultConcreteConfig(Type type)
 		{
+			_ = type ?? throw new ArgumentNullException(nameof(type));
+			
 			if (!_implementations.ContainsKey(type))
 			{
 				throw new KeyNotFoundException($"No implementation registered for type '{type.FullName}'.");
@@ -316,3 +318,4 @@ namespace HashifyNet
 		}
 	}
 }
+
