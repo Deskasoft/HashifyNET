@@ -31,6 +31,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#if NET8_0_OR_GREATER
+using HashifyNet.Algorithms.HMACSHA3_256;
+using HashifyNet.Algorithms.HMACSHA3_384;
+using HashifyNet.Algorithms.HMACSHA3_512;
+using HashifyNet.Algorithms.SHA3_256;
+using HashifyNet.Algorithms.SHA3_384;
+using HashifyNet.Algorithms.SHA3_512;
+#endif
+
 namespace HashifyNet
 {
 	public sealed partial class HashFactory
@@ -115,6 +124,37 @@ namespace HashifyNet
 
 			return instances.ToArray();
 		}
+
+#if NET8_0_OR_GREATER
+		/// <summary>
+		/// Retrieves a list of hash algorithm types that are not supported on the current platform.
+		/// </summary>
+		/// <remarks>This method checks the availability of specific hash algorithms, such as SHA-3 and HMAC-SHA-3
+		/// variants, on the current platform. The returned array can be used to determine which algorithms are unsupported
+		/// and may require alternative handling in your application.</remarks>
+		/// <returns>An array of <see cref="Type"/> objects representing the hash algorithms that are unavailable. If all algorithms
+		/// are supported, the array will be empty.</returns>
+		public static Type[] GetUnavailableHashAlgorithms()
+		{
+			List<Tuple<Type, bool>> possibleUnavailableAlgorithms = new List<Tuple<Type, bool>>()
+			{
+				Tuple.Create(typeof(IHMACSHA3_256), IHMACSHA3_256.IsSupported),
+				Tuple.Create(typeof(IHMACSHA3_384), IHMACSHA3_384.IsSupported),
+				Tuple.Create(typeof(IHMACSHA3_512), IHMACSHA3_512.IsSupported),
+
+				Tuple.Create(typeof(ISHA3_256), ISHA3_256.IsSupported),
+				Tuple.Create(typeof(ISHA3_384), ISHA3_384.IsSupported),
+				Tuple.Create(typeof(ISHA3_512), ISHA3_512.IsSupported),
+			};
+
+			Type[] unavailableAlgorithms = possibleUnavailableAlgorithms
+																		.Where(t => !t.Item2)
+																		.Select(t => t.Item1)
+																		.ToArray();
+
+			return unavailableAlgorithms;
+		}
+#endif
 
 		/// <summary>
 		/// Retrieves an array of hash algorithm types based on the specified hash function category.
