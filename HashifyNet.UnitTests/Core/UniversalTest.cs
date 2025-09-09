@@ -588,7 +588,10 @@ namespace HashifyNet.UnitTests.Core
 				Tuple.Create(typeof(ISHA3_512), ISHA3_512.IsSupported),
 			};
 
-			Type[] unavailableAlgorithms = possibleUnavailableAlgorithms.Where(t => !t.Item2).ToList().ConvertAll(t => t.Item1).ToArray();
+			Type[] unavailableAlgorithms = possibleUnavailableAlgorithms
+																		.Where(t => !t.Item2)
+																		.Select(t => t.Item1)
+																		.ToArray();
 
 			IHashFunctionBase[] all = HashFactory.CreateHashAlgorithms(HashFunctionType.Cryptographic | HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>()
 			{
@@ -710,3 +713,4 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
+
