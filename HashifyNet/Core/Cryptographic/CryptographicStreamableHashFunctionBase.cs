@@ -38,7 +38,15 @@ namespace HashifyNet.Core
 	{
 		private bool disposedValue;
 
-		private void Dispose(bool disposing)
+		/// <summary>
+		/// Releases the resources used by the current instance of the class.
+		/// </summary>
+		/// <remarks>This method releases both managed and unmanaged resources. Call this method when you are 
+		/// finished using the object to ensure that all resources are properly released. If overriding  this method, ensure
+		/// that all resources are disposed of and the base class implementation is called.</remarks>
+		/// <param name="disposing">A value indicating whether to release both managed and unmanaged resources (<see langword="true"/>) or only
+		/// unmanaged resources (<see langword="false"/>).</param>
+		protected virtual void Dispose(bool disposing)
 		{
 			if (!disposedValue)
 			{
@@ -63,4 +71,5 @@ namespace HashifyNet.Core
 			System.GC.SuppressFinalize(this);
 		}
 	}
+
 }
