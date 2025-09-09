@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -63,7 +63,7 @@ namespace HashifyNet
 		}
 
 		/// <summary>
-		/// Retrieves an array of hash function instances based on the specified hash function type.
+		/// Creates an array of hash function instances based on the specified hash function type.
 		/// </summary>
 		/// <param name="type">The type of hash functions to retrieve. This determines the set of hash algorithms to be instantiated.</param>
 		/// <param name="defaultConfigMap">An optional dictionary mapping hash function types to their corresponding configuration objects.  If provided, the
@@ -72,7 +72,7 @@ namespace HashifyNet
 		/// <param name="ignoredFunctions">An optional array of hash function types to be ignored during instantiation. Any types present in this array (and any types derive from the types in this array) will be skipped.</param>
 		/// <returns>An array of <see cref="IHashFunctionBase"/> instances representing the hash functions for the specified type.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if no hash algorithms are found for the specified <paramref name="type"/>.</exception>
-		public static IHashFunctionBase[] GetHashFunctions(HashFunctionType type, Dictionary<Type, IHashConfigBase> defaultConfigMap = null, params Type[] ignoredFunctions)
+		public static IHashFunctionBase[] CreateHashAlgorithms(HashFunctionType type, Dictionary<Type, IHashConfigBase> defaultConfigMap = null, params Type[] ignoredFunctions)
 		{
 			Type[] functions = GetHashAlgorithms(type);
 
