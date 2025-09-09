@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -572,7 +572,20 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void RunUniversalTest()
 		{
-			IHashFunctionBase[] all = HashFactory.GetHashFunctions(HashFunctionType.Cryptographic | HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>()
+			List<Tuple<Type, bool>> possibleUnavailableAlgorithms = new List<Tuple<Type, bool>>()
+			{
+				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_256>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_256>.IsSupported),
+				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_384>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_384>.IsSupported),
+				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_512>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_512>.IsSupported),
+
+				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_256>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_256>.IsSupported),
+				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_384>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_384>.IsSupported),
+				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_512>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_512>.IsSupported),
+			};
+
+			Type[] unavailableAlgorithms = possibleUnavailableAlgorithms.Where(t => t.Item2).ToList().ConvertAll(t => t.Item1).ToArray();
+
+			IHashFunctionBase[] all = HashFactory.CreateHashAlgorithms(HashFunctionType.Cryptographic | HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>()
 			{
 				// Non-cryptographic Forced Defaults
 				{ typeof(ICRC), CRCConfig.CRC32 },
@@ -583,7 +596,7 @@ namespace HashifyNet.UnitTests.Core
 				
 				// Cryptographic Forced Defaults
 				{ typeof(IArgon2id), Argon2idConfig.OWASP_Standard }
-			}, typeof(IHashAlgorithmWrapper));
+			}, unavailableAlgorithms);
 
 			Assert.NotNull(all);
 			Assert.NotEmpty(all);
@@ -692,4 +705,3 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
-
