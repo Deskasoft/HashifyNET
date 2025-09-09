@@ -35,7 +35,7 @@ namespace HashifyNet.Core.HashAlgorithm
 	/// <summary>
 	/// Defines a configuration for a <see cref="IHashAlgorithmWrapper"/> implementation.
 	/// </summary>
-	public class HashAlgorithmWrapperConfig
+	internal class HashAlgorithmWrapperConfig
 		: IHashAlgorithmWrapperConfig
 	{
 		/// <summary>
@@ -64,13 +64,13 @@ namespace HashifyNet.Core.HashAlgorithm
 		}
 
 		/// <summary>
-		/// Makes a deep clone of the current instance.
+		/// Makes a deep clone of current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public IHashAlgorithmWrapperConfig Clone() =>
 			new HashAlgorithmWrapperConfig(InstanceFactory, HashSizeInBits);
 
-   		/// <summary>
+		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
 		public void Dispose()
