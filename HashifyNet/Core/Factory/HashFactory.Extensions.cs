@@ -30,6 +30,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 #if NET8_0_OR_GREATER
 using HashifyNet.Algorithms.HMACSHA3_256;
@@ -155,6 +156,87 @@ namespace HashifyNet
 			return unavailableAlgorithms;
 		}
 #endif
+
+		/// <summary>
+		/// Retrieves an array of concrete configuration types associated with the specified hash function type.
+		/// </summary>
+		/// <remarks>This method inspects the hash algorithm types associated with the specified <paramref
+		/// name="type"/> and retrieves the concrete configuration types defined by the <see
+		/// cref="Core.HashAlgorithmImplementationAttribute"/> applied to each type.</remarks>
+		/// <param name="type">The hash function type for which to retrieve the associated concrete configuration types.</param>
+		/// <returns>An array of <see cref="Type"/> objects representing the concrete configuration types for the specified hash
+		/// function type. If no configurations are found, an empty array is returned.</returns>
+		public static Type[] GetConcreteConfigs(HashFunctionType type)
+		{
+			Type[] types = GetHashAlgorithms(type);
+			List<Type> retval = new List<Type>();
+			foreach (Type t in types)
+			{
+				Core.HashAlgorithmImplementationAttribute attr = t.GetCustomAttribute<Core.HashAlgorithmImplementationAttribute>(false);
+				if (attr == null)
+				{
+					// This should never happen but handle it gracefully.
+					continue;
+				}
+
+				retval.Add(attr.ConcreteConfig);
+			}
+
+			return retval.ToArray();
+		}
+
+		/// <summary>
+		/// Creates a default concrete configuration instance for the specified type.
+		/// </summary>
+		/// <param name="type">The type for which to create the default configuration. This must be a type that has a registered implementation.</param>
+		/// <returns>An instance of <see cref="IHashConfigBase"/> representing the default configuration for the specified type.</returns>
+		/// <exception cref="KeyNotFoundException">Thrown if no implementation is registered for the specified <paramref name="type"/>.</exception>
+		/// <exception cref="NotSupportedException">Thrown if no default configuration is available for the specified <paramref name="type"/>.</exception>
+		public static IHashConfigBase CreateDefaultConcreteConfig(Type type)
+		{
+			if (!_implementations.ContainsKey(type))
+			{
+				throw new KeyNotFoundException($"No implementation registered for type '{type.FullName}'.");
+			}
+
+			Func<object[], object> configFactory = ((Tuple<Func<object[], object>, Func<object[], object>>)_implementations[type]).Item2;
+			if (configFactory == null)
+			{
+				throw new NotSupportedException($"No default configuration available for type '{type.FullName}'.");
+			}
+
+			return (IHashConfigBase)configFactory(null);
+		}
+
+		/// <summary>
+		/// Attempts to create a default concrete configuration for the specified type.
+		/// </summary>
+		/// <remarks>This method catches and handles <see cref="NotSupportedException"/> and <see
+		/// cref="KeyNotFoundException"/> internally, returning <see langword="false"/> in such cases. Other exceptions may
+		/// propagate to the caller.</remarks>
+		/// <param name="type">The type for which to create the default concrete configuration.</param>
+		/// <param name="config">When this method returns, contains the created configuration if the operation succeeds; otherwise, <see
+		/// langword="null"/>. This parameter is passed uninitialized.</param>
+		/// <returns><see langword="true"/> if the default concrete configuration was successfully created; otherwise, <see
+		/// langword="false"/>.</returns>
+		public static bool TryCreateDefaultConcreteConfig(Type type, out IHashConfigBase config)
+		{
+			try
+			{
+				config = CreateDefaultConcreteConfig(type);
+				return true;
+			}
+			catch (NotSupportedException)
+			{
+				config = null;
+				return false;
+			}
+			catch (KeyNotFoundException)
+			{
+				config = null;
+				return false;
+			}
+		}
 
 		/// <summary>
 		/// Retrieves an array of hash algorithm types based on the specified hash function category.
