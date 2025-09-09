@@ -31,8 +31,13 @@ using HashifyNet.Algorithms.Argon2id;
 using HashifyNet.Algorithms.BuzHash;
 using HashifyNet.Algorithms.CRC;
 using HashifyNet.Algorithms.FNV;
+using HashifyNet.Algorithms.HMACSHA3_256;
+using HashifyNet.Algorithms.HMACSHA3_384;
+using HashifyNet.Algorithms.HMACSHA3_512;
 using HashifyNet.Algorithms.Pearson;
-using HashifyNet.Core.HashAlgorithm;
+using HashifyNet.Algorithms.SHA3_256;
+using HashifyNet.Algorithms.SHA3_384;
+using HashifyNet.Algorithms.SHA3_512;
 using HashifyNet.UnitTests.Utilities;
 using System.Diagnostics;
 
@@ -574,13 +579,13 @@ namespace HashifyNet.UnitTests.Core
 		{
 			List<Tuple<Type, bool>> possibleUnavailableAlgorithms = new List<Tuple<Type, bool>>()
 			{
-				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_256>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_256>.IsSupported),
-				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_384>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_384>.IsSupported),
-				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_512>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_512>.IsSupported),
+				Tuple.Create(typeof(IHMACSHA3_256), IHMACSHA3_256.IsSupported),
+				Tuple.Create(typeof(IHMACSHA3_384), IHMACSHA3_384.IsSupported),
+				Tuple.Create(typeof(IHMACSHA3_512), IHMACSHA3_512.IsSupported),
 
-				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_256>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_256>.IsSupported),
-				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_384>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_384>.IsSupported),
-				Tuple.Create(typeof(IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_512>), IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.SHA3_512>.IsSupported),
+				Tuple.Create(typeof(ISHA3_256), ISHA3_256.IsSupported),
+				Tuple.Create(typeof(ISHA3_384), ISHA3_384.IsSupported),
+				Tuple.Create(typeof(ISHA3_512), ISHA3_512.IsSupported),
 			};
 
 			Type[] unavailableAlgorithms = possibleUnavailableAlgorithms.Where(t => !t.Item2).ToList().ConvertAll(t => t.Item1).ToArray();
@@ -705,4 +710,3 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
-
