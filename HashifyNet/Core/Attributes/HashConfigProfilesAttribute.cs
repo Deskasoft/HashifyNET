@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -41,10 +41,10 @@ namespace HashifyNet.Core
 	/// cref="HashConfigProfileAttribute"/>.</description></item> <item><description>It must implement the <see
 	/// cref="IHashConfigBase"/> interface.</description></item> </list></remarks>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-	internal sealed class ConfigProfilesAttribute : Attribute
+	internal sealed class HashConfigProfilesAttribute : Attribute
 	{
 		public Type[] ProfileTypes { get; }
-		public ConfigProfilesAttribute(params Type[] profileTypes)
+		public HashConfigProfilesAttribute(params Type[] profileTypes)
 		{
 			ProfileTypes = profileTypes ?? throw new ArgumentNullException(nameof(profileTypes));
 
