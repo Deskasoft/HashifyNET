@@ -200,13 +200,13 @@ namespace HashifyNet
 				throw new KeyNotFoundException($"No implementation registered for type '{type.FullName}'.");
 			}
 
-			Func<object[], object> configFactory = ((Tuple<Func<object[], object>, Func<object[], object>>)_implementations[type]).Item2;
+			Func<IHashConfigBase> configFactory = ((Tuple<Func<IHashConfigBase, IHashFunctionBase>, Func<IHashConfigBase>>)_implementations[type]).Item2;
 			if (configFactory == null)
 			{
 				throw new NotSupportedException($"No default configuration available for type '{type.FullName}'.");
 			}
 
-			return (IHashConfigBase)configFactory(null);
+			return configFactory();
 		}
 
 		/// <summary>
