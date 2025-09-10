@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -38,7 +38,7 @@ namespace HashifyNet.Core
 	/// <remarks>This attribute is used to associate one or more configuration profile types with a class. Each
 	/// specified type must meet the following criteria: <list type="bullet"> <item><description>It must be a non-abstract
 	/// class.</description></item> <item><description>It must be marked with the <see
-	/// cref="HashConfigProfileAttribute"/>.</description></item> <item><description>It must implement the <see
+	/// cref="DefineHashConfigProfileAttribute"/>.</description></item> <item><description>It must implement the <see
 	/// cref="IHashConfigBase"/> interface.</description></item> </list></remarks>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
 	internal sealed class DeclareHashConfigProfileAttribute : Attribute
@@ -62,9 +62,9 @@ namespace HashifyNet.Core
 				throw new ArgumentException($"{nameof(profileType)} must not contain abstract class types.", nameof(profileType));
 			}
 
-			if (!Attribute.IsDefined(profileType, typeof(HashConfigProfileAttribute), false))
+			if (!Attribute.IsDefined(profileType, typeof(DefineHashConfigProfileAttribute), false))
 			{
-				throw new ArgumentException($"{nameof(profileType)} must only contain types marked with {nameof(HashConfigProfileAttribute)}.", nameof(profileType));
+				throw new ArgumentException($"{nameof(profileType)} must only contain types marked with {nameof(DefineHashConfigProfileAttribute)}.", nameof(profileType));
 			}
 
 			if (!profileType.HasInterface(typeof(IHashConfigBase)))
