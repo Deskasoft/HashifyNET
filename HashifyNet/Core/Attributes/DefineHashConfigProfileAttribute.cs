@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -37,6 +37,9 @@ namespace HashifyNet.Core
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 	internal sealed class DefineHashConfigProfileAttribute : Attribute
 	{
+		private const int MaxNameLength = 255;
+		private const int MaxDescriptionLength = 2048;
+
 		public string Name { get; }
 		public string Description { get; }
 
@@ -49,6 +52,16 @@ namespace HashifyNet.Core
 			if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
 			{
 				throw new ArgumentException("The config profile name must be a non-empty and non-whitespace string.", nameof(name));
+			}
+
+			if (name.Length > MaxNameLength)
+			{
+				throw new ArgumentException($"The config profile name must not exceed {MaxNameLength} characters in length.", nameof(name));
+			}
+
+			if (description != null && description.Length > MaxDescriptionLength)
+			{
+				throw new ArgumentException($"The config profile description must not exceed {MaxDescriptionLength} characters in length.", nameof(description));
 			}
 
 			Name = name;
