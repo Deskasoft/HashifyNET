@@ -36,7 +36,7 @@ namespace HashifyNet.Algorithms.Pearson
 	/// <summary>
 	/// Defines a configuration for a <see cref="IPearson"/> implementation.
 	/// </summary>
-	[DeclareHashConfigProfile(typeof(WikipediaPearsonConfig))]
+	[DeclareHashConfigProfile(typeof(PearsonConfigProfileWikipedia))]
 	public class PearsonConfig
 		: IPearsonConfig
 	{
