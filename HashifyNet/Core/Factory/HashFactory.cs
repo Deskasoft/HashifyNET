@@ -142,32 +142,35 @@ namespace HashifyNet
 
 				if (configProfileTypes != null && configProfileTypes.Count > 0)
 				{
+					// Create instances of each config profile type and push them into an array then to the lookup table.
 					// This implementation assumes that HashAlgorithmImplementationAttribute's constructor already ensures a public parameterless constructor for every config profile type.
-					IHashConfigProfile[] profiles = new IHashConfigProfile[configProfileTypes.Count];
-					for (int i = 0; i < configProfileTypes.Count; ++i)
 					{
-						Type configProfileType = configProfileTypes[i];
-						ConstructorInfo configProfileCtor = configType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, 0);
-						if (configProfileCtor == null)
+						IHashConfigProfile[] profiles = new IHashConfigProfile[configProfileTypes.Count];
+						for (int i = 0; i < configProfileTypes.Count; ++i)
 						{
-							// This should not have happened, as ConfigProfilesAttribute already checks for this in its constructor.
-							// Just in case, we throw here.
-							throw new InvalidOperationException($"The config profile type '{configProfileType.FullName}' does not have a public parameterless constructor. This should not have happened in normal cases, so it probably points to a bug.");
+							Type configProfileType = configProfileTypes[i];
+							ConstructorInfo configProfileCtor = configType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, 0);
+							if (configProfileCtor == null)
+							{
+								// This should not have happened, as ConfigProfilesAttribute already checks for this in its constructor.
+								// Just in case, we throw here.
+								throw new InvalidOperationException($"The config profile type '{configProfileType.FullName}' does not have a public parameterless constructor. This should not have happened in normal cases, so it probably points to a bug.");
+							}
+
+							DefineHashConfigProfileAttribute configProfileAttribute = configProfileType.GetCustomAttribute<DefineHashConfigProfileAttribute>(false);
+							if (configProfileAttribute == null)
+							{
+								// This should not have happened, as ConfigProfilesAttribute already checks for this in its constructor.
+								// Just in case, we throw here.
+								throw new InvalidOperationException($"The config profile type '{configProfileType.FullName}' is not marked with {nameof(DefineHashConfigProfileAttribute)}. This should not have happened in normal cases, so it probably points to a bug.");
+							}
+
+							Func<IHashConfigBase> configProfileFactory = ReflectionHelper.CreateInstance<IHashConfigBase>(configProfileCtor);
+							profiles[i] = new HashConfigProfile(configProfileAttribute.Name, configProfileAttribute.Description, configProfileFactory);
 						}
 
-						DefineHashConfigProfileAttribute configProfileAttribute = configProfileType.GetCustomAttribute<DefineHashConfigProfileAttribute>(false);
-						if (configProfileAttribute == null)
-						{
-							// This should not have happened, as ConfigProfilesAttribute already checks for this in its constructor.
-							// Just in case, we throw here.
-							throw new InvalidOperationException($"The config profile type '{configProfileType.FullName}' is not marked with {nameof(DefineHashConfigProfileAttribute)}. This should not have happened in normal cases, so it probably points to a bug.");
-						}
-
-						Func<IHashConfigBase> configProfileFactory = ReflectionHelper.CreateInstance<IHashConfigBase>(configProfileCtor);
-						profiles[i] = new HashConfigProfile(configProfileAttribute.Name, configProfileAttribute.Description, configProfileFactory);
+						_configProfiles.Add(t.Item2.ImplementedInterface, profiles);
 					}
-
-					_configProfiles.Add(t.Item2.ImplementedInterface, profiles);
 				}
 
 				// If the concrete config has no parameterless constructor, we cannot create a default instance. In this case, the parameterless Create function will throw.
@@ -266,4 +269,3 @@ namespace HashifyNet
 		}
 	}
 }
-
