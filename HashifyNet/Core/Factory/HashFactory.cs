@@ -27,6 +27,7 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core;
 using HashifyNet.Core.Utilities;
 using System;
 using System.Collections;
@@ -60,8 +61,9 @@ namespace HashifyNet
 			}
 		}
 
-		private static readonly Hashtable _concreteConfigTypes;
 		private static readonly Hashtable _implementations;
+		private static readonly Hashtable _concreteConfigTypes;
+		private static readonly Hashtable _configProfiles;
 		/// <summary>
 		/// Initializes the static state of the <see cref="HashFactory"/> class by discovering and registering available hash
 		/// algorithm implementations.
@@ -79,14 +81,15 @@ namespace HashifyNet
 		{
 			_implementations = new Hashtable();
 			_concreteConfigTypes = new Hashtable();
+			_configProfiles = new Hashtable();
 
-			Type[] types = ReflectionHelper.GetClasses(typeof(Core.HashAlgorithmImplementationAttribute), false);
+			Type[] types = ReflectionHelper.GetClasses(typeof(HashAlgorithmImplementationAttribute), false);
 			if (types == null || types.Length < 1)
 			{
 				throw new InvalidOperationException("No hash algorithm implementations found.");
 			}
 
-			List<Tuple<Type, Core.HashAlgorithmImplementationAttribute>> validTypes = new List<Tuple<Type, Core.HashAlgorithmImplementationAttribute>>();
+			List<Tuple<Type, HashAlgorithmImplementationAttribute>> validTypes = new List<Tuple<Type, HashAlgorithmImplementationAttribute>>();
 			foreach (Type type in types)
 			{
 				if (type.GetCustomAttribute<ObsoleteAttribute>() != null)
@@ -94,31 +97,18 @@ namespace HashifyNet
 					continue;
 				}
 
-				IEnumerable<Core.HashAlgorithmImplementationAttribute> attrs = type.GetCustomAttributes<Core.HashAlgorithmImplementationAttribute>(false);
-				if (attrs == null)
+				HashAlgorithmImplementationAttribute implementationAttribute  = type.GetCustomAttribute<HashAlgorithmImplementationAttribute>(false);
+				if (implementationAttribute == null)
 				{
 					continue;
 				}
 
-				bool exists = false;
-				foreach (Core.HashAlgorithmImplementationAttribute attr in attrs)
-				{
-					exists = true;
-					break;
-				}
-
-				if (!exists)
+				if (!type.HasConstructor(BindingFlags.Public | BindingFlags.Instance, 1, new Type[] { typeof(IHashConfigBase) }))
 				{
 					continue;
 				}
 
-				if (!type.HasConstructor(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance, 1, new Type[] { typeof(IHashConfigBase) }))
-				{
-					continue;
-				}
-
-				Core.HashAlgorithmImplementationAttribute implattr = attrs.ElementAt(0);
-				validTypes.Add(new Tuple<Type, Core.HashAlgorithmImplementationAttribute>(type, implattr));
+				validTypes.Add(new Tuple<Type, HashAlgorithmImplementationAttribute>(type, implementationAttribute));
 			}
 
 			if (validTypes.Count < 1)
@@ -126,24 +116,55 @@ namespace HashifyNet
 				throw new InvalidOperationException("No valid hash algorithm implementations found.");
 			}
 
-			foreach (Tuple<Type, Core.HashAlgorithmImplementationAttribute> t in validTypes)
+			foreach (Tuple<Type, HashAlgorithmImplementationAttribute> t in validTypes)
 			{
-				ConstructorInfo factoryCtor = t.Item1.GetConstructor(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance, 1, new Type[] { typeof(IHashConfigBase) });
-				Func<object[], object> factory = ReflectionHelper.CreateInstanceWithParameters(factoryCtor, factoryCtor.GetParameters()[0].ParameterType);
+				ConstructorInfo factoryCtor = t.Item1.GetConstructor(BindingFlags.Public | BindingFlags.Instance, 1, new Type[] { typeof(IHashConfigBase) });
+				Func<IHashConfigBase, IHashFunctionBase> factory = ReflectionHelper.CreateInstanceWithSingleParameter<IHashFunctionBase, IHashConfigBase>(factoryCtor);
 
 				Type configType = t.Item2.ConcreteConfig;
 
 				_concreteConfigTypes.Add(t.Item2.ImplementedInterface, configType);
 
+				ConfigProfilesAttribute configProfilesAttribute = configType.GetCustomAttribute<ConfigProfilesAttribute>(false);
+				if (configProfilesAttribute != null)
+				{
+					// This assumes that HashAlgorithmImplementationAttribute's constructor already ensures a public parameterless constructor for every config profile type.
+					IHashConfigProfile[] factories = new IHashConfigProfile[configProfilesAttribute.ProfileTypes.Length];
+					for (int i = 0; i < configProfilesAttribute.ProfileTypes.Length; ++i)
+					{
+						Type configProfileType = configProfilesAttribute.ProfileTypes[i];
+						ConstructorInfo configProfileCtor = configType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, 0);
+						if (configProfileCtor == null)
+						{
+							// This should not have happened, as ConfigProfilesAttribute already checks for this in its constructor.
+							// Just in case, we throw here.
+							throw new InvalidOperationException($"The config profile type '{configProfileType.FullName}' does not have a public parameterless constructor. This should not have happened in normal cases, so it probably points to a bug.");
+						}
+
+						HashConfigProfileAttribute configProfileAttribute = configProfileType.GetCustomAttribute<HashConfigProfileAttribute>(false);
+						if (configProfileAttribute == null)
+						{
+							// This should not have happened, as ConfigProfilesAttribute already checks for this in its constructor.
+							// Just in case, we throw here.
+							throw new InvalidOperationException($"The config profile type '{configProfileType.FullName}' is not marked with {nameof(HashConfigProfileAttribute)}. This should not have happened in normal cases, so it probably points to a bug.");
+						}
+
+						Func<IHashConfigBase> configProfileFactory = ReflectionHelper.CreateInstance<IHashConfigBase>(configProfileCtor);
+						factories[i] = new HashConfigProfile(configProfileAttribute.Name, configProfileAttribute.Description, configProfileFactory);
+					}
+
+					_configProfiles.Add(t.Item2.ImplementedInterface, factories);
+				}
+
 				// If the concrete config has no parameterless constructor, we cannot create a default instance. In this case, the parameterless Create function will throw.
-				Func<object[], object> configFactory = null;
+				Func<IHashConfigBase> configFactory = null;
 				ConstructorInfo configCtor = configType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, 0);
 				if (configCtor != null)
 				{
-					configFactory = ReflectionHelper.CreateInstanceWithParameters(configCtor);
+					configFactory = ReflectionHelper.CreateInstance<IHashConfigBase>(configCtor);
 				}
 
-				_implementations.Add(t.Item2.ImplementedInterface, Tuple.Create<Func<object[], object>, Func<object[], object>>(factory, configFactory));
+				_implementations.Add(t.Item2.ImplementedInterface, Tuple.Create<Func<IHashConfigBase, IHashFunctionBase>, Func<IHashConfigBase>>(factory, configFactory));
 			}
 		}
 
@@ -181,13 +202,13 @@ namespace HashifyNet
 				throw new NotImplementedException($"No implementation found for type {type.FullName}.");
 			}
 
-			Tuple<Func<object[], object>, Func<object[], object>> factory = (Tuple<Func<object[], object>, Func<object[], object>>)_implementations[type];
+			Tuple<Func<IHashConfigBase, IHashFunctionBase>, Func<IHashConfigBase>> factory = (Tuple<Func<IHashConfigBase, IHashFunctionBase>, Func<IHashConfigBase>>)_implementations[type];
 			if (factory.Item2 == null)
 			{
 				throw new NotImplementedException($"No default configuration available for type {type.FullName}.");
 			}
 
-			return (IHashFunctionBase)factory.Item1(new object[] { factory.Item2(null) });
+			return factory.Item1(factory.Item2());
 		}
 
 		/// <summary>
@@ -226,8 +247,8 @@ namespace HashifyNet
 				throw new NotImplementedException($"No implementation found for type {type.FullName}.");
 			}
 
-			Tuple<Func<object[], object>, Func<object[], object>> factory = (Tuple<Func<object[], object>, Func<object[], object>>)_implementations[type];
-			return (IHashFunctionBase)factory.Item1(new object[] { config });
+			Tuple<Func<IHashConfigBase, IHashFunctionBase>, Func<IHashConfigBase>> factory = (Tuple<Func<IHashConfigBase, IHashFunctionBase>, Func<IHashConfigBase>>)_implementations[type];
+			return factory.Item1(config);
 		}
 	}
 }
