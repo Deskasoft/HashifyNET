@@ -125,7 +125,7 @@ namespace HashifyNet
 
 				_concreteConfigTypes.Add(t.Item2.ImplementedInterface, configType);
 
-				ConfigProfilesAttribute configProfilesAttribute = configType.GetCustomAttribute<ConfigProfilesAttribute>(false);
+				HashConfigProfilesAttribute configProfilesAttribute = configType.GetCustomAttribute<HashConfigProfilesAttribute>(false);
 				if (configProfilesAttribute != null)
 				{
 					// This assumes that HashAlgorithmImplementationAttribute's constructor already ensures a public parameterless constructor for every config profile type.
