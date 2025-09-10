@@ -27,8 +27,9 @@
 // ******************************************************************************
 // *
 
-using System.Linq;
+using HashifyNet.Core;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HashifyNet.Algorithms.BuzHash
 {
@@ -164,4 +165,3 @@ namespace HashifyNet.Algorithms.BuzHash
 			};
 	}
 }
-
