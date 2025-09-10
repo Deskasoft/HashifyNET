@@ -35,6 +35,7 @@ namespace HashifyNet.Algorithms.BuzHash
 	/// <summary>
 	/// Defines a default configuration for a <see cref="IBuzHash"/> implementation.
 	/// </summary>
+	[DefineHashConfigProfile("Default", "Default configuration for Buz Hash.")]
 	public class DefaultBuzHashConfig
 		: IBuzHashConfig
 	{
@@ -163,3 +164,4 @@ namespace HashifyNet.Algorithms.BuzHash
 			};
 	}
 }
+
