@@ -156,12 +156,12 @@ namespace HashifyNet
 							throw new InvalidOperationException($"The config profile type '{configProfileType.FullName}' does not have a public parameterless constructor. This should not have happened in normal cases, so it probably points to a bug.");
 						}
 
-						HashConfigProfileAttribute configProfileAttribute = configProfileType.GetCustomAttribute<HashConfigProfileAttribute>(false);
+						DefineHashConfigProfileAttribute configProfileAttribute = configProfileType.GetCustomAttribute<DefineHashConfigProfileAttribute>(false);
 						if (configProfileAttribute == null)
 						{
 							// This should not have happened, as ConfigProfilesAttribute already checks for this in its constructor.
 							// Just in case, we throw here.
-							throw new InvalidOperationException($"The config profile type '{configProfileType.FullName}' is not marked with {nameof(HashConfigProfileAttribute)}. This should not have happened in normal cases, so it probably points to a bug.");
+							throw new InvalidOperationException($"The config profile type '{configProfileType.FullName}' is not marked with {nameof(DefineHashConfigProfileAttribute)}. This should not have happened in normal cases, so it probably points to a bug.");
 						}
 
 						Func<IHashConfigBase> configProfileFactory = ReflectionHelper.CreateInstance<IHashConfigBase>(configProfileCtor);
