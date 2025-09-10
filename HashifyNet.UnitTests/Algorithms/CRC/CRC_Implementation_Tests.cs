@@ -197,7 +197,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC3_ROHC);
+				new CRC_Implementation(new CRCConfigProfileCRC3_ROHC());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC4_ITU
@@ -209,7 +209,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC4_ITU);
+				new CRC_Implementation(new CRCConfigProfileCRC4_ITU());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC5_EPC
@@ -221,7 +221,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC5_EPC);
+				new CRC_Implementation(new CRCConfigProfileCRC5_EPC());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC5_ITU
@@ -233,7 +233,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC5_ITU);
+				new CRC_Implementation(new CRCConfigProfileCRC5_ITU());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC5_USB
@@ -245,7 +245,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC5_USB);
+				new CRC_Implementation(new CRCConfigProfileCRC5_USB());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC6_CDMA2000A
@@ -257,7 +257,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC6_CDMA2000A);
+				new CRC_Implementation(new CRCConfigProfileCRC6_CDMA2000A());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC6_CDMA2000B
@@ -269,7 +269,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC6_CDMA2000B);
+				new CRC_Implementation(new CRCConfigProfileCRC6_CDMA2000B());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC6_DARC
@@ -281,7 +281,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC6_DARC);
+				new CRC_Implementation(new CRCConfigProfileCRC6_DARC());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC6_ITU
@@ -293,7 +293,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC6_ITU);
+				new CRC_Implementation(new CRCConfigProfileCRC6_ITU());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC7
@@ -305,7 +305,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC7);
+				new CRC_Implementation(new CRCConfigProfileCRC7());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC7_ROHC
@@ -317,7 +317,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC7_ROHC);
+				new CRC_Implementation(new CRCConfigProfileCRC7_ROHC());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC8
@@ -329,7 +329,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC8);
+				new CRC_Implementation(new CRCConfigProfileCRC8());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC8_CDMA2000
@@ -341,7 +341,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC8_CDMA2000);
+				new CRC_Implementation(new CRCConfigProfileCRC8_CDMA2000());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC8_DARC
@@ -353,7 +353,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC8_DARC);
+				new CRC_Implementation(new CRCConfigProfileCRC8_DARC());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC8_DVBS2
@@ -365,7 +365,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC8_DVBS2);
+				new CRC_Implementation(new CRCConfigProfileCRC8_DVBS2());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC8_EBU
@@ -377,7 +377,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC8_EBU);
+				new CRC_Implementation(new CRCConfigProfileCRC8_EBU());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC8_ICODE
@@ -389,7 +389,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC8_ICODE);
+				new CRC_Implementation(new CRCConfigProfileCRC8_ICODE());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC8_ITU
@@ -401,7 +401,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC8_ITU);
+				new CRC_Implementation(new CRCConfigProfileCRC8_ITU());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC8_MAXIM
@@ -413,7 +413,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC8_MAXIM);
+				new CRC_Implementation(new CRCConfigProfileCRC8_MAXIM());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC8_ROHC
@@ -425,7 +425,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC8_ROHC);
+				new CRC_Implementation(new CRCConfigProfileCRC8_ROHC());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC8_WCDMA
@@ -437,7 +437,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC8_WCDMA);
+				new CRC_Implementation(new CRCConfigProfileCRC8_WCDMA());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC10
@@ -449,7 +449,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC10);
+				new CRC_Implementation(new CRCConfigProfileCRC10());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC10_CDMA2000
@@ -461,7 +461,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC10_CDMA2000);
+				new CRC_Implementation(new CRCConfigProfileCRC10_CDMA2000());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC11
@@ -473,7 +473,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC11);
+				new CRC_Implementation(new CRCConfigProfileCRC11());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC12_3GPP
@@ -485,7 +485,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC12_3GPP);
+				new CRC_Implementation(new CRCConfigProfileCRC12_3GPP());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC12_CDMA2000
@@ -497,7 +497,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC12_CDMA2000);
+				new CRC_Implementation(new CRCConfigProfileCRC12_CDMA2000());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC12_DECT
@@ -509,7 +509,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC12_DECT);
+				new CRC_Implementation(new CRCConfigProfileCRC12_DECT());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC13_BBC
@@ -521,7 +521,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC13_BBC);
+				new CRC_Implementation(new CRCConfigProfileCRC13_BBC());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC14_DARC
@@ -533,7 +533,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC14_DARC);
+				new CRC_Implementation(new CRCConfigProfileCRC14_DARC());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC15
@@ -545,7 +545,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC15);
+				new CRC_Implementation(new CRCConfigProfileCRC15());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC15_MPT1327
@@ -557,7 +557,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC15_MPT1327);
+				new CRC_Implementation(new CRCConfigProfileCRC15_MPT1327());
 		}
 
 		public class IStreamableHashFunction_Tests_ARC
@@ -569,7 +569,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.ARC);
+				new CRC_Implementation(new CRCConfigProfileARC());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_AUGCCITT
@@ -581,7 +581,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_AUGCCITT);
+				new CRC_Implementation(new CRCConfigProfileCRC16_AUGCCITT());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_BUYPASS
@@ -593,7 +593,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_BUYPASS);
+				new CRC_Implementation(new CRCConfigProfileCRC16_BUYPASS());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_CCITTFALSE
@@ -605,7 +605,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_CCITTFALSE);
+				new CRC_Implementation(new CRCConfigProfileCRC16_CCITTFALSE());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_CDMA2000
@@ -617,7 +617,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_CDMA2000);
+				new CRC_Implementation(new CRCConfigProfileCRC16_CDMA2000());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_DDS110
@@ -629,7 +629,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_DDS110);
+				new CRC_Implementation(new CRCConfigProfileCRC16_DDS110());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_DECTR
@@ -641,7 +641,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_DECTR);
+				new CRC_Implementation(new CRCConfigProfileCRC16_DECTR());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_DECTX
@@ -653,7 +653,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_DECTX);
+				new CRC_Implementation(new CRCConfigProfileCRC16_DECTX());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_DNP
@@ -665,7 +665,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_DNP);
+				new CRC_Implementation(new CRCConfigProfileCRC16_DNP());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_EN13757
@@ -677,7 +677,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_EN13757);
+				new CRC_Implementation(new CRCConfigProfileCRC16_EN13757());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_GENIBUS
@@ -689,7 +689,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_GENIBUS);
+				new CRC_Implementation(new CRCConfigProfileCRC16_GENIBUS());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_MAXIM
@@ -701,7 +701,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_MAXIM);
+				new CRC_Implementation(new CRCConfigProfileCRC16_MAXIM());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_MCRF4XX
@@ -713,7 +713,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_MCRF4XX);
+				new CRC_Implementation(new CRCConfigProfileCRC16_MCRF4XX());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_RIELLO
@@ -725,7 +725,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_RIELLO);
+				new CRC_Implementation(new CRCConfigProfileCRC16_RIELLO());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_T10DIF
@@ -737,7 +737,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_T10DIF);
+				new CRC_Implementation(new CRCConfigProfileCRC16_T10DIF());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_TELEDISK
@@ -749,7 +749,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_TELEDISK);
+				new CRC_Implementation(new CRCConfigProfileCRC16_TELEDISK());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_TMS37157
@@ -761,7 +761,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_TMS37157);
+				new CRC_Implementation(new CRCConfigProfileCRC16_TMS37157());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC16_USB
@@ -773,7 +773,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC16_USB);
+				new CRC_Implementation(new CRCConfigProfileCRC16_USB());
 		}
 
 		public class IStreamableHashFunction_Tests_CRCA
@@ -785,7 +785,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRCA);
+				new CRC_Implementation(new CRCConfigProfileCRCA());
 		}
 
 		public class IStreamableHashFunction_Tests_KERMIT
@@ -797,7 +797,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.KERMIT);
+				new CRC_Implementation(new CRCConfigProfileKERMIT());
 		}
 
 		public class IStreamableHashFunction_Tests_MODBUS
@@ -809,7 +809,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.MODBUS);
+				new CRC_Implementation(new CRCConfigProfileMODBUS());
 		}
 
 		public class IStreamableHashFunction_Tests_X25
@@ -821,7 +821,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.X25);
+				new CRC_Implementation(new CRCConfigProfileX25());
 		}
 
 		public class IStreamableHashFunction_Tests_XMODEM
@@ -833,7 +833,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.XMODEM);
+				new CRC_Implementation(new CRCConfigProfileXMODEM());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC24
@@ -845,7 +845,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC24);
+				new CRC_Implementation(new CRCConfigProfileCRC24());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC24_FLEXRAYA
@@ -857,7 +857,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC24_FLEXRAYA);
+				new CRC_Implementation(new CRCConfigProfileCRC24_FLEXRAYA());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC24_FLEXRAYB
@@ -869,7 +869,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC24_FLEXRAYB);
+				new CRC_Implementation(new CRCConfigProfileCRC24_FLEXRAYB());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC31_PHILIPS
@@ -881,7 +881,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC31_PHILIPS);
+				new CRC_Implementation(new CRCConfigProfileCRC31_PHILIPS());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC32
@@ -893,7 +893,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC32);
+				new CRC_Implementation(new CRCConfigProfileCRC32());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC32_BZIP2
@@ -905,7 +905,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC32_BZIP2);
+				new CRC_Implementation(new CRCConfigProfileCRC32_BZIP2());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC32C
@@ -917,7 +917,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC32C);
+				new CRC_Implementation(new CRCConfigProfileCRC32C());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC32D
@@ -929,7 +929,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC32D);
+				new CRC_Implementation(new CRCConfigProfileCRC32D());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC32_MPEG2
@@ -941,7 +941,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC32_MPEG2);
+				new CRC_Implementation(new CRCConfigProfileCRC32_MPEG2());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC32_POSIX
@@ -953,7 +953,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC32_POSIX);
+				new CRC_Implementation(new CRCConfigProfileCRC32_POSIX());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC32Q
@@ -965,7 +965,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC32Q);
+				new CRC_Implementation(new CRCConfigProfileCRC32Q());
 		}
 
 		public class IStreamableHashFunction_Tests_JAMCRC
@@ -977,7 +977,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.JAMCRC);
+				new CRC_Implementation(new CRCConfigProfileJAMCRC());
 		}
 
 		public class IStreamableHashFunction_Tests_XFER
@@ -989,7 +989,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.XFER);
+				new CRC_Implementation(new CRCConfigProfileXFER());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC40_GSM
@@ -1001,7 +1001,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC40_GSM);
+				new CRC_Implementation(new CRCConfigProfileCRC40_GSM());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC64
@@ -1013,7 +1013,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC64);
+				new CRC_Implementation(new CRCConfigProfileCRC64());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC64_WE
@@ -1025,7 +1025,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC64_WE);
+				new CRC_Implementation(new CRCConfigProfileCRC64_WE());
 		}
 
 		public class IStreamableHashFunction_Tests_CRC64_XZ
@@ -1037,7 +1037,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 				};
 
 			protected override ICRC CreateHashFunction(int hashSize) =>
-				new CRC_Implementation(CRCConfig.CRC64_XZ);
+				new CRC_Implementation(new CRCConfigProfileCRC64_XZ());
 		}
 	}
 }
