@@ -125,14 +125,29 @@ namespace HashifyNet
 
 				_concreteConfigTypes.Add(t.Item2.ImplementedInterface, configType);
 
-				HashConfigProfilesAttribute configProfilesAttribute = configType.GetCustomAttribute<HashConfigProfilesAttribute>(false);
-				if (configProfilesAttribute != null)
+				IEnumerable<DeclareHashConfigProfileAttribute> configProfileDeclarationAttributes = configType.GetCustomAttributes<DeclareHashConfigProfileAttribute>(false);
+				List<Type> configProfileTypes = null;
+				foreach (DeclareHashConfigProfileAttribute attr in configProfileDeclarationAttributes)
 				{
-					// This assumes that HashAlgorithmImplementationAttribute's constructor already ensures a public parameterless constructor for every config profile type.
-					IHashConfigProfile[] factories = new IHashConfigProfile[configProfilesAttribute.ProfileTypes.Length];
-					for (int i = 0; i < configProfilesAttribute.ProfileTypes.Length; ++i)
+					if (configProfileTypes == null)
 					{
-						Type configProfileType = configProfilesAttribute.ProfileTypes[i];
+						configProfileTypes = new List<Type>();
+					}
+
+					if (attr != null)
+					{
+						// Assuming ProfileType is ensured to be non-null and valid by the attribute's constructor.
+						configProfileTypes.Add(attr.ProfileType);
+					}
+				}
+
+				if (configProfileTypes != null && configProfileTypes.Count > 0)
+				{
+					// This implementation assumes that HashAlgorithmImplementationAttribute's constructor already ensures a public parameterless constructor for every config profile type.
+					IHashConfigProfile[] profiles = new IHashConfigProfile[configProfileTypes.Count];
+					for (int i = 0; i < configProfileTypes.Count; ++i)
+					{
+						Type configProfileType = configProfileTypes[i];
 						ConstructorInfo configProfileCtor = configType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, 0);
 						if (configProfileCtor == null)
 						{
@@ -150,10 +165,10 @@ namespace HashifyNet
 						}
 
 						Func<IHashConfigBase> configProfileFactory = ReflectionHelper.CreateInstance<IHashConfigBase>(configProfileCtor);
-						factories[i] = new HashConfigProfile(configProfileAttribute.Name, configProfileAttribute.Description, configProfileFactory);
+						profiles[i] = new HashConfigProfile(configProfileAttribute.Name, configProfileAttribute.Description, configProfileFactory);
 					}
 
-					_configProfiles.Add(t.Item2.ImplementedInterface, factories);
+					_configProfiles.Add(t.Item2.ImplementedInterface, profiles);
 				}
 
 				// If the concrete config has no parameterless constructor, we cannot create a default instance. In this case, the parameterless Create function will throw.
