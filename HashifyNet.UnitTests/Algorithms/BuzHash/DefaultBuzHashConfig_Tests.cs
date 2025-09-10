@@ -36,7 +36,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 		[Fact]
 		public void DefaultBuzHashConfig_Defaults_HaventChanged()
 		{
-			var defaultBuzHashConfig = new DefaultBuzHashConfig();
+			var defaultBuzHashConfig = new BuzHashConfigProfileDefault();
 
 			Assert.Equal(_expectedRtab.Select(u => unchecked((long)u)).ToArray(), defaultBuzHashConfig.Rtab);
 			Assert.Equal(64, defaultBuzHashConfig.HashSizeInBits);
@@ -47,7 +47,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 		[Fact]
 		public void DefaultBuzHashConfig_Clone_Works()
 		{
-			var defaultBuzHashConfig = new DefaultBuzHashConfig()
+			var defaultBuzHashConfig = new BuzHashConfigProfileDefault()
 			{
 				HashSizeInBits = 32,
 				Seed = 1337L,
@@ -56,7 +56,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 
 			var defaultBuzHashConfigClone = defaultBuzHashConfig.Clone();
 
-			Assert.IsType<DefaultBuzHashConfig>(defaultBuzHashConfig);
+			Assert.IsType<BuzHashConfigProfileDefault>(defaultBuzHashConfig);
 
 			Assert.Equal(defaultBuzHashConfig.Rtab, defaultBuzHashConfigClone.Rtab);
 			Assert.Equal(defaultBuzHashConfig.HashSizeInBits, defaultBuzHashConfigClone.HashSizeInBits);
