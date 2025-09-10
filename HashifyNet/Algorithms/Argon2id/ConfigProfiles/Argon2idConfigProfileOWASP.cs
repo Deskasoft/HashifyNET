@@ -40,17 +40,17 @@ namespace HashifyNet.Algorithms.Argon2id
 	/// suitable for most general-purpose applications but may need adjustment for specific use cases or
 	/// environments.</remarks>
 	[DefineHashConfigProfile("OWASP", "Provides a preconfigured Argon2id hashing configuration that adheres to the OWASP recommendations for memory, iterations, and parallelism.")]
-	public sealed class Argon2idConfigOWASP : Argon2idConfig
+	public sealed class Argon2idConfigProfileOWASP : Argon2idConfig
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Argon2idConfigOWASP"/> class with default configuration values
+		/// Initializes a new instance of the <see cref="Argon2idConfigProfileOWASP"/> class with default configuration values
 		/// recommended by the OWASP Password Storage Cheat Sheet.
 		/// </summary>
 		/// <remarks>The default configuration values are: <list type="bullet"> <item><description><see
 		/// cref="Argon2idConfig.MemorySize"/>: 19 MiB (19456 KiB).</description></item> <item><description><see cref="Argon2idConfig.Iterations"/>:
 		/// 2.</description></item> <item><description><see cref="Argon2idConfig.DegreeOfParallelism"/>: 1.</description></item> </list>
 		/// These values are suitable for environments with limited resources while maintaining reasonable security.</remarks>
-		public Argon2idConfigOWASP()
+		public Argon2idConfigProfileOWASP()
 		{
 			MemorySize = 19456;          // 19 MiB
 			Iterations = 2;

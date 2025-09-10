@@ -39,10 +39,10 @@ namespace HashifyNet.Algorithms.Argon2id
 	/// maintaining a balance between security and performance. It sets the memory size to 64 MiB, the number of iterations
 	/// to 3, and the degree of parallelism to 4.</remarks>
 	[DefineHashConfigProfile("IETF/LowMemory", "Represents a preconfigured Argon2id hashing configuration optimized for low memory usage, adhering to the IETF recommended settings.")]
-	public sealed class Argon2idConfigIETFLowMemory : Argon2idConfig
+	public sealed class Argon2idConfigProfileIETFLowMemory : Argon2idConfig
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Argon2idConfigIETFLowMemory"/> class with default configuration
+		/// Initializes a new instance of the <see cref="Argon2idConfigProfileIETFLowMemory"/> class with default configuration
 		/// values optimized for low memory usage.
 		/// </summary>
 		/// <remarks>This constructor sets the following default values: <list type="bullet"> <item><description><see
@@ -50,7 +50,7 @@ namespace HashifyNet.Algorithms.Argon2id
 		/// 3</description></item> <item><description><see cref="Argon2idConfig.DegreeOfParallelism"/>: 4</description></item> </list> These
 		/// defaults are suitable for environments with constrained memory resources while maintaining reasonable security and
 		/// performance.</remarks>
-		public Argon2idConfigIETFLowMemory()
+		public Argon2idConfigProfileIETFLowMemory()
 		{
 			MemorySize = 65536;           // 64 MiB
 			Iterations = 3;

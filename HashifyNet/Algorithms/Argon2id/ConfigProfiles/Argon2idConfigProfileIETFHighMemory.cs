@@ -42,10 +42,10 @@ namespace HashifyNet.Algorithms.Argon2id
 	/// 4</description></item> </list> These values are suitable for environments requiring strong security guarantees and
 	/// where memory resources are not constrained.</remarks>
 	[DefineHashConfigProfile("IETF/HighMemory", "Represents a predefined configuration profile for the Argon2id key derivation function, optimized for high memory usage in compliance with IETF recommendations.")]
-	public sealed class Argon2idConfigIETFHighMemory : Argon2idConfig
+	public sealed class Argon2idConfigProfileIETFHighMemory : Argon2idConfig
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Argon2idConfigIETFHighMemory"/> class with default configuration
+		/// Initializes a new instance of the <see cref="Argon2idConfigProfileIETFHighMemory"/> class with default configuration
 		/// values optimized for high memory usage.
 		/// </summary>
 		/// <remarks>This configuration is designed to comply with the IETF Argon2id recommendations for high memory
@@ -54,7 +54,7 @@ namespace HashifyNet.Algorithms.Argon2id
 		/// <item><description><see cref="Argon2idConfig.DegreeOfParallelism"/>: 4</description></item> </list> These defaults are suitable
 		/// for environments where memory availability is high and security requirements prioritize resistance to memory-hard
 		/// attacks.</remarks>
-		public Argon2idConfigIETFHighMemory()
+		public Argon2idConfigProfileIETFHighMemory()
 		{
 			MemorySize = 2097152;        // 2 GiB
 			Iterations = 1;
