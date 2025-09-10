@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -183,7 +183,7 @@ namespace HashifyNet.Core.Utilities
 			return retval;
 		}
 
-		public static Func<object[], object> CreateInstanceWithParameters(ConstructorInfo ctor, params Type[] parameterTypes)
+		public static Func<object[], TType> CreateInstanceWithParameters<TType>(ConstructorInfo ctor, params Type[] parameterTypes)
 		{
 			_ = ctor ?? throw new ArgumentNullException(nameof(ctor));
 			var argumentsParameter = Expression.Parameter(typeof(object[]), "args");
@@ -195,9 +195,54 @@ namespace HashifyNet.Core.Utilities
 			}).ToArray();
 
 			var newExpression = Expression.New(ctor, parameterExpressions);
-			var convertExpression = Expression.Convert(newExpression, typeof(object));
+			var convertExpression = Expression.Convert(newExpression, typeof(TType));
 
-			var lambda = Expression.Lambda<Func<object[], object>>(convertExpression, argumentsParameter);
+			var lambda = Expression.Lambda<Func<object[], TType>>(convertExpression, argumentsParameter);
+			return lambda.Compile();
+		}
+
+		public static Func<TParameter, TType> CreateInstanceWithSingleParameter<TType, TParameter>(ConstructorInfo ctor)
+		{
+			_ = ctor ?? throw new ArgumentNullException(nameof(ctor));
+
+			ParameterInfo[] constructorParams = ctor.GetParameters();
+			if (constructorParams.Length != 1)
+			{
+				throw new ArgumentException("The provided constructor must have exactly one parameter.", nameof(ctor));
+			}
+
+			ParameterExpression parameterExpression = Expression.Parameter(typeof(TParameter), "param");
+			Expression argumentExpression = parameterExpression;
+
+			Type constructorParamType = constructorParams[0].ParameterType;
+			if (parameterExpression.Type != constructorParamType)
+			{
+				argumentExpression = Expression.Convert(parameterExpression, constructorParamType);
+			}
+
+			NewExpression newExpression = Expression.New(ctor, argumentExpression);
+			Expression<Func<TParameter, TType>> lambda;
+			if (newExpression.Type != typeof(TType))
+			{
+				UnaryExpression convertExpression = Expression.Convert(newExpression, typeof(TType));
+				lambda = Expression.Lambda<Func<TParameter, TType>>(convertExpression, parameterExpression);
+			}
+			else
+			{
+				lambda = Expression.Lambda<Func<TParameter, TType>>(newExpression, parameterExpression);
+			}
+
+			return lambda.Compile();
+		}
+
+		public static Func<TType> CreateInstance<TType>(ConstructorInfo ctor)
+		{
+			_ = ctor ?? throw new ArgumentNullException(nameof(ctor));
+
+			var newExpression = Expression.New(ctor);
+			var convertExpression = Expression.Convert(newExpression, typeof(TType));
+
+			var lambda = Expression.Lambda<Func<TType>>(convertExpression);
 			return lambda.Compile();
 		}
 
