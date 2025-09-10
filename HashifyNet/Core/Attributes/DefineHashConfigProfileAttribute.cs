@@ -58,24 +58,24 @@ namespace HashifyNet.Core
 
 			if (name.Length < MinNameLength)
 			{
-				throw new ArgumentException($"The config profile name must be at least {MinNameLength} characters in length.", nameof(name));
+				throw new ArgumentException($"The config profile name must be at least {MinNameLength} characters in length. Current: {name}", nameof(name));
 			}
 
 			if (name.Length > MaxNameLength)
 			{
-				throw new ArgumentException($"The config profile name must not exceed {MaxNameLength} characters in length.", nameof(name));
+				throw new ArgumentException($"The config profile name must not exceed {MaxNameLength} characters in length. Current: {name}", nameof(name));
 			}
 
 			if (description != null)
 			{
 				if (description.Length < MinDescriptionLength)
 				{
-					throw new ArgumentException($"The config profile description must be at least {MinDescriptionLength} characters in length.", nameof(description));
+					throw new ArgumentException($"The config profile description must be at least {MinDescriptionLength} characters in length. Current: {description}", nameof(description));
 				}
 
 				if (description.Length > MaxDescriptionLength)
 				{
-					throw new ArgumentException($"The config profile description must not exceed {MaxDescriptionLength} characters in length.", nameof(description));
+					throw new ArgumentException($"The config profile description must not exceed {MaxDescriptionLength} characters in length. Current: {description}", nameof(description));
 				}
 			}
 
