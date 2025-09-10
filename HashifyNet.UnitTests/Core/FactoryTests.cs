@@ -193,5 +193,53 @@ namespace HashifyNet.UnitTests.Core
 		{
 			HashFactory.TryCreateDefaultConcreteConfig(typeof(ICRC), out _);
 		}
+
+		[Fact]
+		public void Factory_GetConfigProfiles_Works()
+		{
+			var algorithms = HashFactory.GetHashAlgorithms(HashFunctionType.Cryptographic | HashFunctionType.Noncryptographic);
+
+			List<IHashConfigProfile> allProfiles = new();
+			foreach (var algorithm in algorithms)
+			{
+				allProfiles.AddRange(HashFactory.GetConfigProfiles(algorithm));
+			}
+
+			Assert.NotEmpty(allProfiles);
+			Assert.All(allProfiles, item => Assert.NotNull(item));
+			Assert.All(allProfiles, item => Assert.False(string.IsNullOrWhiteSpace(item.Name)));
+		}
+
+		[Fact]
+		public void Factory_GetConfigProfiles_Null_Throws()
+		{
+			Assert.Throws<ArgumentNullException>(() =>
+			{
+				HashFactory.GetConfigProfiles(null);
+			});
+		}
+
+		[Fact]
+		public void Factory_GetConfigProfiles_NoProfiles_Works()
+		{
+			var profiles = HashFactory.GetConfigProfiles(typeof(string));
+			Assert.NotNull(profiles);
+			Assert.Empty(profiles);
+		}
+
+		[Fact]
+		public void Factory_GetConfigProfiles_HasUniqueNames()
+		{
+			var algorithms = HashFactory.GetHashAlgorithms(HashFunctionType.Cryptographic | HashFunctionType.Noncryptographic);
+			foreach (var algorithm in algorithms)
+			{
+				var profiles = HashFactory.GetConfigProfiles(algorithm);
+				var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+				foreach (var profile in profiles)
+				{
+					Assert.True(names.Add(profile.Name), $"Duplicate profile name '{profile.Name}' found for algorithm '{algorithm.FullName}'.");
+				}
+			}
+		}
 	}
 }
