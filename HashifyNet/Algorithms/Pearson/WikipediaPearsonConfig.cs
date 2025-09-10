@@ -28,6 +28,7 @@
 // *
 
 using System.Collections.Generic;
+using HashifyNet.Core;
 
 namespace HashifyNet.Algorithms.Pearson
 {
@@ -41,6 +42,7 @@ namespace HashifyNet.Algorithms.Pearson
 	/// There is nothing special about this configuration's lookup table that makes it explicitly
 	/// better or worse than other valid lookup tables.
 	/// </remarks>
+	[DefineHashConfigProfile("Wikipedia", "Specifically contains a configuration for Pearson hashing using the lookup table given in the article at http://en.wikipedia.org/wiki/Pearson_hashing as of 2014-04-21.")]
 	public class WikipediaPearsonConfig
 		: IPearsonConfig
 	{
