@@ -43,7 +43,7 @@ namespace HashifyNet.Algorithms.Pearson
 	/// better or worse than other valid lookup tables.
 	/// </remarks>
 	[DefineHashConfigProfile("Wikipedia", "Specifically contains a configuration for Pearson hashing using the lookup table given in the article at http://en.wikipedia.org/wiki/Pearson_hashing as of 2014-04-21.")]
-	public class PearsonConfigProfileWikipedia
+	public sealed class PearsonConfigProfileWikipedia
 		: IPearsonConfig
 	{
 		/// <summary>
@@ -94,4 +94,5 @@ namespace HashifyNet.Algorithms.Pearson
 				HashSizeInBits = HashSizeInBits
 			};
 	}
+
 }
