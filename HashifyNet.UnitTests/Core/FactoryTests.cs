@@ -32,7 +32,6 @@ using HashifyNet.Algorithms.BuzHash;
 using HashifyNet.Algorithms.CRC;
 using HashifyNet.Algorithms.FNV;
 using HashifyNet.Algorithms.Pearson;
-using HashifyNet.Core.HashAlgorithm;
 using HashifyNet.UnitTests.Utilities;
 
 namespace HashifyNet.UnitTests.Core
@@ -42,7 +41,7 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void Factory_CreateInstance_ValidInputs_Works()
 		{
-			var instance = HashFactory<ICRC>.Create(CRCConfig.CRC32);
+			var instance = HashFactory<ICRC>.Create(new CRCConfigProfileCRC32());
 			Assert.NotNull(instance);
 			Assert.IsType<CRC_Implementation>(instance);
 		}
@@ -95,11 +94,11 @@ namespace HashifyNet.UnitTests.Core
 		{
 			IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>() 
 			{
-				{ typeof(ICRC), CRCConfig.CRC32 },
-				{ typeof(IPearson), new WikipediaPearsonConfig() },
-				{ typeof(IFNV1), FNVConfig.GetPredefinedConfig(32) },
-				{ typeof(IFNV1a), FNVConfig.GetPredefinedConfig(32) },
-				{ typeof(IBuzHash), new DefaultBuzHashConfig() },
+				{ typeof(ICRC), new CRCConfigProfileCRC32() },
+				{ typeof(IPearson), new PearsonConfigProfileWikipedia() },
+				{ typeof(IFNV1), new FNVConfigProfile32Bits() },
+				{ typeof(IFNV1a), new FNVConfigProfile32Bits() },
+				{ typeof(IBuzHash), new BuzHashConfigProfileDefault() },
 			});
 
 			Assert.NotNull(functions);
@@ -119,7 +118,7 @@ namespace HashifyNet.UnitTests.Core
 		{
 			IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
 			{
-				{ typeof(IArgon2id), Argon2idConfig.OWASP_Standard }
+				{ typeof(IArgon2id), new Argon2idConfigProfileOWASP() }
 			}, HashFactory.GetUnavailableHashAlgorithms());
 
 			Assert.NotNull(functions);
@@ -142,7 +141,7 @@ namespace HashifyNet.UnitTests.Core
 			Type type = typeof(ICRC);
 			Assert.NotNull(type);
 
-			var instance = HashFactory.Create(type, CRCConfig.CRC32);
+			var instance = HashFactory.Create(type, new CRCConfigProfileCRC32());
 			Assert.NotNull(instance);
 			Assert.IsType<CRC_Implementation>(instance);
 		}
@@ -150,15 +149,17 @@ namespace HashifyNet.UnitTests.Core
 		[Fact]
 		public void Factory_CreateInstance_WithConfig_Works()
 		{
-			ICRC crc = HashFactory<ICRC>.Create(CRCConfig.CRC7);
+			ICRC crc = HashFactory<ICRC>.Create(new CRCConfigProfileCRC7());
 			Assert.NotNull(crc);
 			Assert.IsType<CRC_Implementation>(crc);
-			Assert.Equal(CRCConfig.CRC7.HashSizeInBits, crc.Config.HashSizeInBits);
-			Assert.Equal(CRCConfig.CRC7.InitialValue, crc.Config.InitialValue);
-			Assert.Equal(CRCConfig.CRC7.Polynomial, crc.Config.Polynomial);
-			Assert.Equal(CRCConfig.CRC7.ReflectIn, crc.Config.ReflectIn);
-			Assert.Equal(CRCConfig.CRC7.ReflectOut, crc.Config.ReflectOut);
-			Assert.Equal(CRCConfig.CRC7.XOrOut, crc.Config.XOrOut);
+
+			ICRCConfig crc7 = new CRCConfigProfileCRC7();
+			Assert.Equal(crc7.HashSizeInBits, crc.Config.HashSizeInBits);
+			Assert.Equal(crc7.InitialValue, crc.Config.InitialValue);
+			Assert.Equal(crc7.Polynomial, crc.Config.Polynomial);
+			Assert.Equal(crc7.ReflectIn, crc.Config.ReflectIn);
+			Assert.Equal(crc7.ReflectOut, crc.Config.ReflectOut);
+			Assert.Equal(crc7.XOrOut, crc.Config.XOrOut);
 		}
 
 		[Fact]
