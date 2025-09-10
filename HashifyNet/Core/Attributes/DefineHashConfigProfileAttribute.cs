@@ -37,7 +37,9 @@ namespace HashifyNet.Core
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 	internal sealed class DefineHashConfigProfileAttribute : Attribute
 	{
+		private const int MinNameLength = 4;
 		private const int MaxNameLength = 64;
+		private const int MinDescriptionLength = 32;
 		private const int MaxDescriptionLength = 2048;
 
 		public string Name { get; }
@@ -54,14 +56,27 @@ namespace HashifyNet.Core
 				throw new ArgumentException("The config profile name must be a non-empty and non-whitespace string.", nameof(name));
 			}
 
+			if (name.Length < MinNameLength)
+			{
+				throw new ArgumentException($"The config profile name must be at least {MinNameLength} characters in length.", nameof(name));
+			}
+
 			if (name.Length > MaxNameLength)
 			{
 				throw new ArgumentException($"The config profile name must not exceed {MaxNameLength} characters in length.", nameof(name));
 			}
 
-			if (description != null && description.Length > MaxDescriptionLength)
+			if (description != null)
 			{
-				throw new ArgumentException($"The config profile description must not exceed {MaxDescriptionLength} characters in length.", nameof(description));
+				if (description.Length < MinDescriptionLength)
+				{
+					throw new ArgumentException($"The config profile description must be at least {MinDescriptionLength} characters in length.", nameof(description));
+				}
+
+				if (description.Length > MaxDescriptionLength)
+				{
+					throw new ArgumentException($"The config profile description must not exceed {MaxDescriptionLength} characters in length.", nameof(description));
+				}
 			}
 
 			Name = name;
@@ -69,4 +84,3 @@ namespace HashifyNet.Core
 		}
 	}
 }
-
