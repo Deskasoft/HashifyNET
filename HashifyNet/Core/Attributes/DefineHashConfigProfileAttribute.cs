@@ -37,7 +37,7 @@ namespace HashifyNet.Core
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 	internal sealed class DefineHashConfigProfileAttribute : Attribute
 	{
-		private const int MinNameLength = 4;
+		private const int MinNameLength = 3;
 		private const int MaxNameLength = 64;
 		private const int MinDescriptionLength = 32;
 		private const int MaxDescriptionLength = 2048;
@@ -84,3 +84,4 @@ namespace HashifyNet.Core
 		}
 	}
 }
+
