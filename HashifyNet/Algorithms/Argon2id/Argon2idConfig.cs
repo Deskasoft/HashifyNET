@@ -38,9 +38,9 @@ namespace HashifyNet.Algorithms.Argon2id
 	/// <remarks>This class provides properties to configure the behavior of the Argon2id algorithm, including
 	/// memory usage, iteration count, and parallelism. It also includes predefined configurations recommended by OWASP and
 	/// IETF RFC 9106 for various use cases, such as memory-constrained or high-memory systems.</remarks>
-	[DeclareHashConfigProfile(typeof(Argon2idConfigOWASP))]
-	[DeclareHashConfigProfile(typeof(Argon2idConfigIETFLowMemory))]
-	[DeclareHashConfigProfile(typeof(Argon2idConfigIETFHighMemory))]
+	[DeclareHashConfigProfile(typeof(Argon2idConfigProfileOWASP))]
+	[DeclareHashConfigProfile(typeof(Argon2idConfigProfileIETFLowMemory))]
+	[DeclareHashConfigProfile(typeof(Argon2idConfigProfileIETFHighMemory))]
 	public class Argon2idConfig : IArgon2idConfig
 	{
 		/// <summary>
