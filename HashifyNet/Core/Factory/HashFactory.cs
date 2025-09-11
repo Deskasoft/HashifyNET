@@ -60,8 +60,8 @@ namespace HashifyNet
 			}
 		}
 
-		private static readonly Hashtable _implementations;
 		private static readonly Hashtable _concreteConfigTypes;
+		private static readonly Hashtable _implementations;
 		private static readonly Hashtable _configProfiles;
 		/// <summary>
 		/// Initializes the static state of the <see cref="HashFactory"/> class by discovering and registering available hash
