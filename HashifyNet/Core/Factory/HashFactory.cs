@@ -166,7 +166,7 @@ namespace HashifyNet
 							}
 
 							Func<IHashConfigBase> configProfileFactory = ReflectionHelper.CreateInstance<IHashConfigBase>(configProfileCtor);
-							profiles[i] = new HashConfigProfile(configProfileAttribute.Name, configProfileAttribute.Description, configProfileFactory);
+							profiles[i] = new HashConfigProfile(configProfileType, configProfileAttribute.Name, configProfileAttribute.Description, configProfileFactory);
 						}
 
 						_configProfiles.Add(t.Item2.ImplementedInterface, profiles);
@@ -269,5 +269,3 @@ namespace HashifyNet
 		}
 	}
 }
-
-
