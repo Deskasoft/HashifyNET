@@ -28,6 +28,7 @@
 // *
 
 using HashifyNet.Algorithms.FNV;
+using HashifyNet.UnitTests.Algorithms.FNV.Utilities;
 using System.Numerics;
 
 namespace HashifyNet.UnitTests.Algorithms.FNV
@@ -74,7 +75,7 @@ namespace HashifyNet.UnitTests.Algorithms.FNV
 				Assert.Equal(
 					"hashSizeInBits",
 					Assert.Throws<ArgumentOutOfRangeException>(
-							() => FNVConfig.GetPredefinedConfig(invalidHashSize))
+							() => ConfigProfileHelper.GetProfile(invalidHashSize))
 						.ParamName);
 			}
 		}
@@ -84,7 +85,7 @@ namespace HashifyNet.UnitTests.Algorithms.FNV
 		{
 			foreach (var expectedPredefinedConfig in _expectedPredefinedConfigs)
 			{
-				var fnvConfig = FNVConfig.GetPredefinedConfig(expectedPredefinedConfig.HashSizeInBits);
+				var fnvConfig = ConfigProfileHelper.GetProfile(expectedPredefinedConfig.HashSizeInBits);
 
 				Assert.Equal(expectedPredefinedConfig.HashSizeInBits, fnvConfig.HashSizeInBits);
 				Assert.Equal(expectedPredefinedConfig.Prime, fnvConfig.Prime);

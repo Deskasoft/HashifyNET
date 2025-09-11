@@ -27,60 +27,33 @@
 // ******************************************************************************
 // *
 
-using System.Linq;
+using HashifyNet.Core;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HashifyNet.Algorithms.BuzHash
 {
 	/// <summary>
 	/// Defines a default configuration for a <see cref="IBuzHash"/> implementation.
 	/// </summary>
-	public class DefaultBuzHashConfig
-		: IBuzHashConfig
+	[DefineHashConfigProfile("Default", "Default configuration for Buz Hash.")]
+	public sealed class BuzHashConfigProfileDefault
+		: BuzHashConfig
 	{
 		/// <summary>
-		/// Gets a list of <c>256</c> (preferably random and distinct) <see cref="long"/> values.
+		/// Initializes a new instance of the <see cref="BuzHashConfigProfileDefault"/> class with default configuration
+		/// values.
 		/// </summary>
-		/// <value>
-		/// List of 256 <see cref="long"/> values.
-		/// </value>
-		/// <remarks>
-		/// Defaults to a statically defined, random chosen of values.
-		/// </remarks>
-		public IReadOnlyList<long> Rtab { get; } = _Rtab.Select(u => unchecked((long)u)).ToArray();
-
-		/// <summary>
-		/// Gets the desired hash size, in bits.
-		/// </summary>
-		/// <value>
-		/// The desired hash size, in bits.
-		/// </value>
-		/// <remarks>
-		/// Defaults to <c>64</c>.
-		/// </remarks>
-		public int HashSizeInBits { get; set; } = 64;
-
-		/// <summary>
-		/// Gets the seed value.
-		/// </summary>
-		/// <value>
-		/// The seed value.
-		/// </value>
-		/// <remarks>
-		/// Defaults to <c>0x3CD05367FD0337D3UL</c>
-		/// </remarks>
-		public long Seed { get; set; } = 0x3CD05367FD0337D3L;
-
-		/// <summary>
-		/// Gets the shift direction.
-		/// </summary>
-		/// <value>
-		/// The shift direction.
-		/// </value>
-		/// <remarks>
-		/// Defaults to <see cref="CircularShiftDirection.Left"/>.
-		/// </remarks>
-		public CircularShiftDirection ShiftDirection { get; set; } = CircularShiftDirection.Left;
+		/// <remarks>This constructor sets up the default configuration for a BuzHash profile, including the hash
+		/// size, seed value,  and circular shift direction. The default values are suitable for general-purpose hashing
+		/// scenarios.</remarks>
+		public BuzHashConfigProfileDefault()
+		{
+			Rtab = _Rtab.Select(u => unchecked((long)u)).ToArray();
+			HashSizeInBits = 64;
+			Seed = 0x3CD05367FD0337D3L;
+			ShiftDirection = CircularShiftDirection.Left;
+		}
 
 		private static readonly IReadOnlyList<ulong> _Rtab =
 			new ulong[] {
@@ -148,18 +121,6 @@ namespace HashifyNet.Algorithms.BuzHash
 				0x30C1A0C0CB03AAA9, 0x00080D88746C14B5, 0xD4B1FBDE8B376876, 0x2004200247C5DB47,
 				0xDD645E45898E166D, 0x80000D38B28D2BC0, 0xF7ADA101A6F34F0F, 0x04404000A27DB2F2,
 				0x7B79E1EC83874C2A, 0x6B2FFD2662DA5E68, 0xCF3EEBA20B383BCE, 0x4503C00A838F9989
-			};
-
-		/// <summary>
-		/// Makes a deep clone of the current instance.
-		/// </summary>
-		/// <returns>A deep clone of the current instance.</returns>
-		public IBuzHashConfig Clone() =>
-			new DefaultBuzHashConfig()
-			{
-				HashSizeInBits = HashSizeInBits,
-				Seed = Seed,
-				ShiftDirection = ShiftDirection
 			};
 	}
 }

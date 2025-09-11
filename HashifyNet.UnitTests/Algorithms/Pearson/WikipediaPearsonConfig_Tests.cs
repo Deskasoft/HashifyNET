@@ -36,7 +36,7 @@ namespace HashifyNet.UnitTests.Algorithms.Pearson
 		[Fact]
 		public void WikipediaPearsonConfig_Defaults_HaventChanged()
 		{
-			var wikipediaPearsonConfig = new WikipediaPearsonConfig();
+			var wikipediaPearsonConfig = new PearsonConfigProfileWikipedia();
 
 			Assert.Equal(_expectedTable, wikipediaPearsonConfig.Table);
 			Assert.Equal(8, wikipediaPearsonConfig.HashSizeInBits);
@@ -45,14 +45,14 @@ namespace HashifyNet.UnitTests.Algorithms.Pearson
 		[Fact]
 		public void WikipediaPearsonConfig_Clone_Works()
 		{
-			var wikipediaPearsonConfig = new WikipediaPearsonConfig()
+			var wikipediaPearsonConfig = new PearsonConfigProfileWikipedia()
 			{
 				HashSizeInBits = 16
 			};
 
 			var wikipediaPearsonConfigClone = wikipediaPearsonConfig.Clone();
 
-			Assert.IsType<WikipediaPearsonConfig>(wikipediaPearsonConfigClone);
+			Assert.IsType<PearsonConfigProfileWikipedia>(wikipediaPearsonConfigClone);
 
 			Assert.Equal(wikipediaPearsonConfig.Table, wikipediaPearsonConfigClone.Table);
 			Assert.Equal(wikipediaPearsonConfig.HashSizeInBits, wikipediaPearsonConfigClone.HashSizeInBits);

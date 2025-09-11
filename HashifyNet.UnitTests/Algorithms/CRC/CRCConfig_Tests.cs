@@ -67,7 +67,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		[Fact]
 		public void CRCConfig_Clone_Works()
 		{
-			var crcConfig = CRCConfig.CRC64;
+			var crcConfig = new CRCConfigProfileCRC64();
 
 			var crcConfigClone = crcConfig.Clone();
 
@@ -84,7 +84,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		private readonly IEnumerable<KeyValuePair<Func<ICRCConfig>, ICRCConfig>> _expectedCrcStandards =
 			new[] {
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC3_ROHC,
+					() => new CRCConfigProfileCRC3_ROHC(),
 					new CRCConfig {
 						HashSizeInBits = 3,
 						Polynomial = 0x3,
@@ -95,7 +95,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC4_ITU,
+					() => new CRCConfigProfileCRC4_ITU(),
 					new CRCConfig {
 						HashSizeInBits = 4,
 						Polynomial = 0x3,
@@ -106,7 +106,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC5_EPC,
+					() => new CRCConfigProfileCRC5_EPC(),
 					new CRCConfig {
 						HashSizeInBits = 5,
 						Polynomial = 0x09,
@@ -117,7 +117,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC5_ITU,
+					() => new CRCConfigProfileCRC5_ITU(),
 					new CRCConfig {
 						HashSizeInBits = 5,
 						Polynomial = 0x15,
@@ -128,7 +128,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC5_USB,
+					() => new CRCConfigProfileCRC5_USB(),
 					new CRCConfig {
 						HashSizeInBits = 5,
 						Polynomial = 0x05,
@@ -139,7 +139,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC6_CDMA2000A,
+					() => new CRCConfigProfileCRC6_CDMA2000A(),
 					new CRCConfig {
 						HashSizeInBits = 6,
 						Polynomial = 0x27,
@@ -150,7 +150,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC6_CDMA2000B,
+					() => new CRCConfigProfileCRC6_CDMA2000B(),
 					new CRCConfig {
 						HashSizeInBits = 6,
 						Polynomial = 0x07,
@@ -161,7 +161,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC6_DARC,
+					() => new CRCConfigProfileCRC6_DARC(),
 					new CRCConfig {
 						HashSizeInBits = 6,
 						Polynomial = 0x19,
@@ -172,7 +172,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC6_ITU,
+					() => new CRCConfigProfileCRC6_ITU(),
 					new CRCConfig {
 						HashSizeInBits = 6,
 						Polynomial = 0x03,
@@ -183,7 +183,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC7,
+					() => new CRCConfigProfileCRC7(),
 					new CRCConfig {
 						HashSizeInBits = 7,
 						Polynomial = 0x09,
@@ -194,7 +194,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC7_ROHC,
+					() => new CRCConfigProfileCRC7_ROHC(),
 					new CRCConfig {
 						HashSizeInBits = 7,
 						Polynomial = 0x4f,
@@ -205,7 +205,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC8,
+					() => new CRCConfigProfileCRC8(),
 					new CRCConfig {
 						HashSizeInBits = 8,
 						Polynomial = 0x07,
@@ -216,7 +216,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC8_CDMA2000,
+					() => new CRCConfigProfileCRC8_CDMA2000(),
 					new CRCConfig {
 						HashSizeInBits = 8,
 						Polynomial = 0x9b,
@@ -227,7 +227,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC8_DARC,
+					() => new CRCConfigProfileCRC8_DARC(),
 					new CRCConfig {
 						HashSizeInBits = 8,
 						Polynomial = 0x39,
@@ -238,7 +238,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC8_DVBS2,
+					() => new CRCConfigProfileCRC8_DVBS2(),
 					new CRCConfig {
 						HashSizeInBits = 8,
 						Polynomial = 0xd5,
@@ -249,7 +249,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC8_EBU,
+					() => new CRCConfigProfileCRC8_EBU(),
 					new CRCConfig {
 						HashSizeInBits = 8,
 						Polynomial = 0x1d,
@@ -260,7 +260,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC8_ICODE,
+					() => new CRCConfigProfileCRC8_ICODE(),
 					new CRCConfig {
 						HashSizeInBits = 8,
 						Polynomial = 0x1d,
@@ -271,7 +271,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC8_ITU,
+					() => new CRCConfigProfileCRC8_ITU(),
 					new CRCConfig {
 						HashSizeInBits = 8,
 						Polynomial = 0x07,
@@ -282,7 +282,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC8_MAXIM,
+					() => new CRCConfigProfileCRC8_MAXIM(),
 					new CRCConfig {
 						HashSizeInBits = 8,
 						Polynomial = 0x31,
@@ -293,7 +293,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC8_ROHC,
+					() => new CRCConfigProfileCRC8_ROHC(),
 					new CRCConfig {
 						HashSizeInBits = 8,
 						Polynomial = 0x07,
@@ -304,7 +304,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC8_WCDMA,
+					() => new CRCConfigProfileCRC8_WCDMA(),
 					new CRCConfig {
 						HashSizeInBits = 8,
 						Polynomial = 0x9b,
@@ -315,7 +315,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC10,
+					() => new CRCConfigProfileCRC10(),
 					new CRCConfig {
 						HashSizeInBits = 10,
 						Polynomial = 0x233,
@@ -326,7 +326,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC10_CDMA2000,
+					() => new CRCConfigProfileCRC10_CDMA2000(),
 					new CRCConfig {
 						HashSizeInBits = 10,
 						Polynomial = 0x3d9,
@@ -337,7 +337,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC11,
+					() => new CRCConfigProfileCRC11(),
 					new CRCConfig {
 						HashSizeInBits = 11,
 						Polynomial = 0x385,
@@ -348,7 +348,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC12_3GPP,
+					() => new CRCConfigProfileCRC12_3GPP(),
 					new CRCConfig {
 						HashSizeInBits = 12,
 						Polynomial = 0x80f,
@@ -359,7 +359,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC12_CDMA2000,
+					() => new CRCConfigProfileCRC12_CDMA2000(),
 					new CRCConfig {
 						HashSizeInBits = 12,
 						Polynomial = 0xf13,
@@ -370,7 +370,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC12_DECT,
+					() => new CRCConfigProfileCRC12_DECT(),
 					new CRCConfig {
 						HashSizeInBits = 12,
 						Polynomial = 0x80f,
@@ -381,7 +381,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC13_BBC,
+					() => new CRCConfigProfileCRC13_BBC(),
 					new CRCConfig {
 						HashSizeInBits = 13,
 						Polynomial = 0x1cf5,
@@ -392,7 +392,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC14_DARC,
+					() => new CRCConfigProfileCRC14_DARC(),
 					new CRCConfig {
 						HashSizeInBits = 14,
 						Polynomial = 0x0805,
@@ -403,7 +403,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC15,
+					() => new CRCConfigProfileCRC15(),
 					new CRCConfig {
 						HashSizeInBits = 15,
 						Polynomial = 0x4599,
@@ -414,7 +414,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC15_MPT1327,
+					() => new CRCConfigProfileCRC15_MPT1327(),
 					new CRCConfig {
 						HashSizeInBits = 15,
 						Polynomial = 0x6815,
@@ -425,7 +425,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.ARC,
+					() => new CRCConfigProfileARC(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x8005,
@@ -436,7 +436,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_AUGCCITT,
+					() => new CRCConfigProfileCRC16_AUGCCITT(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x1021,
@@ -447,7 +447,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_BUYPASS,
+					() => new CRCConfigProfileCRC16_BUYPASS(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x8005,
@@ -458,7 +458,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_CCITTFALSE,
+					() => new CRCConfigProfileCRC16_CCITTFALSE(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x1021,
@@ -469,7 +469,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_CDMA2000,
+					() => new CRCConfigProfileCRC16_CDMA2000(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0xc867,
@@ -480,7 +480,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_DDS110,
+					() => new CRCConfigProfileCRC16_DDS110(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x8005,
@@ -491,7 +491,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_DECTR,
+					() => new CRCConfigProfileCRC16_DECTR(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x0589,
@@ -502,7 +502,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_DECTX,
+					() => new CRCConfigProfileCRC16_DECTX(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x0589,
@@ -513,7 +513,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_DNP,
+					() => new CRCConfigProfileCRC16_DNP(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x3d65,
@@ -524,7 +524,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_EN13757,
+					() => new CRCConfigProfileCRC16_EN13757(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x3d65,
@@ -535,7 +535,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_GENIBUS,
+					() => new CRCConfigProfileCRC16_GENIBUS(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x1021,
@@ -546,7 +546,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_MAXIM,
+					() => new CRCConfigProfileCRC16_MAXIM(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x8005,
@@ -557,7 +557,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_MCRF4XX,
+					() => new CRCConfigProfileCRC16_MCRF4XX(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x1021,
@@ -568,7 +568,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_RIELLO,
+					() => new CRCConfigProfileCRC16_RIELLO(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x1021,
@@ -579,7 +579,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_T10DIF,
+					() => new CRCConfigProfileCRC16_T10DIF(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x8bb7,
@@ -590,7 +590,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_TELEDISK,
+					() => new CRCConfigProfileCRC16_TELEDISK(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0xa097,
@@ -601,7 +601,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_TMS37157,
+					() => new CRCConfigProfileCRC16_TMS37157(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x1021,
@@ -612,7 +612,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC16_USB,
+					() => new CRCConfigProfileCRC16_USB(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x8005,
@@ -623,7 +623,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRCA,
+					() => new CRCConfigProfileCRCA(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x1021,
@@ -634,7 +634,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.KERMIT,
+					() => new CRCConfigProfileKERMIT(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x1021,
@@ -645,7 +645,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.MODBUS,
+					() => new CRCConfigProfileMODBUS(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x8005,
@@ -656,7 +656,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.X25,
+					() => new CRCConfigProfileX25(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x1021,
@@ -667,7 +667,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.XMODEM,
+					() => new CRCConfigProfileXMODEM(),
 					new CRCConfig {
 						HashSizeInBits = 16,
 						Polynomial = 0x1021,
@@ -678,7 +678,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC24,
+					() => new CRCConfigProfileCRC24(),
 					new CRCConfig {
 						HashSizeInBits = 24,
 						Polynomial = 0x864cfb,
@@ -689,7 +689,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC24_FLEXRAYA,
+					() => new CRCConfigProfileCRC24_FLEXRAYA(),
 					new CRCConfig {
 						HashSizeInBits = 24,
 						Polynomial = 0x5d6dcb,
@@ -700,7 +700,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC24_FLEXRAYB,
+					() => new CRCConfigProfileCRC24_FLEXRAYB(),
 					new CRCConfig {
 						HashSizeInBits = 24,
 						Polynomial = 0x5d6dcb,
@@ -711,7 +711,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC31_PHILIPS,
+					() => new CRCConfigProfileCRC31_PHILIPS(),
 					new CRCConfig {
 						HashSizeInBits = 31,
 						Polynomial = 0x04c11db7,
@@ -722,7 +722,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC32,
+					() => new CRCConfigProfileCRC32(),
 					new CRCConfig {
 						HashSizeInBits = 32,
 						Polynomial = 0x04c11db7,
@@ -733,7 +733,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC32_BZIP2,
+					() => new CRCConfigProfileCRC32_BZIP2(),
 					new CRCConfig {
 						HashSizeInBits = 32,
 						Polynomial = 0x04c11db7,
@@ -744,7 +744,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC32C,
+					() => new CRCConfigProfileCRC32C(),
 					new CRCConfig {
 						HashSizeInBits = 32,
 						Polynomial = 0x1edc6f41,
@@ -755,7 +755,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC32D,
+					() => new CRCConfigProfileCRC32D(),
 					new CRCConfig {
 						HashSizeInBits = 32,
 						Polynomial = 0xa833982b,
@@ -766,7 +766,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC32_MPEG2,
+					() => new CRCConfigProfileCRC32_MPEG2(),
 					new CRCConfig {
 						HashSizeInBits = 32,
 						Polynomial = 0x04c11db7,
@@ -777,7 +777,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC32_POSIX,
+					() => new CRCConfigProfileCRC32_POSIX(),
 					new CRCConfig {
 						HashSizeInBits = 32,
 						Polynomial = 0x04c11db7,
@@ -788,7 +788,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC32Q,
+					() => new CRCConfigProfileCRC32Q(),
 					new CRCConfig {
 						HashSizeInBits = 32,
 						Polynomial = 0x814141ab,
@@ -799,7 +799,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.JAMCRC,
+					() => new CRCConfigProfileJAMCRC(),
 					new CRCConfig {
 						HashSizeInBits = 32,
 						Polynomial = 0x04c11db7,
@@ -810,7 +810,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.XFER,
+					() => new CRCConfigProfileXFER(),
 					new CRCConfig {
 						HashSizeInBits = 32,
 						Polynomial = 0x000000af,
@@ -821,7 +821,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC40_GSM,
+					() => new CRCConfigProfileCRC40_GSM(),
 					new CRCConfig {
 						HashSizeInBits = 40,
 						Polynomial = 0x0004820009,
@@ -832,7 +832,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC64,
+					() => new CRCConfigProfileCRC64(),
 					new CRCConfig {
 						HashSizeInBits = 64,
 						Polynomial = 0x42f0e1eba9ea3693,
@@ -843,7 +843,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC64_WE,
+					() => new CRCConfigProfileCRC64_WE(),
 					new CRCConfig {
 						HashSizeInBits = 64,
 						Polynomial = 0x42f0e1eba9ea3693,
@@ -854,7 +854,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					}
 				),
 				new KeyValuePair<Func<ICRCConfig>, ICRCConfig>(
-					() => CRCConfig.CRC64_XZ,
+					() => new CRCConfigProfileCRC64_XZ(),
 					new CRCConfig {
 						HashSizeInBits = 64,
 						Polynomial = 0x42f0e1eba9ea3693,

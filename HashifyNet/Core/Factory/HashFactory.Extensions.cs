@@ -158,6 +158,26 @@ namespace HashifyNet
 #endif
 
 		/// <summary>
+		/// Retrieves the configuration profiles associated with the specified hash algorithm interface type.
+		/// </summary>
+		/// <param name="type">The type of hash algorithm interface for which to retrieve the configuration profiles. Cannot be <see langword="null"/>.</param>
+		/// <returns>An array of <see cref="IHashConfigProfile"/> objects associated with the specified type, or an empty array
+		/// if no configuration profiles are found for the specified type.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if <paramref name="type"/> is <see langword="null"/>.</exception>
+		public static IHashConfigProfile[] GetConfigProfiles(Type type)
+		{
+			_ = type ?? throw new ArgumentNullException(nameof(type));
+			if (!_configProfiles.ContainsKey(type))
+			{
+				return Array.Empty<IHashConfigProfile>();
+			}
+			else
+			{
+				return (IHashConfigProfile[])_configProfiles[type];
+			}
+		}
+
+		/// <summary>
 		/// Retrieves an array of concrete configuration types associated with the specified hash function type.
 		/// </summary>
 		/// <remarks>This method inspects the hash algorithm types associated with the specified <paramref
@@ -200,13 +220,13 @@ namespace HashifyNet
 				throw new KeyNotFoundException($"No implementation registered for type '{type.FullName}'.");
 			}
 
-			Func<object[], object> configFactory = ((Tuple<Func<object[], object>, Func<object[], object>>)_implementations[type]).Item2;
+			Func<IHashConfigBase> configFactory = ((Tuple<Func<IHashConfigBase, IHashFunctionBase>, Func<IHashConfigBase>>)_implementations[type]).Item2;
 			if (configFactory == null)
 			{
 				throw new NotSupportedException($"No default configuration available for type '{type.FullName}'.");
 			}
 
-			return (IHashConfigBase)configFactory(null);
+			return configFactory();
 		}
 
 		/// <summary>

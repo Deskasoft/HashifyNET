@@ -27,7 +27,7 @@
 // ******************************************************************************
 // *
 
-using System;
+using HashifyNet.Core;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -36,6 +36,7 @@ namespace HashifyNet.Algorithms.BuzHash
 	/// <summary>
 	/// Defines a configuration for a <see cref="IBuzHash"/> implementation.
 	/// </summary>
+	[DeclareHashConfigProfile(typeof(BuzHashConfigProfileDefault))]
 	public class BuzHashConfig
 		: IBuzHashConfig
 	{
@@ -65,7 +66,7 @@ namespace HashifyNet.Algorithms.BuzHash
 		/// The seed value.
 		/// </value>
 		/// <remarks>
-		/// Defaults to <c>0</c>
+		/// Defaults to <c>0L</c>
 		/// </remarks>
 		public long Seed { get; set; }
 

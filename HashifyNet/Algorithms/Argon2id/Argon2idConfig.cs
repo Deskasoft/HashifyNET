@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,6 +27,7 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core;
 using HashifyNet.Core.Utilities;
 
 namespace HashifyNet.Algorithms.Argon2id
@@ -37,38 +38,11 @@ namespace HashifyNet.Algorithms.Argon2id
 	/// <remarks>This class provides properties to configure the behavior of the Argon2id algorithm, including
 	/// memory usage, iteration count, and parallelism. It also includes predefined configurations recommended by OWASP and
 	/// IETF RFC 9106 for various use cases, such as memory-constrained or high-memory systems.</remarks>
+	[DeclareHashConfigProfile(typeof(Argon2idConfigProfileOWASP))]
+	[DeclareHashConfigProfile(typeof(Argon2idConfigProfileIETFLowMemory))]
+	[DeclareHashConfigProfile(typeof(Argon2idConfigProfileIETFHighMemory))]
 	public class Argon2idConfig : IArgon2idConfig
 	{
-		/// <summary>
-		/// A secure baseline recommended by OWASP.
-		/// </summary>
-		public static IArgon2idConfig OWASP_Standard => new Argon2idConfig()
-		{
-			MemorySize = 19456,          // 19 MiB
-			Iterations = 2,
-			DegreeOfParallelism = 1,
-		}.Clone();
-
-		/// <summary>
-		/// A strong recommendation from IETF RFC 9106 for memory-constrained systems.
-		/// </summary>
-		public static IArgon2idConfig IETF_LowMemory => new Argon2idConfig()
-		{
-			MemorySize = 65536,           // 64 MiB
-			Iterations = 3,
-			DegreeOfParallelism = 4,
-		}.Clone();
-
-		/// <summary>
-		/// A very strong recommendation from IETF RFC 9106 for systems with ample memory.
-		/// </summary>
-		public static IArgon2idConfig IETF_HighMemory => new Argon2idConfig()
-		{
-			MemorySize = 2097152,        // 2 GiB
-			Iterations = 1,
-			DegreeOfParallelism = 4,
-		}.Clone();
-
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>

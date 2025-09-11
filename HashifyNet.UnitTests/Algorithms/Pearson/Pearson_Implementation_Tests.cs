@@ -78,7 +78,7 @@ namespace HashifyNet.UnitTests.Algorithms.Pearson
 			var pearsonConfigMock = new Mock<IPearsonConfig>();
 			{
 				pearsonConfigMock.Setup(pc => pc.Clone())
-					.Returns(() => new WikipediaPearsonConfig()
+					.Returns(() => new PearsonConfigProfileWikipedia()
 					{
 						HashSizeInBits = 8
 					});
@@ -288,7 +288,7 @@ namespace HashifyNet.UnitTests.Algorithms.Pearson
 
 			protected override IPearson CreateHashFunction(int hashSize) =>
 				new Pearson_Implementation(
-					new WikipediaPearsonConfig()
+					new PearsonConfigProfileWikipedia()
 					{
 						HashSizeInBits = hashSize
 					});
@@ -306,7 +306,7 @@ namespace HashifyNet.UnitTests.Algorithms.Pearson
 
 			protected override IPearson CreateHashFunction(int hashSize) =>
 				new Pearson_Implementation(
-					new WikipediaPearsonConfig());
+					new PearsonConfigProfileWikipedia());
 		}
 	}
 }

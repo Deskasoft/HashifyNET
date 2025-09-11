@@ -28,6 +28,7 @@
 // *
 
 using HashifyNet.Algorithms.FNV;
+using HashifyNet.UnitTests.Algorithms.FNV.Utilities;
 using HashifyNet.UnitTests.Utilities;
 using Moq;
 using System.Numerics;
@@ -351,7 +352,7 @@ namespace HashifyNet.UnitTests.Algorithms.FNV
 
 			protected override IFNV1a CreateHashFunction(int hashSize) =>
 				new FNV1a_Implementation(
-					FNVConfig.GetPredefinedConfig(hashSize));
+					ConfigProfileHelper.GetProfile(hashSize));
 		}
 	}
 }

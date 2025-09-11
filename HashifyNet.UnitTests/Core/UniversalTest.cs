@@ -580,14 +580,14 @@ namespace HashifyNet.UnitTests.Core
 			IHashFunctionBase[] all = HashFactory.CreateHashAlgorithms(HashFunctionType.Cryptographic | HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>()
 			{
 				// Non-cryptographic Forced Defaults
-				{ typeof(ICRC), CRCConfig.CRC32 },
-				{ typeof(IPearson), new WikipediaPearsonConfig() },
-				{ typeof(IFNV1), FNVConfig.GetPredefinedConfig(32) },
-				{ typeof(IFNV1a), FNVConfig.GetPredefinedConfig(32) },
-				{ typeof(IBuzHash), new DefaultBuzHashConfig() },
+				{ typeof(ICRC), new CRCConfigProfileCRC32() },
+				{ typeof(IPearson), new PearsonConfigProfileWikipedia() },
+				{ typeof(IFNV1), new FNVConfigProfile32Bits() },
+				{ typeof(IFNV1a), new FNVConfigProfile32Bits() },
+				{ typeof(IBuzHash), new BuzHashConfigProfileDefault() },
 				
 				// Cryptographic Forced Defaults
-				{ typeof(IArgon2id), Argon2idConfig.OWASP_Standard }
+				{ typeof(IArgon2id), new Argon2idConfigProfileOWASP() }
 			}, HashFactory.GetUnavailableHashAlgorithms());
 
 			Assert.NotNull(all);
@@ -697,5 +697,6 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
+
 
 

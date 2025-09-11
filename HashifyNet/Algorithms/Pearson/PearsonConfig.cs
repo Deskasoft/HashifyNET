@@ -29,12 +29,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using HashifyNet.Core;
 
 namespace HashifyNet.Algorithms.Pearson
 {
 	/// <summary>
 	/// Defines a configuration for a <see cref="IPearson"/> implementation.
 	/// </summary>
+	[DeclareHashConfigProfile(typeof(PearsonConfigProfileWikipedia))]
 	public class PearsonConfig
 		: IPearsonConfig
 	{

@@ -82,7 +82,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 			var buzHashConfigMock = new Mock<IBuzHashConfig>();
 			{
 				buzHashConfigMock.Setup(bhc => bhc.Clone())
-					.Returns(new DefaultBuzHashConfig());
+					.Returns(new BuzHashConfigProfileDefault());
 			}
 
 			GC.KeepAlive(
@@ -402,7 +402,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 
 			protected override IBuzHash CreateHashFunction(int hashSize) =>
 				new BuzHash_Implementation(
-					new DefaultBuzHashConfig()
+					new BuzHashConfigProfileDefault()
 					{
 						HashSizeInBits = hashSize
 					});
@@ -420,7 +420,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 
 			protected override IBuzHash CreateHashFunction(int hashSize) =>
 				new BuzHash_Implementation(
-					new DefaultBuzHashConfig());
+					new BuzHashConfigProfileDefault());
 		}
 
 		public class IStreamableHashFunction_Tests_RightShift
@@ -444,7 +444,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 
 			protected override IBuzHash CreateHashFunction(int hashSize) =>
 				new BuzHash_Implementation(
-					new DefaultBuzHashConfig()
+					new BuzHashConfigProfileDefault()
 					{
 						HashSizeInBits = hashSize,
 						ShiftDirection = CircularShiftDirection.Right
@@ -463,7 +463,7 @@ namespace HashifyNet.UnitTests.Algorithms.BuzHash
 
 			protected override IBuzHash CreateHashFunction(int hashSize) =>
 				new BuzHash_Implementation(
-					new DefaultBuzHashConfig()
+					new BuzHashConfigProfileDefault()
 					{
 						ShiftDirection = CircularShiftDirection.Right
 					});

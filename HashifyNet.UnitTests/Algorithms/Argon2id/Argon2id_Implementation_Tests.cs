@@ -140,7 +140,7 @@ namespace HashifyNet.UnitTests.Algorithms.Argon2id
 		[Fact]
 		public void Argon2id_Implementation_Verify_Works()
 		{
-			Argon2id_Implementation impl = new Argon2id_Implementation(Argon2idConfig.OWASP_Standard);
+			Argon2id_Implementation impl = new Argon2id_Implementation(new Argon2idConfigProfileOWASP());
 			IHashValue hash1 = impl.ComputeHash(TestConstants.FooBar);
 
 			Assert.NotNull(hash1);
@@ -153,7 +153,7 @@ namespace HashifyNet.UnitTests.Algorithms.Argon2id
 		[Fact]
 		public void Argon2id_Implementation_Verify_Irrelevant_Fails()
 		{
-			Argon2id_Implementation impl = new Argon2id_Implementation(Argon2idConfig.OWASP_Standard);
+			Argon2id_Implementation impl = new Argon2id_Implementation(new Argon2idConfigProfileOWASP());
 			IHashValue hash1 = impl.ComputeHash(TestConstants.FooBar);
 
 			Assert.NotNull(hash1);
@@ -185,7 +185,7 @@ namespace HashifyNet.UnitTests.Algorithms.Argon2id
 
 			protected override IArgon2id CreateHashFunction(int hashSize) =>
 				new Argon2id_Implementation(
-					Argon2idConfig.OWASP_Standard);
+					new Argon2idConfigProfileOWASP());
 		}
 	}
 }
