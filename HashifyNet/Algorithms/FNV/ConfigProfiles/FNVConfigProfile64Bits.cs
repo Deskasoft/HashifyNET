@@ -37,7 +37,7 @@ namespace HashifyNet.Algorithms.FNV
 	/// </summary>
 	/// <remarks>This class defines the parameters specific to the 64-bit FNV hash algorithm, including the hash
 	/// size, prime, and offset values. It is a sealed class and cannot be inherited.</remarks>
-	[DefineHashConfigProfile("64Bits", "epresents the configuration profile for the 64-bit variant of the FNV (Fowler–Noll–Vo) hash algorithm.")]
+	[DefineHashConfigProfile("64Bits", "Represents the configuration profile for the 64-bit variant of the FNV (Fowler–Noll–Vo) hash algorithm.")]
 	public sealed class FNVConfigProfile64Bits : FNVConfig
 	{
 		/// <summary>
