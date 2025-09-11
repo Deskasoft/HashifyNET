@@ -80,7 +80,6 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 			GC.KeepAlive(
 				new CRC_Implementation(crcConfigMock.Object));
 
-
 			crcConfigMock.Verify(cc => cc.Clone(), Times.Once);
 
 			crcConfigMock.VerifyGet(cc => cc.HashSizeInBits, Times.Never);
@@ -109,7 +108,6 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 						.Returns(() => crcConfigMock.Object);
 				}
 
-
 				Assert.Equal(
 					"config.HashSizeInBits",
 					Assert.Throws<ArgumentOutOfRangeException>(
@@ -133,7 +131,6 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 					crcConfigMock.Setup(cc => cc.Clone())
 						.Returns(() => crcConfigMock.Object);
 				}
-
 
 				GC.KeepAlive(
 					new CRC_Implementation(crcConfigMock.Object));
