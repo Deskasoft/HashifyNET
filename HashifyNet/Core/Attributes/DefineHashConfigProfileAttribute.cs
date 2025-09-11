@@ -66,6 +66,11 @@ namespace HashifyNet.Core
 				throw new ArgumentException($"The config profile name must not exceed {MaxNameLength} characters in length. Current: {name}", nameof(name));
 			}
 
+			if (name.Contains("=") || name.Contains(":"))
+			{
+				throw new ArgumentException("The config profile name must not contain the '=' or ':' characters.", nameof(name));
+			}
+
 			if (description != null)
 			{
 				if (description.Length < MinDescriptionLength)
@@ -84,4 +89,3 @@ namespace HashifyNet.Core
 		}
 	}
 }
-
