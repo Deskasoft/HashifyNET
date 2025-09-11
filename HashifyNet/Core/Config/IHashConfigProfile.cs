@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,6 +27,8 @@
 // ******************************************************************************
 // *
 
+using System;
+
 namespace HashifyNet
 {
 	/// <summary>
@@ -34,6 +36,11 @@ namespace HashifyNet
 	/// </summary>
 	public interface IHashConfigProfile
 	{
+		/// <summary>
+		/// Gets the type of the config profile's class.
+		/// </summary>
+		Type ProfileType { get; }
+
 		/// <summary>
 		/// Gets the name of the underlying config profile.
 		/// </summary>
