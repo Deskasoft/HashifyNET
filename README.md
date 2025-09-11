@@ -30,7 +30,7 @@ As an addition, we introduced 30 more hash algorithms, sorted below:
 - Argon2id
 - RapidHash
 
-### Wrapped around .NET Implementations
+Implementations introduced by wrapping existing .NET implementations:
 - xxHash3
 - xxHash3_128
 - HMACMD5
@@ -276,5 +276,6 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
