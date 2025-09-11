@@ -1,12 +1,12 @@
 HashifyNET
 =================
 
-HashifyNET is a CLS-Compliant, platform-independent .NET library designed to offer a common interface for a wide range of [cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions) and [non-cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions) hashing algorithms, while also providing built-in implementations of numerous well-known hash functions.
+HashifyNET is a CLS-Compliant, platform-independent .NET library designed to offer a common interface for a wide range of [cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions) and [non-cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions) hashing algorithms.
 
 All functionality of the library is tested using [xUnit](https://github.com/xunit/xunit). A primary requirement for each release is 100% code coverage by these tests.
 All code within the library is commented using Visual Studio-compatible XML comments.
 
-You can join our Discord at https://discord.gg/PrKery9 any time you'd need support or just to join our Family.
+Should you require assistance or wish to join our community, please use the following link to access our Discord server: https://discord.gg/PrKery9
 
 Differences
 -----------
@@ -16,7 +16,7 @@ Every hash algorithm is now collected under one single assembly and package name
 The former factory-based implementation, which assigned a unique factory to each hash function, has been superseded by a more modular and centralized factory.
 This new model provides superior accessibility and efficiency.
 
-As an addition, we introduced 14 more hash algorithms, sorted below:
+As an addition, we introduced 30 more hash algorithms, sorted below:
 - Adler32
 - Blake3
 - Gost
@@ -28,9 +28,27 @@ As an addition, we introduced 14 more hash algorithms, sorted below:
 - SM3
 - Keccak
 - Argon2id
+- RapidHash
+
+### Wrapped around .NET Implementations
 - xxHash3
 - xxHash3_128
-- RapidHash
+- HMACMD5
+- HMACSHA1
+- HMACSHA256
+- HMACSHA384
+- HMACSHA512
+- HMACSHA3_256
+- HMACSHA3_384
+- HMACSHA3_512
+- MD5
+- SHA1
+- SHA256
+- SHA384
+- SHA512
+- SHA3_256
+- SHA3_384
+- SHA3_512
 
 > [!NOTE]
 > Please check Implementations for the full list of available hash algorithms.
@@ -72,9 +90,6 @@ The following hash functions have been implemented from the most reliable refere
 * [Gost](https://en.wikipedia.org/wiki/GOST_(hash_function))
   * Gost - Implementation of Streebog Family (GOST R 34.11-2012).
 * [HighwayHash](https://github.com/google/highwayhash)
-* [Hash Algorithm Wrapper](http://msdn.microsoft.com/en-us/library/system.security.cryptography.hashalgorithm%28v=vs.110%29.aspx)
-  * HashAlgorithmWrapper - Wraps an existing instance of a .NET HashAlgorithm
-  * HashAlgorithmWrapper<HashAlgorithmT> - Wraps a managed instance of a .NET HashAlgorithm
 * [Jenkins](http://en.wikipedia.org/wiki/Jenkins_hash_function)
   * JenkinsOneAtATime - Original
   * JenkinsLookup2 - Improvement upon One-at-a-Time hash function
@@ -104,6 +119,29 @@ The following hash functions have been implemented from the most reliable refere
   * xxHash - Original and 64-bit version.
   * xxHash3 - Wraps around System.IO.Hashes.
   * xxHash128 - Wraps around System.IO.Hashes.
+
+Wrapped Implementations
+-----------------------
+The implementations below are backed by .NET directly and are added to be accessible through our universal factory:
+
+* [xxHash3](https://learn.microsoft.com/en-us/dotnet/api/system.io.hashing.xxhash3)
+* [xxHash128](https://learn.microsoft.com/en-us/dotnet/api/system.io.hashing.xxhash128)
+* [HMACMD5](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.HMACMD5)
+* [HMACSHA1](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.HMACSHA1)
+* [HMACSHA256](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.HMACSHA256)
+* [HMACSHA384](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.HMACSHA384)
+* [HMACSHA512](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.HMACSHA512)
+* [HMACSHA3_256](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.HMACSHA3_256)
+* [HMACSHA3_384](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.HMACSHA3_384)
+* [HMACSHA3_512](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.HMACSHA3_512)
+* [MD5](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.MD5)
+* [SHA1](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.SHA1)
+* [SHA256](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.SHA256)
+* [SHA384](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.SHA384)
+* [SHA512](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.SHA512)
+* [SHA3_256](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.SHA3_256)
+* [SHA3_384](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.SHA3_384)
+* [SHA3_512](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.SHA3_512)
 
 Usage
 -----
@@ -185,7 +223,7 @@ IHashFunctionBase[] functions = HashFactory.GetHashFunctions(HashFunctionType.Cr
     // Only adding configs that require us to pick or define one, for the rest of the hash algorithms, the default provided configs will be used instead.
 	{ typeof(IArgon2id), Argon2idConfig.OWASP_Standard }
 
-}, typeof(IHashAlgorithmWrapper)); // We do not want IHashAlgorithmWrapper, though you can add as many as you want to ignore, including base interfaces to ignore all derived interfaces (such as IFNV to also ignore IFNV1 and IFNV1a).
+}, typeof(IBlake3)); // (Example) We do not want Blake3, though you can add as many as you want to ignore, including base interfaces to ignore all derived interfaces (such as IFNV to also ignore IFNV1 and IFNV1a).
 
 Assert.NotNull(functions);
 Assert.NotEmpty(functions);
@@ -238,4 +276,5 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
