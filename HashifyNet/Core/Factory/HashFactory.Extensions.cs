@@ -82,7 +82,7 @@ namespace HashifyNet
 		/// <param name="ignoredFunctions">An optional array of hash function types to be ignored during instantiation. Any types present in this array (and any types derive from the types in this array) will be skipped.</param>
 		/// <returns>An array of <see cref="IHashFunctionBase"/> instances representing the hash functions for the specified type.</returns>
 		/// <exception cref="InvalidOperationException">Thrown if no hash algorithms are found for the specified <paramref name="type"/>.</exception>
-		public static IHashFunctionBase[] CreateHashAlgorithms(HashFunctionType type, Dictionary<Type, IHashConfigBase> defaultConfigMap = null, params Type[] ignoredFunctions)
+		public static IHashFunctionBase[] CreateHashAlgorithms(HashFunctionType type, IReadOnlyDictionary<Type, IHashConfigBase> defaultConfigMap = null, params Type[] ignoredFunctions)
 		{
 			Type[] functions = GetHashAlgorithms(type);
 
@@ -337,3 +337,4 @@ namespace HashifyNet
 		}
 	}
 }
+
