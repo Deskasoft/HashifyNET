@@ -38,7 +38,6 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		{
 			var crcConfig = new CRCConfig();
 
-
 			Assert.Equal(0, crcConfig.HashSizeInBits);
 			Assert.Equal(0L, crcConfig.InitialValue);
 			Assert.Equal(0L, crcConfig.Polynomial);
@@ -867,3 +866,4 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 			};
 	}
 }
+
