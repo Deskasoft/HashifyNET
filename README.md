@@ -191,7 +191,7 @@ Thanks to our latest design, we can now calculate multiple hashes at once, in ca
 
 ### Example using 'System.Type' to compute all non-cryptographic hashes:
 ``` CSharp
-IHashFunctionBase[] functions = HashFactory.GetHashFunctions(HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>() 
+IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>() 
 {
 
     // Only adding configs that require us to pick or define one, for the rest of the hash algorithms, the default provided configs will be used instead.
@@ -215,9 +215,9 @@ foreach (IHashFunctionBase function in functions)
 }
 ```
 
-### Example using 'System.Type' to compute all cryptographic hashes except `IHashAlgorithmWrapper`:
+### Example using 'System.Type' to compute all cryptographic hashes except `IBlake3`:
 ``` CSharp
-IHashFunctionBase[] functions = HashFactory.GetHashFunctions(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
+IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
 {
 
     // Only adding configs that require us to pick or define one, for the rest of the hash algorithms, the default provided configs will be used instead.
@@ -276,6 +276,7 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
