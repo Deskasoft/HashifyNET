@@ -150,7 +150,7 @@ namespace HashifyNet
 						for (int i = 0; i < configProfileTypes.Count; ++i)
 						{
 							Type configProfileType = configProfileTypes[i];
-							ConstructorInfo configProfileCtor = configType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, 0);
+							ConstructorInfo configProfileCtor = configProfileType.GetConstructor(BindingFlags.Public | BindingFlags.Instance, 0);
 							if (configProfileCtor == null)
 							{
 								// This should not have happened, as ConfigProfilesAttribute already checks for this in its constructor.
