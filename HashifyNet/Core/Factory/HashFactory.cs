@@ -96,7 +96,7 @@ namespace HashifyNet
 					continue;
 				}
 
-				HashAlgorithmImplementationAttribute implementationAttribute  = type.GetCustomAttribute<HashAlgorithmImplementationAttribute>(false);
+				HashAlgorithmImplementationAttribute implementationAttribute = type.GetCustomAttribute<HashAlgorithmImplementationAttribute>(false);
 				if (implementationAttribute == null)
 				{
 					continue;
@@ -269,4 +269,5 @@ namespace HashifyNet
 		}
 	}
 }
+
 
