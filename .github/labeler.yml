@@ -1,0 +1,23 @@
+# Apply the 'Core' label if any .csproj file or any file in the 'core/' directory is changed.
+Core:
+  - changed-files:
+    - any-glob-to-any-file: 
+      - '**/*.csproj'
+      - 'core/**/*'
+      - '**/.editorconfig'
+
+# Apply the 'Config' label for any change to .filenesting.json configuration file.
+Config:
+  - changed-files:
+     - any-glob-to-any-file:
+       - '**/.filenesting.json'
+
+# Apply the 'Algorithms' label for any change within the 'Algorithms/' directory.
+Algorithms:
+  - changed-files:
+    - any-glob-to-any-file: 'Algorithms/**/*'
+
+# Apply the 'Documentation' label for any change to a Markdown file.
+Documentation:
+  - changed-files:
+    - any-glob-to-any-file: '**/*.md'
