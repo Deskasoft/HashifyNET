@@ -241,5 +241,21 @@ namespace HashifyNet.UnitTests.Core
 				}
 			}
 		}
+
+		[Fact]
+		public void Factory_GetConfigProfiles_Create_Works()
+		{
+			var algorithms = HashFactory.GetHashAlgorithms(HashFunctionType.Cryptographic | HashFunctionType.Noncryptographic);
+			foreach (var algorithm in algorithms)
+			{
+				var profiles = HashFactory.GetConfigProfiles(algorithm);
+				foreach (var profile in profiles)
+				{
+					IHashConfigBase config = profile.Create();
+					Assert.NotNull(config);
+					Assert.IsType(profile.ProfileType, config);
+				}
+			}
+		}
 	}
 }
