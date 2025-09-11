@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -33,21 +33,34 @@ namespace HashifyNet
 {
 	internal sealed class HashConfigProfile : IHashConfigProfile
 	{
+		public Type ProfileType { get; }
 		public string Name { get; }
 		public string Description { get; }
 
 		private Func<IHashConfigBase> _profileFactory;
-		public HashConfigProfile(string name, string description, Func<IHashConfigBase> profileFactory)
+		public HashConfigProfile(Type profileType, string name, string description, Func<IHashConfigBase> profileFactory)
 		{
+			if (profileType == null)
+			{
+				throw new ArgumentNullException(nameof(profileType), "The profile type cannot be null.");
+			}
+
+			if (!typeof(IHashConfigBase).IsAssignableFrom(profileType))
+			{
+				throw new ArgumentException($"The profile type must implement {nameof(IHashConfigBase)} interface.", nameof(profileType));
+			}
+
 			if (string.IsNullOrWhiteSpace(name))
 			{
 				throw new ArgumentException("The profile name must be a non-empty string.", nameof(name));
 			}
+
 			if (profileFactory == null)
 			{
 				throw new ArgumentNullException(nameof(profileFactory), "The profile factory function cannot be null.");
 			}
 
+			ProfileType = profileType;
 			Name = name;
 			Description = description;
 			_profileFactory = profileFactory;
