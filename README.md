@@ -1,5 +1,5 @@
 HashifyNET
-=================
+==========
 
 HashifyNET is a CLS-Compliant, platform-independent .NET library designed to offer a common interface for a wide range of [cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions) and [non-cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions) hashing algorithms.
 
@@ -276,6 +276,7 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
