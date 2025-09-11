@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,6 +27,9 @@
 // ******************************************************************************
 // *
 
+using System;
+using System.Collections.Generic;
+
 namespace HashifyNet
 {
 	public sealed partial class HashFactory<TAlgorithmInterface>
@@ -48,6 +51,42 @@ namespace HashifyNet
 		public static TAlgorithmInterface Create(IHashConfigBase config)
 		{
 			return Singleton.CreateInstance(config);
+		}
+
+		/// <summary>
+		/// Retrieves the configuration profiles associated with <typeparamref name="TAlgorithmInterface"/> algorithm.
+		/// </summary>
+		/// <returns>An array of <see cref="IHashConfigProfile"/> objects associated with <typeparamref name="TAlgorithmInterface"/> algorithm, or an empty array
+		/// if no configuration profiles are found for the specified type.</returns>
+		public static IHashConfigProfile[] GetConfigProfiles()
+		{
+			return HashFactory.GetConfigProfiles(typeof(TAlgorithmInterface));
+		}
+
+		/// <summary>
+		/// Creates a default concrete configuration instance for <typeparamref name="TAlgorithmInterface"/> algorithm.
+		/// </summary>
+		/// <returns>An instance of <typeparamref name="TAlgorithmInterface"/> representing the default configuration for <typeparamref name="TAlgorithmInterface"/> algorithm.</returns>
+		/// <exception cref="KeyNotFoundException">Thrown if no implementation is registered for <typeparamref name="TAlgorithmInterface"/> algorithm.</exception>
+		/// <exception cref="NotSupportedException">Thrown if no default configuration is available for <typeparamref name="TAlgorithmInterface"/> algorithm.</exception>
+		public static IHashConfigBase CreateDefaultConcreteConfig()
+		{
+			return HashFactory.CreateDefaultConcreteConfig(typeof(TAlgorithmInterface));
+		}
+
+		/// <summary>
+		/// Attempts to create a default concrete configuration for <typeparamref name="TAlgorithmInterface"/> algorithm.
+		/// </summary>
+		/// <remarks>This method catches and handles <see cref="NotSupportedException"/> and <see
+		/// cref="KeyNotFoundException"/> internally, returning <see langword="false"/> in such cases. Other exceptions may
+		/// propagate to the caller.</remarks>
+		/// <param name="config">When this method returns, contains the created configuration if the operation succeeds; otherwise, <see
+		/// langword="null"/>. This parameter is passed uninitialized.</param>
+		/// <returns><see langword="true"/> if the default concrete configuration was successfully created; otherwise, <see
+		/// langword="false"/>.</returns>
+		public static bool TryCreateDefaultConcreteConfig(out IHashConfigBase config)
+		{
+			return HashFactory.TryCreateDefaultConcreteConfig(typeof(TAlgorithmInterface), out config);
 		}
 	}
 }
