@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> [HashifyNET Command Line Interface](https://github.com/Deskasoft/HashifyNETCLI) is now available!
+
+
 HashifyNET
 ==========
 
@@ -276,6 +280,7 @@ License
 
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
