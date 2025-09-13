@@ -278,8 +278,8 @@ Code contributions should follow the existing code's methodologies and style, al
 License
 -------
 
-
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
