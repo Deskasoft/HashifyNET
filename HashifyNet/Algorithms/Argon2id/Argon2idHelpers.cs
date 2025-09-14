@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -54,7 +54,7 @@ namespace HashifyNet.Algorithms.Argon2id
 				Salt = salt,
 				Password = password,
 				Secret = config.Secret,
-				Threads = Environment.ProcessorCount / 2,
+				Threads = Math.Max(1, Environment.ProcessorCount / 2),
 				TimeCost = config.Iterations,
 				Type = Argon2Type.HybridAddressing,
 				Version = (Argon2Version)config.Version,
