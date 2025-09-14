@@ -77,7 +77,7 @@ namespace HashifyNet.Algorithms.Argon2id
 
 		/// <summary>
 		/// Gets the degree of parallelism (parallelism cost, p). This parameter defines
-		///  the number of parallel threads (or lanes) to use, influencing how resistant the hash is
+		///  the number of lanes to use, influencing how resistant the hash is
 		///  to GPU cracking attacks.
 		/// </summary>
 		int DegreeOfParallelism { get; }
