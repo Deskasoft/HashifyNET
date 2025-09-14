@@ -136,6 +136,13 @@ namespace HashifyNet
 		string AsBase85String();
 
 		/// <summary>
+		/// Encodes the current data as a Base85-encoded string using the specified variant.
+		/// </summary>
+		/// <param name="variant">The <see cref="Base85Variant"/> to use for encoding. This determines the character set and encoding rules applied.</param>
+		/// <returns>A Base85-encoded string representation of the data.</returns>
+		string AsBase85String(Base85Variant variant);
+
+		/// <summary>
 		/// Gets the hash value as a Base64-encoded string. If the bit length is not a multiple of 8, the last byte is padded with zeros.
 		/// </summary>
 		/// <param name="formattingOptions">The formatting options for generating base64 encoded string.</param>
