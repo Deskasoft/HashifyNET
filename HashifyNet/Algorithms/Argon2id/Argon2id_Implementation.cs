@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -69,7 +69,22 @@ namespace HashifyNet.Algorithms.Argon2id
 				throw new ArgumentOutOfRangeException($"{nameof(config)}.{nameof(config.Iterations)}", config.Iterations, "Iterations must be at least 1.");
 			}
 
-			if (_config.DegreeOfParallelism < 1 || _config.DegreeOfParallelism > Environment.ProcessorCount)
+			int maxProcessors;
+#if NET8_0_OR_GREATER
+			if (OperatingSystem.IsBrowser())
+#else
+			if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Create("Browser")))
+#endif
+			{
+				// TODO: Review this.
+				maxProcessors = int.MaxValue; // Just assume we can use as many as we want in WASM.
+			}
+			else
+			{
+				maxProcessors = Environment.ProcessorCount;
+			}
+
+			if (_config.DegreeOfParallelism < 1 || _config.DegreeOfParallelism > maxProcessors)
 			{
 				throw new ArgumentOutOfRangeException($"{nameof(config)}.{nameof(config.DegreeOfParallelism)}", config.DegreeOfParallelism, $"Degree of parallelism must be at least 1 and smaller or equal to processor count '{Environment.ProcessorCount}'.");
 			}
@@ -99,7 +114,7 @@ namespace HashifyNet.Algorithms.Argon2id
 
 			try
 			{
-				return new EncodedHashValue(encodedHash, (i) => Argon2idSerializer.Deserialize((byte[])i),  buffer.Buffer, _config.HashSizeInBits);
+				return new EncodedHashValue(encodedHash, (i) => Argon2idSerializer.Deserialize((byte[])i), buffer.Buffer, _config.HashSizeInBits);
 			}
 			finally
 			{
@@ -107,5 +122,4 @@ namespace HashifyNet.Algorithms.Argon2id
 			}
 		}
 	}
-
 }
