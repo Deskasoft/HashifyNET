@@ -97,7 +97,13 @@ namespace HashifyNet.Algorithms.Argon2id
 
 		protected override IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
 		{
-			return ComputeHashWithSaltInternal(data, Argon2idHelpers.GenerateSalt());
+			byte[] salt;
+			if (_config.Salt != null)
+				salt = _config.Salt;
+			else
+				salt = Argon2idHelpers.GenerateSalt();
+
+			return ComputeHashWithSaltInternal(data, salt);
 		}
 
 		internal IHashValue ComputeHashWithSaltInternal(ArraySegment<byte> data, byte[] salt)
