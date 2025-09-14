@@ -69,24 +69,10 @@ namespace HashifyNet.Algorithms.Argon2id
 				throw new ArgumentOutOfRangeException($"{nameof(config)}.{nameof(config.Iterations)}", config.Iterations, "Iterations must be at least 1.");
 			}
 
-			int maxProcessors;
-#if NET8_0_OR_GREATER
-			if (OperatingSystem.IsBrowser())
-#else
-			if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Create("Browser")))
-#endif
-			{
-				// TODO: Review this.
-				maxProcessors = int.MaxValue; // Just assume we can use as many as we want in WASM.
-			}
-			else
-			{
-				maxProcessors = Environment.ProcessorCount;
-			}
-
+			int maxProcessors = Math.Max(1, Environment.ProcessorCount);
 			if (_config.DegreeOfParallelism < 1 || _config.DegreeOfParallelism > maxProcessors)
 			{
-				throw new ArgumentOutOfRangeException($"{nameof(config)}.{nameof(config.DegreeOfParallelism)}", config.DegreeOfParallelism, $"Degree of parallelism must be at least 1 and smaller or equal to processor count '{Environment.ProcessorCount}'.");
+				throw new ArgumentOutOfRangeException($"{nameof(config)}.{nameof(config.DegreeOfParallelism)}", config.DegreeOfParallelism, $"Degree of parallelism must be at least 1 and smaller or equal to processor count '{maxProcessors}'.");
 			}
 
 			if (_config.MemorySize < 8 * _config.DegreeOfParallelism)
