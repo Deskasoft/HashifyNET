@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -48,6 +48,11 @@ namespace HashifyNet.Algorithms.Argon2id
 		/// Gets the secret input for the hashing function.
 		/// </summary>
 		byte[] Secret { get; }
+
+		/// <summary>
+		/// Gets the cryptographic salt.
+		/// </summary>
+		byte[] Salt { get; }
 
 		/// <summary>
 		/// Gets the optional associated data (or "keyed hash"). This data is included in the
