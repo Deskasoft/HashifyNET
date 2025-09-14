@@ -29,11 +29,11 @@
 
 using System;
 using System.Collections;
-using System.Collections.Immutable;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using System.Numerics;
+using System.Text;
 
 namespace HashifyNet.Core.Utilities
 {
@@ -227,10 +227,14 @@ namespace HashifyNet.Core.Utilities
 		private decimal AsNumber128_96()
 		{
 			if (BitLength < 1)
+			{
 				throw new ArgumentException("Bit Length cannot be smaller than 1.");
+			}
 
 			if (BitLength > 96)
+			{
 				throw new NotSupportedException("Bit Length greater than 96 is not supported.");
+			}
 
 			byte[] data = AsByteArray();
 
@@ -246,10 +250,14 @@ namespace HashifyNet.Core.Utilities
 		private long AsNumber64()
 		{
 			if (BitLength < 1)
+			{
 				throw new ArgumentException("Bit Length cannot be smaller than 1.");
+			}
 
 			if (BitLength > 64)
+			{
 				throw new NotSupportedException("Bit Length greater than 64 is not supported.");
+			}
 
 			byte[] data = AsByteArray();
 
@@ -296,7 +304,7 @@ namespace HashifyNet.Core.Utilities
 
 			if (BitLength < 64)
 			{
-				double maxHashValue = (double)(1L << BitLength);
+				double maxHashValue = 1L << BitLength;
 				ticks = (long)(ticks / maxHashValue * DateTime.MaxValue.Ticks);
 			}
 
@@ -327,7 +335,7 @@ namespace HashifyNet.Core.Utilities
 
 			if (BitLength < 64)
 			{
-				double maxHashValue = (double)(1L << BitLength);
+				double maxHashValue = 1L << BitLength;
 				ticks = (long)(ticks / maxHashValue * DateTimeOffset.MaxValue.Ticks);
 			}
 
@@ -358,7 +366,7 @@ namespace HashifyNet.Core.Utilities
 
 			if (BitLength < 64)
 			{
-				double maxHashValue = (double)(1L << BitLength);
+				double maxHashValue = 1L << BitLength;
 				ticks = (long)(ticks / maxHashValue * TimeSpan.MaxValue.Ticks);
 			}
 
@@ -396,38 +404,22 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public string AsBase85String()
 		{
+			return AsBase85String(Base85Variant.Z85);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="variant"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		public string AsBase85String(Base85Variant variant)
+		{
 			if (BitLength < 1)
+			{
 				return "";
-
-			const string Base85Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|}~";
-			byte[] data = AsByteArray();
-			var builder = new StringBuilder();
-			int value = 0;
-			int count = 0;
-
-			foreach (byte b in data)
-			{
-				value = (value << 8) | b;
-				count++;
-				if (count == 4)
-				{
-					for (int i = 4; i >= 0; i--)
-					{
-						builder.Append(Base85Alphabet[(value / (int)Math.Pow(85, i)) % 85]);
-					}
-					value = 0;
-					count = 0;
-				}
 			}
-			if (count > 0)
-			{
-				value <<= (4 - count) * 8; // Pad with zeros
-				for (int i = 4; i >= 5 - count; i--)
-				{
-					builder.Append(Base85Alphabet[(value / (int)Math.Pow(85, i)) % 85]);
-				}
-			}
-			return builder.ToString();
+
+			return Base85Helper.AsBase85String(AsByteArray(), variant);
 		}
 
 		/// <summary>
@@ -447,7 +439,9 @@ namespace HashifyNet.Core.Utilities
 		public string AsBase58String()
 		{
 			if (BitLength < 1)
+			{
 				return "";
+			}
 
 			const string Base58Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 			byte[] data = AsByteArray();
@@ -478,7 +472,9 @@ namespace HashifyNet.Core.Utilities
 		public string AsBase32String()
 		{
 			if (BitLength < 1)
+			{
 				return "";
+			}
 
 			const string Base32Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 			byte[] data = AsByteArray();
