@@ -1,4 +1,4 @@
-﻿#if NET8_0_OR_GREATER
+#if NET8_0_OR_GREATER
 // *
 // *****************************************************************************
 // *
@@ -35,7 +35,7 @@ namespace HashifyNet
 	/// <summary>
 	/// Any hash algorithm deriving from this points to an existing underlying platform-dependent .NET implementation that gets wrapped by HashifyNET.
 	/// </summary>
-	public interface IHashAlgorithmWrapperPlatformDependentAlgorithm<TAlgorithm> : IHashAlgorithmWrapperAlgorithm<TAlgorithm> where TAlgorithm : System.Security.Cryptography.HashAlgorithm
+	public interface IHashAlgorithmWrapperPlatformDependentAlgorithm<TAlgorithm> : IHashAlgorithmWrapperAlgorithm<TAlgorithm>, IHashAlgorithmWrapperPlatformDependentAlgorithmBase where TAlgorithm : System.Security.Cryptography.HashAlgorithm
 	{
 		/// <summary>
 		/// Gets a value that indicates whether the algorithm is supported on the current platform.
