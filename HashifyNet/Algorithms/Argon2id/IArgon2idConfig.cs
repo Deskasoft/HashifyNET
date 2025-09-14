@@ -50,7 +50,7 @@ namespace HashifyNet.Algorithms.Argon2id
 		byte[] Secret { get; }
 
 		/// <summary>
-		/// Gets the cryptographic salt.
+		/// Gets the cryptographic salt. If not specified, a new random salt will be generated for each hash operation. Defaults to <see langword="null"/>.
 		/// </summary>
 		byte[] Salt { get; }
 
