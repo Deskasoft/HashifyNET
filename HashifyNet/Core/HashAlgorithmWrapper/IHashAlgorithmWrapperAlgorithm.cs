@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -32,7 +32,7 @@ namespace HashifyNet
 	/// <summary>
 	/// Any hash algorithm deriving from this points to an existing underlying .NET implementation that gets wrapped by HashifyNET.
 	/// </summary>
-	public interface IHashAlgorithmWrapperAlgorithm<TAlgorithm> where TAlgorithm : System.Security.Cryptography.HashAlgorithm
+	public interface IHashAlgorithmWrapperAlgorithm<TAlgorithm> : IHashAlgorithmWrapperAlgorithmBase where TAlgorithm : System.Security.Cryptography.HashAlgorithm
 	{
 	}
 }
