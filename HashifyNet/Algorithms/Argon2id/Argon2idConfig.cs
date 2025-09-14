@@ -61,6 +61,11 @@ namespace HashifyNet.Algorithms.Argon2id
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
+		public byte[] Salt { get; set; }
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
 		public byte[] AssociatedData { get; set; }
 
 		/// <summary>
@@ -89,7 +94,8 @@ namespace HashifyNet.Algorithms.Argon2id
 			AssociatedData = this.AssociatedData == null ? null : (byte[])this.AssociatedData.Clone(),
 			Iterations = this.Iterations,
 			MemorySize = this.MemorySize,
-			DegreeOfParallelism = this.DegreeOfParallelism
+			DegreeOfParallelism = this.DegreeOfParallelism,
+			Salt = this.Salt == null ? null : (byte[])this.Salt.Clone(),
 		};
 
 		/// <summary>
@@ -107,6 +113,12 @@ namespace HashifyNet.Algorithms.Argon2id
 			{
 				ArrayHelpers.ZeroFill(AssociatedData);
 				AssociatedData = null;
+			}
+
+			if (Salt != null) // Not necessary for this one but anyway.
+			{
+				ArrayHelpers.ZeroFill(Salt);
+				Salt = null;
 			}
 		}
 	}
