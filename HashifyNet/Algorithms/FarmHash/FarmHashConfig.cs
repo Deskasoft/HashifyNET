@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,6 +27,8 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core;
+
 namespace HashifyNet.Algorithms.FarmHash
 {
 	/// <summary>
@@ -35,6 +37,8 @@ namespace HashifyNet.Algorithms.FarmHash
 	/// <remarks>This class allows customization of the hash size used by the FarmHash algorithm. The default hash
 	/// size is  64 bits, but it can be configured to 32, 64, or 128 bits. The configuration can be cloned to create a new
 	/// instance with the same settings.</remarks>
+	[DeclareHashConfigProfile(typeof(FarmHashConfigProfile32Bits))]	
+	[DeclareHashConfigProfile(typeof(FarmHashConfigProfile128Bits))]	
 	public class FarmHashConfig : IFarmHashConfig
 	{
 		/// <summary>
