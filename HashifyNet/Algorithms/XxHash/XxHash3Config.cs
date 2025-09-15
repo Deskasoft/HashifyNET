@@ -27,11 +27,14 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core;
+
 namespace HashifyNet.Algorithms.XxHash3
 {
 	/// <summary>
 	/// Defines a configuration for a <see cref="IXxHash3"/> implementation.
 	/// </summary>
+	[DeclareHashConfigProfile(typeof(XxHash3ConfigProfile128Bits))]
 	public class XxHash3Config : IXxHash3Config
 	{
 		/// <summary>
@@ -58,5 +61,4 @@ namespace HashifyNet.Algorithms.XxHash3
 				Seed = Seed
 			};
 	}
-
 }
