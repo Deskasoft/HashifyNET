@@ -404,7 +404,7 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public string AsBase85String()
 		{
-			return AsBase85String(Base85Variant.Z85);
+			return AsBase85String(Base85Variant.Rfc1924);
 		}
 
 		/// <summary>
@@ -679,3 +679,4 @@ namespace HashifyNet.Core.Utilities
 		}
 	}
 }
+
