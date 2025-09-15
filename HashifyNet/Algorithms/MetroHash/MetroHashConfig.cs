@@ -27,11 +27,14 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core;
+
 namespace HashifyNet.Algorithms.MetroHash
 {
 	/// <summary>
 	/// Defines a configuration for a MetroHash implementation.
 	/// </summary>
+	[DeclareHashConfigProfile(typeof(MetroHashConfigProfile128Bits))]
 	public class MetroHashConfig
 		: IMetroHashConfig
 	{
@@ -46,7 +49,7 @@ namespace HashifyNet.Algorithms.MetroHash
 		/// <value>
 		/// The seed value.
 		/// </value>
-		public long Seed { get; set; }
+		public long Seed { get; set; } = 0;
 
 		/// <summary>
 		/// Makes a deep clone of the current instance.
