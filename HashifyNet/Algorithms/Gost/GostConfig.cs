@@ -27,11 +27,14 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core;
+
 namespace HashifyNet.Algorithms.Gost
 {
 	/// <summary>
 	/// Concrete implementation of the GOST R 34.11-2012 (Streebog) configuration.
 	/// </summary>
+	[DeclareHashConfigProfile(typeof(GostConfigProfile256Bits))]
 	public class GostConfig : IGostConfig
 	{
 		/// <summary>
