@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,14 +27,18 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core;
+
 namespace HashifyNet.Algorithms.RapidHash
 {
 	/// <summary>
 	/// Represents the configuration settings for the RapidHash algorithm.
 	/// </summary>
 	/// <remarks>This class provides options to configure the behavior of the RapidHash algorithm, including the
-	/// hash size and an optional seed value. It also supports cloning to create an independent configuration
+	/// hash size and an optional seed value. It also supports cloning to create independent configuration
 	/// instances.</remarks>
+	[DeclareHashConfigProfile(typeof(RapidHashConfigProfileMicro))]
+	[DeclareHashConfigProfile(typeof(RapidHashConfigProfileNano))]
 	public class RapidHashConfig : IRapidHashConfig
 	{
 		/// <summary>
@@ -46,7 +50,7 @@ namespace HashifyNet.Algorithms.RapidHash
 		/// <inheritdoc/>
 		/// <para>Defaults to 0.</para>
 		/// </summary>
-		public long Seed { get; set; }
+		public long Seed { get; set; } = 0;
 
 		/// <summary>
 		/// <inheritdoc/>
@@ -61,4 +65,3 @@ namespace HashifyNet.Algorithms.RapidHash
 		public IRapidHashConfig Clone() => new RapidHashConfig() { Seed = this.Seed, Mode = this.Mode };
 	}
 }
-
