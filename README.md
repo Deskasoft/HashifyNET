@@ -64,6 +64,7 @@ You can also click on the showcase below to go to the demo.
 
 ### NuGet
 You can directly bind HashifyNET to your project through NuGet below:
+
 [![Version Status](https://img.shields.io/nuget/v/HashifyNET.svg)](https://www.nuget.org/packages/HashifyNET/)
 
 Implementations
@@ -283,6 +284,7 @@ License
 -------
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
