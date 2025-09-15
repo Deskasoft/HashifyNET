@@ -57,14 +57,13 @@ Implementations introduced by wrapping existing .NET implementations:
 > [!NOTE]
 > Please check Implementations for the full list of available hash algorithms.
 
-### NuGet
-You can directly bind HashifyNET to your project through NuGet below:
-
 ### Demo
 You can see a working example of HasihfyNET using Blazor right [here](https://deskasoft.github.io/HashifyNETDemo/).
 You can also click on the showcase below to go to the demo.
 [<img width="1280" height="720" alt="hashifynet_demo_short" src="https://github.com/user-attachments/assets/2bd7c477-88d6-4616-a9cb-5d24cb9d4be5" />](https://deskasoft.github.io/HashifyNETDemo/)
 
+### NuGet
+You can directly bind HashifyNET to your project through NuGet below:
 [![Version Status](https://img.shields.io/nuget/v/HashifyNET.svg)](https://www.nuget.org/packages/HashifyNET/)
 
 Implementations
@@ -284,6 +283,7 @@ License
 -------
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
