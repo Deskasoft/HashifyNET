@@ -27,6 +27,8 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core;
+
 namespace HashifyNet.Algorithms.Keccak
 {
 	/// <summary>
@@ -34,6 +36,7 @@ namespace HashifyNet.Algorithms.Keccak
 	/// </summary>
 	/// <remarks>This configuration allows customization of the hash size and padding scheme used by the Keccak
 	/// algorithm.</remarks>
+	[DeclareHashConfigProfile(typeof(KeccakConfigProfileSha3Padding))]
 	public class KeccakConfig : IKeccakConfig
 	{
 		/// <summary>
