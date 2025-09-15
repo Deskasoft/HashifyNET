@@ -27,11 +27,15 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core;
+
 namespace HashifyNet.Algorithms.SpookyHash
 {
 	/// <summary>
 	/// Defines a configuration for a <see cref="ISpookyHashV1"/>/<see cref="ISpookyHashV2"/> implementation.
 	/// </summary>
+	[DeclareHashConfigProfile(typeof(SpookyHashConfigProfile32Bits))]
+	[DeclareHashConfigProfile(typeof(SpookyHashConfigProfile64Bits))]
 	public class SpookyHashConfig
 		: ISpookyHashConfig
 	{
@@ -60,7 +64,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 		public long Seed2 { get; set; }
 
 		/// <summary>
-		/// Makes a deep clone of the current instance.
+		/// Makes a deep clone of current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public ISpookyHashConfig Clone() =>
