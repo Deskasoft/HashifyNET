@@ -27,11 +27,15 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core;
+
 namespace HashifyNet.Algorithms.CityHash
 {
 	/// <summary>
 	/// Defines a configuration for a <see cref="ICityHash"/> implementation.
 	/// </summary>
+	[DeclareHashConfigProfile(typeof(CityHashConfigProfile64Bits))]
+	[DeclareHashConfigProfile(typeof(CityHashConfigProfile128Bits))]
 	public class CityHashConfig
 		: ICityHashConfig
 	{
