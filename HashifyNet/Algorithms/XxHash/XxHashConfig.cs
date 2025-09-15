@@ -27,11 +27,14 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core;
+
 namespace HashifyNet.Algorithms.XxHash
 {
 	/// <summary>
 	/// Defines a configuration for a <see cref="IXxHash"/> implementation.
 	/// </summary>
+	[DeclareHashConfigProfile(typeof(XxHashConfigProfile64Bits))]
 	public class XxHashConfig
 		: IXxHashConfig
 	{
@@ -52,7 +55,7 @@ namespace HashifyNet.Algorithms.XxHash
 		public long Seed { get; set; }
 
 		/// <summary>
-		/// Makes a deep clone of the current instance.
+		/// Makes a deep clone of current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public IXxHashConfig Clone() =>
@@ -63,4 +66,3 @@ namespace HashifyNet.Algorithms.XxHash
 			};
 	}
 }
-
