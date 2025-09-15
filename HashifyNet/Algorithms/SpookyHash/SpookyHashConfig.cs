@@ -64,7 +64,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 		public long Seed2 { get; set; }
 
 		/// <summary>
-		/// Makes a deep clone of current instance.
+		/// Makes a deep clone of the current instance.
 		/// </summary>
 		/// <returns>A deep clone of the current instance.</returns>
 		public ISpookyHashConfig Clone() =>
@@ -76,3 +76,4 @@ namespace HashifyNet.Algorithms.SpookyHash
 			};
 	}
 }
+
