@@ -139,22 +139,7 @@ namespace HashifyNet.Core
 				throw new ArgumentNullException(nameof(data));
 			}
 
-			if (data.Length == 0)
-			{
-				throw new ArgumentException("data.Length must be greater than 0.", nameof(data));
-			}
-
-			if (offset < 0 || offset >= data.Length)
-			{
-				throw new ArgumentOutOfRangeException(nameof(offset), "Offset must be a value greater than or equal to zero and less than the length of the array minus one.");
-			}
-
-			if (count <= 0 || count > data.Length - offset)
-			{
-				throw new ArgumentOutOfRangeException(nameof(count), "Count must be a value greater than zero and less than the remaining length of the array after the offset value.");
-			}
-
-			TransformBytes(new ReadOnlySpan<byte>(data, offset, count), cancellationToken);
+			TransformBytes(data.AsSpan(offset, count), cancellationToken);
 		}
 
 		/// <summary>
