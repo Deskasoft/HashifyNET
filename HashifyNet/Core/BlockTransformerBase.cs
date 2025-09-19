@@ -181,7 +181,23 @@ namespace HashifyNet.Core
 		{
 			ThrowIfCorrupted();
 
-			return FinalizeHashValueInternal(FinalizeInputBuffer(), cancellationToken);
+			try
+			{
+				cancellationToken.ThrowIfCancellationRequested();
+				try
+				{
+					return FinalizeHashValueInternal(FinalizeInputBuffer(), cancellationToken);
+				}
+				finally
+				{
+					cancellationToken.ThrowIfCancellationRequested();
+				}
+			}
+			catch (TaskCanceledException)
+			{
+				MarkSelfCorrupted();
+				throw;
+			}
 		}
 
 		/// <summary>
