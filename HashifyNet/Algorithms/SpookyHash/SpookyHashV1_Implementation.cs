@@ -185,7 +185,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 
 					if (_shortHashBuffer != null)
 					{
-						Mix(_hashValue, new ArraySegment<byte>(_shortHashBuffer, 0, _bytesProcessed));
+						Mix(_hashValue, _shortHashBuffer.AsSpan(0, _bytesProcessed));
 
 						_shortHashBuffer = null;
 					}
@@ -212,7 +212,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 
 				finalMixBuffer[95] = (byte)remainderCount;
 
-				Mix(finalHashValue, new ArraySegment<byte>(finalMixBuffer, 0, 96));
+				Mix(finalHashValue, finalMixBuffer.AsSpan(0, finalMixBuffer.Length));
 				End(finalHashValue);
 
 				switch (_hashSizeInBits)
