@@ -389,6 +389,4 @@ namespace HashifyNet.UnitTests
 			}
 		}
 	}
-
 }
-

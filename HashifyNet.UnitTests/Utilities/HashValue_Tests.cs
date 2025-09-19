@@ -27,6 +27,7 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Algorithms.Blake2;
 using HashifyNet.Core.Utilities;
 using Moq;
 using System.Collections.Immutable;
@@ -43,11 +44,11 @@ namespace HashifyNet.UnitTests.Utilities
 		{
 			// Enumerable
 			GC.KeepAlive(
-				new HashValue(Enumerable.Range(0, 1).Select(i => (byte)i), 8));
+				new HashValue(ValueEndianness.NotApplicable, Enumerable.Range(0, 1).Select(i => (byte)i), 8));
 
 			// Non-enumerable
 			GC.KeepAlive(
-				new HashValue(new byte[1], 8));
+				new HashValue(ValueEndianness.NotApplicable, new byte[1], 8));
 		}
 
 		[Fact]
@@ -65,11 +66,11 @@ namespace HashifyNet.UnitTests.Utilities
 			foreach (var underlyingHashValue in underlyingHashValues)
 			{
 				var hashValues = new[] {
-					new HashValue(ArrayHelpers.CoerceToArray(underlyingHashValue, 8), 8),
-					new HashValue(ArrayHelpers.CoerceToArray(underlyingHashValue, 9), 9),
-					new HashValue(ArrayHelpers.CoerceToArray(underlyingHashValue, 10), 10),
-					new HashValue(ArrayHelpers.CoerceToArray(underlyingHashValue, 16), 16),
-					new HashValue(ArrayHelpers.CoerceToArray(underlyingHashValue, 24), 24)
+					new HashValue(ValueEndianness.NotApplicable, ArrayHelpers.CoerceToArray(underlyingHashValue, 8), 8),
+					new HashValue(ValueEndianness.NotApplicable, ArrayHelpers.CoerceToArray(underlyingHashValue, 9), 9),
+					new HashValue(ValueEndianness.NotApplicable, ArrayHelpers.CoerceToArray(underlyingHashValue, 10), 10),
+					new HashValue(ValueEndianness.NotApplicable, ArrayHelpers.CoerceToArray(underlyingHashValue, 16), 16),
+					new HashValue(ValueEndianness.NotApplicable, ArrayHelpers.CoerceToArray(underlyingHashValue, 24), 24)
 				};
 
 				Assert.Equal(new byte[] { 1 }, hashValues[0].Hash);
@@ -87,8 +88,8 @@ namespace HashifyNet.UnitTests.Utilities
 		{
 			Assert.Equal(
 				"hash",
-				Assert.Throws<ArgumentNullException>(() =>
-						new HashValue(null, 8))
+				Assert.Throws<ArgumentException>(() =>
+						new HashValue(ValueEndianness.NotApplicable, null, 8))
 					.ParamName);
 		}
 
@@ -106,7 +107,7 @@ namespace HashifyNet.UnitTests.Utilities
 				Assert.Equal(
 					"bitLength",
 					Assert.Throws<ArgumentOutOfRangeException>(() =>
-							new HashValue(new byte[1], invalidBitLength))
+							new HashValue(ValueEndianness.NotApplicable, new byte[1], invalidBitLength))
 						.ParamName);
 			}
 		}
@@ -124,7 +125,7 @@ namespace HashifyNet.UnitTests.Utilities
 			{
 				var enumerableValue = Enumerable.Range(2, 1).Select(i => (byte)i);
 
-				var hashValue = new HashValue(enumerableValue, 8);
+				var hashValue = new HashValue(ValueEndianness.NotApplicable, enumerableValue, 8);
 
 				Assert.NotStrictEqual(enumerableValue, hashValue.AsByteArray());
 				Assert.Equal(enumerableValue, hashValue.AsByteArray());
@@ -134,7 +135,7 @@ namespace HashifyNet.UnitTests.Utilities
 			{
 				var arrayValue = new byte[] { 2 };
 
-				var hashValue = new HashValue(arrayValue, 8);
+				var hashValue = new HashValue(ValueEndianness.NotApplicable, arrayValue, 8);
 
 				Assert.NotStrictEqual(arrayValue, hashValue.AsByteArray());
 				Assert.Equal(arrayValue, hashValue.AsByteArray());
@@ -154,7 +155,7 @@ namespace HashifyNet.UnitTests.Utilities
 			{
 				byte[] orig = new byte[2];
 				byte[] coerced = ArrayHelpers.CoerceToArray(orig, validBitLength);
-				var hashValue = new HashValue(coerced, validBitLength);
+				var hashValue = new HashValue(ValueEndianness.NotApplicable, coerced, validBitLength);
 
 				Assert.Equal(validBitLength, hashValue.BitLength);
 			}
@@ -168,12 +169,12 @@ namespace HashifyNet.UnitTests.Utilities
 		public void HashValue_AsBase64String_ExpectedValues()
 		{
 			var knownValues = new[] {
-				new { HashValue = new HashValue(Encoding.ASCII.GetBytes("f"), 8), Base64String = "Zg==" },
-				new { HashValue = new HashValue(Encoding.ASCII.GetBytes("fo"), 16), Base64String = "Zm8=" },
-				new { HashValue = new HashValue(Encoding.ASCII.GetBytes("foo"), 24), Base64String = "Zm9v" },
-				new { HashValue = new HashValue(Encoding.ASCII.GetBytes("foob"), 32), Base64String = "Zm9vYg==" },
-				new { HashValue = new HashValue(Encoding.ASCII.GetBytes("fooba"), 40), Base64String = "Zm9vYmE=" },
-				new { HashValue = new HashValue(Encoding.ASCII.GetBytes("foobar"), 48), Base64String = "Zm9vYmFy" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, Encoding.ASCII.GetBytes("f"), 8), Base64String = "Zg==" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, Encoding.ASCII.GetBytes("fo"), 16), Base64String = "Zm8=" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, Encoding.ASCII.GetBytes("foo"), 24), Base64String = "Zm9v" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, Encoding.ASCII.GetBytes("foob"), 32), Base64String = "Zm9vYg==" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, Encoding.ASCII.GetBytes("fooba"), 40), Base64String = "Zm9vYmE=" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, Encoding.ASCII.GetBytes("foobar"), 48), Base64String = "Zm9vYmFy" },
 			};
 
 			foreach (var knownValue in knownValues)
@@ -191,7 +192,7 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsBitArray_ExpectedValues()
 		{
-			var hashValue = new HashValue(new byte[] { 173 }, 8);
+			var hashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 173 }, 8);
 			var bitArray = hashValue.AsBitArray();
 
 			Assert.True(bitArray[0]);
@@ -211,19 +212,189 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsHexString_ExpectedValue()
 		{
-			var hashValue = new HashValue(new byte[] { 173, 0, 255 }, 24);
-
-			Assert.Equal(
-				"ad00ff",
-				hashValue.AsHexString());
-
-			Assert.Equal(
-				"ad00ff",
-				hashValue.AsHexString(false));
+			var hashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 173, 0, 255 }, 24);
 
 			Assert.Equal(
 				"AD00FF",
-				hashValue.AsHexString(true));
+				hashValue.AsHexString());
+		}
+		#endregion
+
+		#region AsByteArray
+		[Fact]
+		public void HashValue_AsByteArray_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 0 }, 8), ByteArray = new byte[] { 0 } },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 0, 0 }, 16), ByteArray = new byte[] { 0, 0 } },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 173, 0, 255 }, 24), ByteArray = new byte[] { 173, 0, 255 } },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.Equal(
+					knownValue.ByteArray,
+					knownValue.HashValue.AsByteArray());
+			}
+		}
+		#endregion
+
+		#region AsBase32String
+		[Fact]
+		public void HashValue_AsBase32String_Rfc4648_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.FooBar, TestConstants.FooBar.Length * 8), Base32String = "MZXW6YTBOI======" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.QuickBrownFox, TestConstants.QuickBrownFox.Length * 8), Base32String = "KRUGKIDROVUWG2ZAMJZG653OEBTG66BANJ2W24DTEBXXMZLSEB2GQZJANRQXU6JAMRXWO===" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.LoremIpsum, TestConstants.LoremIpsum.Length * 8), Base32String = "JRXXEZLNEBUXA43VNUQGI33MN5ZCA43JOQQGC3LFOQWCAY3PNZZWKY3UMV2HK4RAMFSGS4DJONRWS3THEBSWY2LUFYQCAVLUEBXXE3TBOJSSAYLMNFYXKYLNEBWWC5LSNFZSYIDBOQQHM33MOV2HAYLUEBWWC43TMEXCAICQNBQXGZLMNR2XGIDQOVWHM2LOMFZCA4DVOJ2XGIDFOUQHMZLOMVXGC5DJOMQGG33NNVXWI3ZO" },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.Equal(
+					knownValue.Base32String,
+					knownValue.HashValue.AsBase32String());
+			}
+		}
+
+		[Fact]
+		public void HashValue_AsBase32String_Crockford_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.FooBar, TestConstants.FooBar.Length * 8), Base32String = "CSQPYRK1E8" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.QuickBrownFox, TestConstants.QuickBrownFox.Length * 8), Base32String = "AHM6A83HENMP6TS0C9S6YXVE41K6YY10D9TPTW3K41QQCSBJ41T6GS90DHGQMY90CHQPE" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.LoremIpsum, TestConstants.LoremIpsum.Length * 8), Base32String = "9HQQ4SBD41MQ0WVNDMG68VVCDXS20WV9EGG62VB5EGP20RVFDSSPARVMCNT7AWH0C5J6JW39EDHPJVK741JPRTBM5RG20NBM41QQ4VK1E9JJ0RBCD5RQARBD41PP2XBJD5SJR831EGG7CVVCENT70RBM41PP2WVKC4Q2082GD1GQ6SBCDHTQ683GENP7CTBEC5S20W3NE9TQ6835EMG7CSBECNQ62X39ECG66VVDDNQP8VSE" },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.Equal(
+					knownValue.Base32String,
+					knownValue.HashValue.AsBase32String(Base32Variant.Crockford));
+			}
+		}
+		#endregion
+
+		#region AsBase58String
+		[Fact]
+		public void HashValue_AsBase58String_Bitcoin_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.FooBar, TestConstants.FooBar.Length * 8), Base58String = "t1Zv2yaZ" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.QuickBrownFox, TestConstants.QuickBrownFox.Length * 8), Base58String = "7DdiPPYtxLjCD3wA1po2rvZHTDYjkZYiEtazrfiwJcwnKCizhGFhBGHeRdx" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.LoremIpsum, TestConstants.LoremIpsum.Length * 8), Base58String = "ANTbBh3nk9K3wfs1J43pynEbvAQiZP4k1uVXJhQZdBpEv9MncAngn1BFz3sCykR9GDwBfvLXJgds29L8r3ogWWPpxEBZeHnsF7pVXdfkQwTueyLc8Rf5FKZe7fFYmLwsTnYTS8jsAYWGqKnL3QsJTiuZgUAF9NKRyyG3Tz4Fn2MHrtTXyMYPq9q4msyo35fxivnkf9WXzRrzH" },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.Equal(
+					knownValue.Base58String,
+					knownValue.HashValue.AsBase58String()); // Base58Variant.Bitcoin
+			}
+		}
+
+		[Fact]
+		public void HashValue_AsBase58String_Flickr_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.FooBar, TestConstants.FooBar.Length * 8), Base58String = "T1yV2Yzy" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.QuickBrownFox, TestConstants.QuickBrownFox.Length * 8), Base58String = "7dCHooxTXkJcd3Wa1PN2RVyhsdxJKyxHeTzZREHWiBWMjcHZGgfGbghDqCX" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.LoremIpsum, TestConstants.LoremIpsum.Length * 8), Base58String = "ansAbG3MK9j3WES1i43PYMeAVapHyo4K1UuwiGpyCbPeV9mMBaMFM1bfZ3ScYKq9gdWbEVkwiFCS29k8R3NFvvoPXebyDhMSf7PuwCEKpWsUDYkB8qE5fjyD7EfxLkWSsMxsr8JSaxvgQjMk3pSisHUyFtaf9njqYYg3sZ4fM2mhRTswYmxoQ9Q4LSYN35EXHVMKE9vwZqRZh" },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.Equal(
+					knownValue.Base58String,
+					knownValue.HashValue.AsBase58String(Base58Variant.Flickr));
+			}
+		}
+
+		[Fact]
+		public void HashValue_AsBase58String_Ripple_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.FooBar, TestConstants.FooBar.Length * 8), Base58String = "trZvpy2Z" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.QuickBrownFox, TestConstants.QuickBrownFox.Length * 8), Base58String = "fDd5PPYtxLjUDsAwrFopivZHTDYjkZY5Nt2ziC5AJcA8KU5z6GE6BGHeRdx" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.LoremIpsum, TestConstants.LoremIpsum.Length * 8), Base58String = "w4TbB6s8k9KsAC1rJhsFy8NbvwQ5ZPhkruVXJ6QZdBFNv9M8cw8g8rBEzs1UykR9GDABCvLXJgd1p9L3isogWWPFxNBZeH81EfFVXdCkQATueyLc3RCnEKZefCEYmLA1T8YTS3j1wYWGqK8LsQ1JT5uZg7wE94KRyyGsTzhE8pMHitTXyMYPq9qhm1yosnCx5v8kC9WXzRizH" },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.Equal(
+					knownValue.Base58String,
+					knownValue.HashValue.AsBase58String(Base58Variant.Ripple));
+			}
+		}
+		#endregion
+
+		#region AsBase85String
+		[Fact]
+		public void HashValue_AsBase85String_Ascii85_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.FooBar, TestConstants.FooBar.Length * 8), Base85String = "AoDTs@<)" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.QuickBrownFox, TestConstants.QuickBrownFox.Length * 8), Base85String = "<+ohcEHPu*CER),Dg-(AAoDo:C3=B4F!,CEATAo8BOr<&@=!2AA8c)" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.LoremIpsum, TestConstants.LoremIpsum.Length * 8), Base85String = "9Q+r_D'3P3F*2=BA8c:&EZfF;F<G\"/ATTIG@rH7+ARfgnFEMUH@:X(kBldcuDJ()'Ch[uD+<X[++E):<@<,p%@;KXtF^],0D..R-BlbgJ@<<W8DesQ<E+*i2D..L,@4iZF:hX9YASc1*F!,FECj'N1@<*K0F`MVG+D#[<G%GQ&DIIX$F!+t2D/F3%D_;" },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.Equal(
+					knownValue.Base85String,
+					knownValue.HashValue.AsBase85String());
+			}
+		}
+
+		[Fact]
+		public void HashValue_AsBase85String_AdobeAscii85_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.FooBar, TestConstants.FooBar.Length * 8), Base85String = "<~AoDTs@<)~>" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.QuickBrownFox, TestConstants.QuickBrownFox.Length * 8), Base85String = "<~<+ohcEHPu*CER),Dg-(AAoDo:C3=B4F!,CEATAo8BOr<&@=!2AA8c)~>" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.LoremIpsum, TestConstants.LoremIpsum.Length * 8), Base85String = "<~9Q+r_D'3P3F*2=BA8c:&EZfF;F<G\"/ATTIG@rH7+ARfgnFEMUH@:X(kBldcuDJ()'Ch[uD+<X[++E):<@<,p%@;KXtF^],0D..R-BlbgJ@<<W8DesQ<E+*i2D..L,@4iZF:hX9YASc1*F!,FECj'N1@<*K0F`MVG+D#[<G%GQ&DIIX$F!+t2D/F3%D_;~>" },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.Equal(
+					knownValue.Base85String,
+					knownValue.HashValue.AsBase85String(Base85Variant.AdobeAscii85));
+			}
+		}
+
+		[Fact]
+		public void HashValue_AsBase85String_Z85_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.FooBar, TestConstants.FooBar.Length * 8), Base85String = "w]zP%vr8" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.QuickBrownFox, TestConstants.QuickBrownFox.Length * 8), Base85String = "ra]?=ADL#9yAN8bz*c7ww]z]pyisxjB0byAwPw]nxK@r5vs0hwwn=8" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.LoremIpsum, TestConstants.LoremIpsum.Length * 8), Base85String = "oMa@.z6iLiB9hsxwn=p5AV/BqBrC1ewPPECv@DmawN/*[BAIQDvpT7>x(^=#zF786y?W#zarTWaaA8prvrb{4vqGT$BZYbfzddNcx(+*FvrrSnz!%MrAa9&hzddHbvj&VBp?ToUwO=g9B0bBAy<6Jgvr9GfB-IRCaz2WrC4CM5zEET3B0a$hzeBi4z.q" },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.Equal(
+					knownValue.Base85String,
+					knownValue.HashValue.AsBase85String(Base85Variant.Z85));
+			}
+		}
+
+		[Fact]
+		public void HashValue_AsBase85String_Rfc1924_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.FooBar, TestConstants.FooBar.Length * 8), Base85String = "W^Zp|VR8" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.QuickBrownFox, TestConstants.QuickBrownFox.Length * 8), Base85String = "RA^-&adl~9Yan8BZ+C7WW^Z^PYISXJb0BYaWpW^NXk{R5VS0HWWN&8" },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.LoremIpsum, TestConstants.LoremIpsum.Length * 8), Base85String = "OmA{!Z6IlIb9HSXWN&P5av*bQbRc1EWppecV{dMAWn*+@baiqdVPt7=X>(&~Zf786Y-w~ZARtwAAa8PRVRB_4VQgt}bzyBFZDDnCX>%+fVRRsNZ)|mRaA9;HZDDhBVJ;vbP-tOuWo&G9b0BbaY<6jGVR9gFb#ircAZ2wRc4cm5Zeet3b0A}HZEbI4Z!Q" },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.Equal(
+					knownValue.Base85String,
+					knownValue.HashValue.AsBase85String(Base85Variant.Rfc1924));
+			}
 		}
 		#endregion
 
@@ -233,10 +404,10 @@ namespace HashifyNet.UnitTests.Utilities
 		public void HashValue_GetHashCode_ExpectedValues()
 		{
 			var knownValues = new[] {
-				new { HashValue = new HashValue(new byte[] { 0 }, 4), HashCode = 16213 },
-				new { HashValue = new HashValue(new byte[] { 0 }, 8), HashCode = 16089 },
-				new { HashValue = new HashValue(new byte[] { 0, 0 }, 12), HashCode = 494915 },
-				new { HashValue = new HashValue(new byte[] { 0, 0 }, 16), HashCode = 521823 },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 0 }, 4), HashCode = 16213 },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 0 }, 8), HashCode = 16089 },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 0, 0 }, 12), HashCode = 494915 },
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 0, 0 }, 16), HashCode = 521823 },
 			};
 
 			foreach (var knownValue in knownValues)
@@ -255,7 +426,7 @@ namespace HashifyNet.UnitTests.Utilities
 		public void HashValue_Equals_Works()
 		{
 			{
-				var hashValue = new HashValue(new byte[] { 173, 0, 255 }, 24);
+				var hashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 173, 0, 255 }, 24);
 
 				Assert.False(hashValue.Equals(null));
 				Assert.False(hashValue.Equals((object)null));
@@ -268,21 +439,21 @@ namespace HashifyNet.UnitTests.Utilities
 			}
 
 			{
-				var hashValue = new HashValue(new byte[] { 173, 0, 254 }, 24);
+				var hashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 173, 0, 254 }, 24);
 				var mockValue = Mock.Of<IHashValue>(hv => hv.BitLength == 24 && hv.Hash == new byte[] { 173, 0, 255 }.ToImmutableArray());
 
 				Assert.False(hashValue.Equals(mockValue));
 			}
 
 			{
-				var hashValue = new HashValue(new byte[] { 173, 0, 254 }, 23);
+				var hashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 173, 0, 254 }, 23);
 				var mockValue = Mock.Of<IHashValue>(hv => hv.BitLength == 24 && hv.Hash == new byte[] { 173, 0, 254 }.ToImmutableArray());
 
 				Assert.False(hashValue.Equals(mockValue));
 			}
 
 			{
-				var hashValue = new HashValue(new byte[] { 173, 0, 255 }, 24);
+				var hashValue = new HashValue(ValueEndianness.NotApplicable, new byte[] { 173, 0, 255 }, 24);
 				var mockValue = Mock.Of<IHashValue>(hv => hv.BitLength == 23 && hv.Hash == new byte[] { 173, 0, 127 }.ToImmutableArray());
 
 				Assert.False(hashValue.Equals(mockValue));
@@ -291,5 +462,4 @@ namespace HashifyNet.UnitTests.Utilities
 
 		#endregion
 	}
-
 }

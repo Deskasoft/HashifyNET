@@ -188,6 +188,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC3_ROHC
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(3, "123456789", 0x6),
@@ -200,6 +201,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC4_ITU
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(4, "123456789", 0x7),
@@ -212,6 +214,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC5_EPC
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues =>
 				new KnownValue[] {
 					new KnownValue(5, "123456789", 0x00),
@@ -224,6 +227,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC5_ITU
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues =>
 				new KnownValue[] {
 					new KnownValue(5, "123456789", 0x07),
@@ -236,6 +240,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC5_USB
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(5, "123456789", 0x19),
@@ -248,6 +253,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC6_CDMA2000A
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(6, "123456789", 0x0d),
@@ -260,6 +266,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC6_CDMA2000B
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(6, "123456789", 0x3b),
@@ -272,6 +279,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC6_DARC
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(6, "123456789", 0x26),
@@ -284,6 +292,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC6_ITU
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(6, "123456789", 0x06),
@@ -296,6 +305,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC7
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(7, "123456789", 0x75),
@@ -308,6 +318,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC7_ROHC
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(7, "123456789", 0x53),
@@ -320,6 +331,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC8
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(8, "123456789", 0xf4),
@@ -332,6 +344,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC8_CDMA2000
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(8, "123456789", 0xda),
@@ -344,6 +357,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC8_DARC
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(8, "123456789", 0x15),
@@ -356,6 +370,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC8_DVBS2
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(8, "123456789", 0xbc),
@@ -368,6 +383,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC8_EBU
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(8, "123456789", 0x97),
@@ -380,6 +396,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC8_ICODE
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(8, "123456789", 0x7e),
@@ -392,6 +409,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC8_ITU
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(8, "123456789", 0xa1),
@@ -404,6 +422,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC8_MAXIM
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(8, "123456789", 0xa1),
@@ -416,6 +435,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC8_ROHC
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(8, "123456789", 0xd0),
@@ -428,6 +448,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC8_WCDMA
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(8, "123456789", 0x25),
@@ -440,6 +461,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC10
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(10, "123456789", 0x199),
@@ -452,6 +474,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC10_CDMA2000
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(10, "123456789", 0x233),
@@ -464,6 +487,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC11
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(11, "123456789", 0x5a3),
@@ -476,6 +500,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC12_3GPP
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(12, "123456789", 0xdaf),
@@ -488,6 +513,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC12_CDMA2000
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(12, "123456789", 0xd4d),
@@ -500,6 +526,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC12_DECT
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(12, "123456789", 0xf5b),
@@ -512,6 +539,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC13_BBC
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(13, "123456789", 0x04fa),
@@ -524,6 +552,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC14_DARC
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(14, "123456789", 0x082d),
@@ -536,6 +565,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC15
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(15, "123456789", 0x059e),
@@ -548,6 +578,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC15_MPT1327
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(15, "123456789", 0x2566),
@@ -560,6 +591,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_ARC
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0xbb3d),
@@ -572,6 +604,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_AUGCCITT
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0xe5cc),
@@ -584,6 +617,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_BUYPASS
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0xfee8),
@@ -596,6 +630,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_CCITTFALSE
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x29b1),
@@ -608,6 +643,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_CDMA2000
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x4c06),
@@ -620,6 +656,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_DDS110
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x9ecf),
@@ -632,6 +669,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_DECTR
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x007e),
@@ -644,6 +682,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_DECTX
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x007f),
@@ -656,6 +695,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_DNP
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0xea82),
@@ -668,6 +708,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_EN13757
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0xc2b7),
@@ -680,6 +721,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_GENIBUS
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0xd64e),
@@ -692,6 +734,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_MAXIM
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x44c2),
@@ -704,6 +747,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_MCRF4XX
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x6f91),
@@ -716,6 +760,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_RIELLO
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x63d0),
@@ -728,6 +773,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_T10DIF
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0xd0db),
@@ -740,6 +786,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_TELEDISK
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x0fb3),
@@ -752,6 +799,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_TMS37157
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x26b1),
@@ -764,6 +812,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC16_USB
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0xb4c8),
@@ -776,6 +825,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRCA
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0xbf05),
@@ -788,6 +838,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_KERMIT
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x2189),
@@ -800,6 +851,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_MODBUS
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x4b37),
@@ -812,6 +864,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_X25
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x906e),
@@ -824,6 +877,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_XMODEM
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(16, "123456789", 0x31c3),
@@ -836,6 +890,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC24
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(24, "123456789", 0x21cf02),
@@ -848,6 +903,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC24_FLEXRAYA
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(24, "123456789", 0x7979bd),
@@ -860,6 +916,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC24_FLEXRAYB
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(24, "123456789", 0x1f23b8),
@@ -872,6 +929,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC31_PHILIPS
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(31, "123456789", 0x0ce9e46c),
@@ -884,6 +942,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC32
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(32, "123456789", 0xcbf43926),
@@ -896,6 +955,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC32_BZIP2
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(32, "123456789", 0xfc891918),
@@ -908,6 +968,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC32C
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(32, "123456789", 0xe3069283),
@@ -920,6 +981,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC32D
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(32, "123456789", 0x87315576),
@@ -932,6 +994,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC32_MPEG2
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(32, "123456789", 0x0376e6e7),
@@ -944,6 +1007,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC32_POSIX
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(32, "123456789", 0x765e7680),
@@ -956,6 +1020,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC32Q
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(32, "123456789", 0x3010bf7f),
@@ -968,6 +1033,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_JAMCRC
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(32, "123456789", 0x340bc6d9),
@@ -980,6 +1046,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_XFER
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(32, "123456789", 0xbd0be338),
@@ -992,6 +1059,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC40_GSM
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(40, "123456789", 0xd4164fc646),
@@ -1004,6 +1072,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC64
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(64, "123456789", 0x6c40df5f0b497347),
@@ -1016,6 +1085,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC64_WE
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(64, "123456789", 0x62ec59e3f1a4f00a),
@@ -1028,6 +1098,7 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 		public class IStreamableHashFunction_Tests_CRC64_XZ
 			: IStreamableHashFunction_TestBase<ICRC, ICRCConfig>
 		{
+			protected override ValueEndianness? FixedEndianness => ValueEndianness.LittleEndian;
 			protected override IEnumerable<KnownValue> KnownValues { get; } =
 				new KnownValue[] {
 					new KnownValue(64, "123456789", 0x995dc9bbdf1939fa),

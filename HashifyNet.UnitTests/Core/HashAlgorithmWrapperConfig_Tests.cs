@@ -45,7 +45,7 @@ namespace HashifyNet.UnitTests.Core.HashAlgorithm
 		[Fact]
 		public void HashAlgorithmWrapperConfig_Clone_Works()
 		{
-			var hashAlgorithmWrapperConfig = new HashAlgorithmWrapperConfig(static () => SHA1.Create(), 160);
+			var hashAlgorithmWrapperConfig = new HashAlgorithmWrapperConfig(static () => IncrementalHash.CreateHash(HashAlgorithmName.SHA1), 160);
 
 			var hashAlgorithmWrapperConfigClone = hashAlgorithmWrapperConfig.Clone();
 

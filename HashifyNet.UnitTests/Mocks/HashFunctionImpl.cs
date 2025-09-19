@@ -33,9 +33,8 @@ using HashifyNet.Core.Utilities;
 namespace HashifyNet.UnitTests.Mocks
 {
 	public class HashFunctionImpl<CName>
-			: HashFunctionBase<CName> where CName : IHashConfig<CName>
+			: HashFunctionBase<CName> where CName : IHashConfig<CName>, new()
 	{
-		public Func<ArraySegment<byte>, CancellationToken, IHashValue> OnComputeHashInternal { get; set; } = (_, __) => new HashValue(new byte[1], 1);
 		private readonly CName _config;
 		public override CName Config => _config.Clone();
 
@@ -43,10 +42,10 @@ namespace HashifyNet.UnitTests.Mocks
 		{
 			_config = cname;
 		}
-
-		protected override IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
+		
+		protected override IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 		{
-			return OnComputeHashInternal(data, cancellationToken);
+			return new HashValue(ValueEndianness.NotApplicable, new byte[1], 1);
 		}
 	}
 }
