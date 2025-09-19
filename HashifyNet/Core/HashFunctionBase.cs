@@ -97,17 +97,7 @@ namespace HashifyNet.Core
 				throw new ArgumentNullException(nameof(data));
 			}
 
-			if (offset < 0 || offset > data.Length)
-			{
-				throw new ArgumentOutOfRangeException(nameof(offset), "Offset must be a value greater than or equal to zero and less than or equal to the length of the array.");
-			}
-
-			if (count < 0 || count > data.Length - offset)
-			{
-				throw new ArgumentOutOfRangeException(nameof(count), "Count must be a value greater than or equal to zero and less than the the remaining length of the array after the offset value.");
-			}
-
-			return ComputeHash(new ReadOnlySpan<byte>(data, offset, count), cancellationToken);
+			return ComputeHash(data.AsSpan(offset, count), cancellationToken);
 		}
 
 		/// <summary>
