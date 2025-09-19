@@ -180,7 +180,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 
 					if (_shortHashBuffer != null)
 					{
-						Mix(_hashValue, new ArraySegment<byte>(_shortHashBuffer, 0, _bytesProcessed));
+						Mix(_hashValue, _shortHashBuffer.AsSpan(0, _bytesProcessed));
 
 						_shortHashBuffer = null;
 					}
