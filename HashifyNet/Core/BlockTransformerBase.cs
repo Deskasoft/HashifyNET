@@ -220,7 +220,7 @@ namespace HashifyNet.Core
 		/// <remarks>All overriders should ensure base.CopyStateTo(other) is called.</remarks>
 		protected virtual void CopyStateTo(TSelf other)
 		{
-			if (_leftover != null && _leftover.Length > 0)
+			if (_leftoverCount > 0)
 			{
 				Buffer.BlockCopy(_leftover, 0, other._leftover, 0, _leftoverCount);
 			}
