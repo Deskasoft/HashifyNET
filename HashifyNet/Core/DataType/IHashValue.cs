@@ -197,6 +197,42 @@ namespace HashifyNet
 		byte[] AsByteArray();
 
 		/// <summary>
+		/// Gets the hash value as a read-only span of bytes.
+		/// </summary>
+		/// <param name="start">The zero-based byte index at which to begin the span. Must be greater than or equal to 0 and less than <see cref="Hash"/>.Length.</param>
+		/// <param name="length">The number of bytes to include in the span. Must be greater than or equal to 0 and less than or equal to <see cref="Hash"/>.Length - <paramref name="start"/>.</param>
+		/// <returns>The read-only span of bytes.</returns>
+		ReadOnlySpan<byte> AsSpan(int start, int length);
+
+		/// <summary>
+		/// Gets the hash value as a read-only span of bytes of the specified length from the start.
+		/// </summary>
+		/// <param name="length">The number of bytes to include in the span. Must be greater than or equal to 0 and less than or equal to <see cref="Hash"/>.Length.</param>
+		/// <returns>The read-only span of bytes.</returns>
+		ReadOnlySpan<byte> AsSpan(int length);
+
+		/// <summary>
+		/// Gets the hash value as a read-only span of bytes.
+		/// </summary>
+		/// <returns>The read-only span of bytes.</returns>
+		ReadOnlySpan<byte> AsSpan();
+
+		/// <summary>
+		/// Slices a portion of the hash value starting from the specified bit index and spanning the specified number of bits.
+		/// </summary>
+		/// <param name="start">The zero-based bit index at which to begin the slice. Must be greater than or equal to 0 and less than <see cref="BitLength"/>.</param>
+		/// <param name="length">The number of bits to include in the slice. Must be greater than or equal to 1 and less than or equal to <see cref="BitLength"/> - <paramref name="start"/>.</param>
+		/// <returns>The sliced <see cref="IHashValue"/> instance.</returns>
+		IHashValue Slice(int start, int length);
+
+		/// <summary>
+		/// Slices the hash value to the specified length in bits, starting from the beginning of the hash.
+		/// </summary>
+		/// <param name="length">The number of bits to include in the slice. Must be greater than or equal to 1 and less than or equal to <see cref="BitLength"/>.</param>
+		/// <returns>The sliced <see cref="IHashValue"/> instance.</returns>
+		IHashValue Slice(int length);
+
+		/// <summary>
 		/// Converts the current hash value to a new representation with the specified bit length.
 		/// </summary>
 		/// <param name="bitLength">The desired bit length of the resulting hash value. Must be greater than or equal to 1.</param>
