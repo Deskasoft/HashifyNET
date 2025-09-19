@@ -117,11 +117,9 @@ namespace HashifyNet.Algorithms.Pearson
 				}
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataCount = data.Count;
-				var endOffset = data.Offset + dataCount;
+				var dataCount = data.Length;
 
 				var tempHashValue = _hashValue;
 				var tempAnyBytesProcessed = _anyBytesProcessed;
@@ -129,17 +127,17 @@ namespace HashifyNet.Algorithms.Pearson
 				var tempTable = _table;
 				var tempHashValueLength = tempHashValue.Length;
 
-				for (var currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
+				for (var currentOffset = 0; currentOffset < dataCount; ++currentOffset)
 				{
 					for (int y = 0; y < tempHashValueLength; ++y)
 					{
 						if (tempAnyBytesProcessed)
 						{
-							tempHashValue[y] = tempTable[tempHashValue[y] ^ dataArray[currentOffset]];
+							tempHashValue[y] = tempTable[tempHashValue[y] ^ data[currentOffset]];
 						}
 						else
 						{
-							tempHashValue[y] = tempTable[(dataArray[currentOffset] + y) & 0xff];
+							tempHashValue[y] = tempTable[(data[currentOffset] + y) & 0xff];
 						}
 					}
 
@@ -149,9 +147,9 @@ namespace HashifyNet.Algorithms.Pearson
 				_anyBytesProcessed = tempAnyBytesProcessed;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				return new HashValue(_hashValue, _hashValue.Length * 8);
+				return new HashValue(ValueEndianness.NotApplicable, _hashValue, _hashValue.Length * 8);
 			}
 		}
 	}

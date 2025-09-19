@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,25 +27,26 @@
 // ******************************************************************************
 // *
 
-namespace HashifyNet.Algorithms.SHA1
+namespace HashifyNet
 {
 	/// <summary>
-	/// Represents the configuration settings for the SHA1 cryptographic hash algorithm.
+	/// The endianness of a value when represented as a sequence of bytes.
 	/// </summary>
-	/// <remarks>This interface extends <see cref="ICryptographicHashConfig{T}"/> to provide configuration specific
-	/// to the SHA1 algorithm. The <see cref="HashSizeInBits"/> property is fixed at <c>160</c> bits, as defined by the SHA1
-	/// standard.</remarks>
-	public interface ISHA1Config : ICryptographicHashConfig<ISHA1Config>
+	public enum ValueEndianness
 	{
 		/// <summary>
-		/// <inheritdoc cref="IHashConfigBase.HashSizeInBits"/>
-		/// <para>For SHA1, this is always fixed at <c>160</c> bits.</para>
+		/// The endianness is not applicable, as the hash is typically treated only as a byte sequence.
 		/// </summary>
-		new int HashSizeInBits { get; }
+		NotApplicable = 0,
 
 		/// <summary>
-		/// Gets the secret key for the hash algorithm.
+		/// Indicates that the value is in little-endian format (least significant byte first).
 		/// </summary>
-		byte[] Key { get; }
+		LittleEndian,
+
+		/// <summary>
+		/// Indicates that the value is in big-endian format (most significant byte first).
+		/// </summary>
+		BigEndian
 	}
 }

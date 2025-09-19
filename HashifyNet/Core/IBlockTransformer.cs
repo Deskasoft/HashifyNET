@@ -92,19 +92,19 @@ namespace HashifyNet
 		/// Updates the internal state of this transformer with the given data.
 		/// </summary>
 		/// <param name="data">The data to process into this transformer's internal state.</param>
-		/// <exception cref="ArgumentException">data must be an ArraySegment of Count > 0.;<paramref name="data"/></exception>
+		/// <exception cref="ArgumentException"><paramref name="data"/> must point to a non-empty valid <see cref="ReadOnlySpan{T}"/>.</exception>
 		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
-		void TransformBytes(ArraySegment<byte> data);
+		void TransformBytes(ReadOnlySpan<byte> data);
 
 		/// <summary>
 		/// Updates the internal state of this transformer with the given data.
 		/// </summary>
 		/// <param name="data">The data to process into this transformer's internal state.</param>
 		/// <param name="cancellationToken">A <see cref="CancellationToken"/> to cease processing of the provided data.</param>
-		/// <exception cref="ArgumentException">data must be an ArraySegment of Count > 0.;<paramref name="data"/></exception>
+		/// <exception cref="ArgumentException"><paramref name="data"/> must point to a non-empty valid <see cref="ReadOnlySpan{T}"/>.</exception>
 		/// <exception cref="TaskCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
 		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
-		void TransformBytes(ArraySegment<byte> data, CancellationToken cancellationToken);
+		void TransformBytes(ReadOnlySpan<byte> data, CancellationToken cancellationToken);
 
 		/// <summary>
 		/// Completes any finalization processing and returns the resulting <see cref="IHashValue"/>.

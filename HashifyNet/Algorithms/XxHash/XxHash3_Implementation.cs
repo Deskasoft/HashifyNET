@@ -95,21 +95,18 @@ namespace HashifyNet.Algorithms.XxHash3
 				other._hash = _hash;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				_hash.Append(data.AsSpan());
+				_hash.Append(data);
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				Span<byte> last = FinalizeInputBuffer == null ? Span<byte>.Empty : FinalizeInputBuffer.AsSpan();
-				_hash.Append(last);
+				_hash.Append(leftover);
 
 				byte[] output = _hash.GetCurrentHash();
-				return new HashValue(output, _hash.HashLengthInBytes * 8);
+				return new HashValue(ValueEndianness.BigEndian, output, _hash.HashLengthInBytes * 8);
 			}
 		}
 	}
-
 }
-

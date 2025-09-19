@@ -137,12 +137,8 @@ namespace HashifyNet.Algorithms.CRC
 				other._hashValue = _hashValue;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var endOffset = dataOffset + data.Count;
-
 				var tempHashValue = _hashValue;
 
 				var tempHashSizeInBits = _hashSizeInBits;
@@ -150,18 +146,18 @@ namespace HashifyNet.Algorithms.CRC
 				var tempCrcTable = _crcTable;
 				var tempMostSignificantShift = _mostSignificantShift;
 
-				for (var currentOffset = dataOffset; currentOffset < endOffset; ++currentOffset)
+				for (var currentOffset = 0; currentOffset < data.Length; ++currentOffset)
 				{
 					if (tempHashSizeInBits >= 8)
 					{
 						// Process per byte, treating hash differently based on input endianness
 						if (tempReflectIn)
 						{
-							tempHashValue = (tempHashValue >> 8) ^ tempCrcTable[(byte)tempHashValue ^ dataArray[currentOffset]];
+							tempHashValue = (tempHashValue >> 8) ^ tempCrcTable[(byte)tempHashValue ^ data[currentOffset]];
 						}
 						else
 						{
-							tempHashValue = (tempHashValue << 8) ^ tempCrcTable[((byte)(tempHashValue >> tempMostSignificantShift)) ^ dataArray[currentOffset]];
+							tempHashValue = (tempHashValue << 8) ^ tempCrcTable[((byte)(tempHashValue >> tempMostSignificantShift)) ^ data[currentOffset]];
 						}
 					}
 					else
@@ -171,11 +167,11 @@ namespace HashifyNet.Algorithms.CRC
 						{
 							if (tempReflectIn)
 							{
-								tempHashValue = (tempHashValue >> 1) ^ tempCrcTable[(byte)(tempHashValue & 1) ^ ((byte)(dataArray[currentOffset] >> currentBit) & 1)];
+								tempHashValue = (tempHashValue >> 1) ^ tempCrcTable[(byte)(tempHashValue & 1) ^ ((byte)(data[currentOffset] >> currentBit) & 1)];
 							}
 							else
 							{
-								tempHashValue = (tempHashValue << 1) ^ tempCrcTable[(byte)((tempHashValue >> tempMostSignificantShift) & 1) ^ ((byte)(dataArray[currentOffset] >> (7 - currentBit)) & 1)];
+								tempHashValue = (tempHashValue << 1) ^ tempCrcTable[(byte)((tempHashValue >> tempMostSignificantShift) & 1) ^ ((byte)(data[currentOffset] >> (7 - currentBit)) & 1)];
 							}
 						}
 					}
@@ -184,11 +180,9 @@ namespace HashifyNet.Algorithms.CRC
 				_hashValue = tempHashValue;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
 				var finalHashValue = _hashValue;
-
-				// Account for mixed-endianness
 				if (_reflectIn ^ _reflectOut)
 				{
 					finalHashValue = ReflectBits(finalHashValue, _hashSizeInBits);
@@ -196,8 +190,11 @@ namespace HashifyNet.Algorithms.CRC
 
 				finalHashValue ^= _xOrOut;
 
+				ValueEndianness resultEndianness = _reflectOut ? ValueEndianness.LittleEndian : ValueEndianness.BigEndian;
+
 				return new HashValue(
-					ToBytes(finalHashValue, _hashSizeInBits),
+					resultEndianness,
+					ToBytes(finalHashValue, _hashSizeInBits, resultEndianness),
 					_hashSizeInBits);
 			}
 
@@ -274,22 +271,33 @@ namespace HashifyNet.Algorithms.CRC
 				return crcTable;
 			}
 
-			private static byte[] ToBytes(ulong value, int bitLength)
+			private static byte[] ToBytes(ulong value, int bitLength, ValueEndianness endianness)
 			{
 				value &= ulong.MaxValue >> (64 - bitLength);
 
-				var valueBytes = new byte[(bitLength + 7) / 8];
+				var byteCount = (bitLength + 7) / 8;
+				var valueBytes = new byte[byteCount];
 
-				for (int x = 0; x < valueBytes.Length; ++x)
+				if (endianness == ValueEndianness.LittleEndian)
 				{
-					valueBytes[x] = (byte)value;
-					value >>= 8;
+					for (int x = 0; x < valueBytes.Length; ++x)
+					{
+						valueBytes[x] = (byte)value;
+						value >>= 8;
+					}
+				}
+				else // BigEndian
+				{
+					for (int x = valueBytes.Length - 1; x >= 0; --x)
+					{
+						valueBytes[x] = (byte)value;
+						value >>= 8;
+					}
 				}
 
-				if (valueBytes.Length != (bitLength + 7) / 8)
+				if (bitLength % 8 != 0)
 				{
-					byte[] result = ArrayHelpers.CoerceToArray(valueBytes, bitLength);
-					return result;
+					return valueBytes;
 				}
 
 				return valueBytes;

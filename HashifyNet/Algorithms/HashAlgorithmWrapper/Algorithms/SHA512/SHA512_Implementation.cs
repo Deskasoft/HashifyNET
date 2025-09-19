@@ -28,6 +28,7 @@
 // *
 
 using HashifyNet.Core;
+using System.Security.Cryptography;
 
 namespace HashifyNet.Algorithms.SHA512
 {
@@ -38,7 +39,7 @@ namespace HashifyNet.Algorithms.SHA512
 	internal class SHA512_Implementation : HashAlgorithmWrapperBase<ISHA512Config>,
 		  ISHA512
 	{
-		public SHA512_Implementation(ISHA512Config config) : base(config, () => System.Security.Cryptography.SHA512.Create())
+		public SHA512_Implementation(ISHA512Config config) : base(config, () => config.Key == null ? IncrementalHash.CreateHash(HashAlgorithmName.SHA512) : IncrementalHash.CreateHMAC(HashAlgorithmName.SHA512, config.Key))
 		{
 		}
 	}

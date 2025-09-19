@@ -30,7 +30,6 @@
 using HashifyNet.Core;
 using HashifyNet.Core.Utilities;
 using System;
-using System.Diagnostics;
 using System.Threading;
 
 namespace HashifyNet.Algorithms.Jenkins
@@ -98,23 +97,19 @@ namespace HashifyNet.Algorithms.Jenkins
 				other._bytesProcessed = _bytesProcessed;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				Debug.Assert(data.Count % 12 == 0);
-
-				var dataArray = data.Array;
-				var dataCount = data.Count;
-				var endOffset = data.Offset + dataCount;
+				var dataCount = data.Length;
 
 				var tempA = _a;
 				var tempB = _b;
 				var tempC = _c;
 
-				for (var currentOffset = data.Offset; currentOffset < endOffset; currentOffset += 12)
+				for (var currentOffset = 0; currentOffset < dataCount; currentOffset += 12)
 				{
-					tempA += Endianness.ToUInt32LittleEndian(dataArray, currentOffset);
-					tempB += Endianness.ToUInt32LittleEndian(dataArray, currentOffset + 4);
-					tempC += Endianness.ToUInt32LittleEndian(dataArray, currentOffset + 8);
+					tempA += Endianness.ToUInt32LittleEndian(data, currentOffset);
+					tempB += Endianness.ToUInt32LittleEndian(data, currentOffset + 4);
+					tempC += Endianness.ToUInt32LittleEndian(data, currentOffset + 8);
 
 					Mix(ref tempA, ref tempB, ref tempC);
 				}
@@ -126,50 +121,45 @@ namespace HashifyNet.Algorithms.Jenkins
 				_bytesProcessed += (uint)dataCount;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				var remainder = FinalizeInputBuffer;
-				var remainderLength = (remainder?.Length).GetValueOrDefault();
-
-				Debug.Assert(remainderLength >= 0);
-				Debug.Assert(remainderLength < 12);
-
 				var finalA = _a;
 				var finalB = _b;
 				var finalC = _c;
 
 				// All the case statements fall through on purpose
-				switch (remainderLength)
+				switch (leftover.Length)
 				{
-					case 11: finalC += (uint)remainder[10] << 24; goto case 10;
-					case 10: finalC += (uint)remainder[9] << 16; goto case 9;
-					case 9: finalC += (uint)remainder[8] << 8; goto case 8;
+					case 11: finalC += (uint)leftover[10] << 24; goto case 10;
+					case 10: finalC += (uint)leftover[9] << 16; goto case 9;
+					case 9: finalC += (uint)leftover[8] << 8; goto case 8;
 					// the first byte of c is reserved for the length
 
 					case 8:
-						finalB += Endianness.ToUInt32LittleEndian(remainder, 4);
+						finalB += Endianness.ToUInt32LittleEndian(leftover, 4);
 						goto case 4;
 
-					case 7: finalB += (uint)remainder[6] << 16; goto case 6;
-					case 6: finalB += (uint)remainder[5] << 8; goto case 5;
-					case 5: finalB += remainder[4]; goto case 4;
+					case 7: finalB += (uint)leftover[6] << 16; goto case 6;
+					case 6: finalB += (uint)leftover[5] << 8; goto case 5;
+					case 5: finalB += leftover[4]; goto case 4;
 
 					case 4:
-						finalA += Endianness.ToUInt32LittleEndian(remainder, 0);
+						finalA += Endianness.ToUInt32LittleEndian(leftover, 0);
 						break;
 
-					case 3: finalA += (uint)remainder[2] << 16; goto case 2;
-					case 2: finalA += (uint)remainder[1] << 8; goto case 1;
+					case 3: finalA += (uint)leftover[2] << 16; goto case 2;
+					case 2: finalA += (uint)leftover[1] << 8; goto case 1;
 					case 1:
-						finalA += remainder[0];
+						finalA += leftover[0];
 						break;
 				}
 
-				finalC += _bytesProcessed + (uint)remainderLength;
+				finalC += _bytesProcessed + (uint)leftover.Length;
 
 				Mix(ref finalA, ref finalB, ref finalC);
 
 				return new HashValue(
+					ValueEndianness.LittleEndian,
 					Endianness.GetBytesLittleEndian(finalC),
 					32);
 			}

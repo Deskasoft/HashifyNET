@@ -141,14 +141,16 @@ namespace HashifyNet.Core
 		/// Hash value of the data.
 		/// </returns>
 		/// <exception cref="TaskCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
-		protected override IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
+		protected override IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 		{
-			cancellationToken.ThrowIfCancellationRequested();
+			var blockTransformer = CreateBlockTransformer();
 
-			using (var memoryStream = new MemoryStream(data.Array, data.Offset, data.Count, false))
+			if (!data.IsEmpty)
 			{
-				return ComputeHashInternal(memoryStream, cancellationToken);
+				blockTransformer.TransformBytes(data, cancellationToken);
 			}
+
+			return blockTransformer.FinalizeHashValue(cancellationToken);
 		}
 
 		/// <summary>
@@ -170,10 +172,7 @@ namespace HashifyNet.Core
 
 			while (true)
 			{
-				cancellationToken.ThrowIfCancellationRequested();
-
 				var bytesRead = data.Read(buffer, 0, 4096);
-
 				if (bytesRead == 0)
 				{
 					break;

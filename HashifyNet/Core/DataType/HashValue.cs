@@ -34,6 +34,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using EndianHelper = HashifyNet.Core.Utilities.Endianness;
 
 namespace HashifyNet.Core.Utilities
 {
@@ -55,20 +56,18 @@ namespace HashifyNet.Core.Utilities
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
-		public int BitLength { get; }
+		public ValueEndianness Endianness { get; }
 
 		/// <summary>
-		/// Creates a new instance of the <see cref="HashValue"/> class that is a representation of a hash value and its bit length computed by a hasher.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="hash">The hash computed by a hasher.</param>
-		/// <param name="bitLength">The expected bit length of the given <paramref name="hash"/>.</param>
-		/// <exception cref="ArgumentNullException">Thrown if the given hash is <see langword="null"/>.</exception>
-		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="bitLength"/> parameter is smaller than 1.</exception>
-		public HashValue(IEnumerable<byte> hash, int bitLength)
+		public int BitLength { get; }
+
+		private HashValue(ValueEndianness endianness, ImmutableArray<byte> hash, int bitLength)
 		{
-			if (hash == null)
+			if (hash.IsDefaultOrEmpty)
 			{
-				throw new ArgumentNullException(nameof(hash));
+				throw new ArgumentException("Expected a valid populated immutable array containing the hash result, got an empty or default ImmutableArray instance.", nameof(hash));
 			}
 
 			if (bitLength < 1)
@@ -76,14 +75,53 @@ namespace HashifyNet.Core.Utilities
 				throw new ArgumentOutOfRangeException(nameof(bitLength), $"{nameof(bitLength)} must be greater than or equal to 1.");
 			}
 
-			ImmutableArray<byte> immutableHash = hash.ToImmutableArray();
-			if (immutableHash.Length != (bitLength + 7) / 8)
+			if (hash.Length != (bitLength + 7) / 8)
 			{
-				throw new ArgumentOutOfRangeException(nameof(hash), $"The length of {nameof(hash)} in bits must be equal to {nameof(bitLength)}. Bytes: {immutableHash.Length} Expected: {immutableHash.Length * 8}, Got: {bitLength}");
+				throw new ArgumentOutOfRangeException(nameof(hash), $"The length of {nameof(hash)} in bits must be equal to {nameof(bitLength)}. Bytes: {hash.Length} Expected: {hash.Length * 8}, Got: {bitLength}");
 			}
 
-			Hash = immutableHash;
+			if (endianness != ValueEndianness.NotApplicable)
+			{
+				if (HashValueOptions.FixedEndianness.HasValue)
+				{
+					ValueEndianness fixedEndianness = HashValueOptions.FixedEndianness.Value;
+					if (endianness != fixedEndianness)
+					{
+						hash = hash.Reverse().ToImmutableArray();
+						endianness = fixedEndianness;
+					}
+				}
+			}
+
+			Hash = hash;
 			BitLength = bitLength;
+			Endianness = endianness;
+		}
+
+		/// <summary>
+		/// Creates a new instance of the <see cref="HashValue"/> class that is a representation of a hash value and its bit length computed by a hasher.
+		/// </summary>
+		/// <param name="endianness">The endianness of the given <paramref name="hash"/>.</param>
+		/// <param name="hash">The hash computed by a hasher.</param>
+		/// <param name="bitLength">The expected bit length of the given <paramref name="hash"/>.</param>
+		/// <exception cref="ArgumentNullException">Thrown if the given hash is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="bitLength"/> parameter is smaller than 1.</exception>
+		public HashValue(ValueEndianness endianness, IEnumerable<byte> hash, int bitLength) : this(endianness, hash?.ToImmutableArray() ?? ImmutableArray<byte>.Empty, bitLength)
+		{
+		}
+
+		/// <summary>
+		/// Creates a new instance of the <see cref="HashValue"/> class that is a representation of a hash value and its bit length computed by a hasher.
+		/// </summary>
+		/// <param name="endianness">The endianness of the given <paramref name="hash"/>.</param>
+		/// <param name="hash">The hash computed by a hasher.</param>
+		/// <param name="bitLength">The expected bit length of the given <paramref name="hash"/>.</param>
+		/// <returns>A new instance of the <see cref="HashValue"/> class.</returns>
+		/// <exception cref="ArgumentNullException">Thrown if the given hash is <see langword="null"/>.</exception>
+		/// <exception cref="ArgumentOutOfRangeException">Thrown if the <paramref name="bitLength"/> parameter is smaller than 1.</exception>
+		public static HashValue FromSpan(ValueEndianness endianness, ReadOnlySpan<byte> hash, int bitLength)
+		{
+			return new HashValue(endianness, hash.ToImmutableArray(), bitLength);
 		}
 
 		/// <summary>
@@ -226,11 +264,6 @@ namespace HashifyNet.Core.Utilities
 
 		private decimal AsNumber128_96()
 		{
-			if (BitLength < 1)
-			{
-				throw new ArgumentException("Bit Length cannot be smaller than 1.");
-			}
-
 			if (BitLength > 96)
 			{
 				throw new NotSupportedException("Bit Length greater than 96 is not supported.");
@@ -241,19 +274,14 @@ namespace HashifyNet.Core.Utilities
 			byte[] dataPadded = new byte[12];
 			Array.Copy(data, dataPadded, data.Length);
 
-			int lo = (int)Endianness.ToUInt32LittleEndian(dataPadded, 0);
-			int mid = (int)Endianness.ToUInt32LittleEndian(dataPadded, 4);
-			int hi = (int)Endianness.ToUInt32LittleEndian(dataPadded, 8);
+			int lo = (int)EndianHelper.ToUInt32LittleEndian(dataPadded, 0);
+			int mid = (int)EndianHelper.ToUInt32LittleEndian(dataPadded, 4);
+			int hi = (int)EndianHelper.ToUInt32LittleEndian(dataPadded, 8);
 			return new decimal(lo, mid, hi, false, 0);
 		}
 
 		private long AsNumber64()
 		{
-			if (BitLength < 1)
-			{
-				throw new ArgumentException("Bit Length cannot be smaller than 1.");
-			}
-
 			if (BitLength > 64)
 			{
 				throw new NotSupportedException("Bit Length greater than 64 is not supported.");
@@ -404,7 +432,7 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public string AsBase85String()
 		{
-			return AsBase85String(Base85Variant.Rfc1924);
+			return AsBase85String(Base85Variant.Ascii85);
 		}
 
 		/// <summary>
@@ -414,11 +442,6 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public string AsBase85String(Base85Variant variant)
 		{
-			if (BitLength < 1)
-			{
-				return "";
-			}
-
 			return Base85Helper.AsBase85String(AsByteArray(), variant);
 		}
 
@@ -429,7 +452,7 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public string AsBase64String(Base64FormattingOptions formattingOptions = Base64FormattingOptions.None)
 		{
-			return Convert.ToBase64String(Hash.ToArray(), formattingOptions);
+			return Convert.ToBase64String(AsBigEndian().AsByteArray(), formattingOptions);
 		}
 
 		/// <summary>
@@ -438,31 +461,17 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public string AsBase58String()
 		{
-			if (BitLength < 1)
-			{
-				return "";
-			}
+			return AsBase58String(Base58Variant.Bitcoin);
+		}
 
-			const string Base58Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-			byte[] data = AsByteArray();
-
-			byte[] dataPadded = new byte[data.Length + 1];
-			Array.Copy(data, dataPadded, data.Length);
-			var intData = new BigInteger(dataPadded);
-
-			var builder = new StringBuilder();
-			while (intData > 0)
-			{
-				intData = BigInteger.DivRem(intData, 58, out BigInteger remainder);
-				builder.Insert(0, Base58Alphabet[(int)remainder]);
-			}
-
-			for (int i = data.Length - 1; i >= 0 && data[i] == 0; i--)
-			{
-				builder.Insert(0, '1');
-			}
-
-			return builder.ToString();
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="variant"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		public string AsBase58String(Base58Variant variant)
+		{
+			return Base58Helper.AsBase58String(AsBigEndian().AsByteArray(), variant);
 		}
 
 		/// <summary>
@@ -471,60 +480,31 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public string AsBase32String()
 		{
-			if (BitLength < 1)
-			{
-				return "";
-			}
+			return AsBase32String(Base32Variant.Rfc4648);
+		}
 
-			const string Base32Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-			byte[] data = AsByteArray();
-
-			var builder = new StringBuilder();
-			int bitsRead = 0;
-			int buffer = 0;
-
-			foreach (byte b in data)
-			{
-				buffer = (buffer << 8) | b;
-				bitsRead += 8;
-
-				while (bitsRead >= 5)
-				{
-					int index = (buffer >> (bitsRead - 5)) & 31;
-					builder.Append(Base32Alphabet[index]);
-					bitsRead -= 5;
-				}
-			}
-
-			if (bitsRead > 0)
-			{
-				int index = (buffer << (5 - bitsRead)) & 31;
-				builder.Append(Base32Alphabet[index]);
-			}
-
-			int padding = (8 - (builder.Length % 8)) % 8;
-			builder.Append('=', padding);
-
-			return builder.ToString();
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="variant"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		public string AsBase32String(Base32Variant variant)
+		{
+			return Base32Helper.AsBase32String(AsBigEndian().AsByteArray(), variant);
 		}
 
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
-		public string AsHexString() => AsHexString(false);
-
-		/// <summary>
-		/// <inheritdoc/>
-		/// </summary>
-		/// <param name="uppercase"><inheritdoc/></param>
-		/// <returns><inheritdoc/></returns>
-		public string AsHexString(bool uppercase)
+		public string AsHexString()
 		{
-			var stringBuilder = new StringBuilder(Hash.Length);
-			var formatString = uppercase ? "X2" : "x2";
+			ImmutableArray<byte> hash = AsBigEndian().Hash;
 
-			foreach (var byteValue in Hash)
+			var stringBuilder = new StringBuilder(hash.Length);
+			var formatString = "X2";
+
+			foreach (var byteValue in hash)
 			{
 				stringBuilder.Append(byteValue.ToString(formatString));
 			}
@@ -561,12 +541,56 @@ namespace HashifyNet.Core.Utilities
 		/// <exception cref="ArgumentOutOfRangeException"><inheritdoc/></exception>
 		public virtual IHashValue Coerce(int bitLength)
 		{
-			if (bitLength < 1)
-			{
-				throw new ArgumentOutOfRangeException(nameof(bitLength), $"{nameof(bitLength)} must be greater than or equal to 1.");
-			}
+			return new HashValue(Endianness, ArrayHelpers.CoerceToArray(Hash.ToArray(), bitLength), bitLength);
+		}
 
-			return new HashValue(ArrayHelpers.CoerceToArray(Hash.ToArray(), bitLength), bitLength);
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public IHashValue AsLittleEndian()
+		{
+			if (Endianness != ValueEndianness.BigEndian)
+				return this;
+
+			return new HashValue(ValueEndianness.LittleEndian, Hash.Reverse().ToImmutableArray(), BitLength);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public IHashValue AsBigEndian()
+		{
+			if (Endianness != ValueEndianness.LittleEndian)
+				return this;
+
+			return new HashValue(ValueEndianness.BigEndian, Hash.Reverse().ToImmutableArray(), BitLength);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="endianness"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		public IHashValue ToEndianness(ValueEndianness endianness)
+		{
+			if (Endianness == ValueEndianness.NotApplicable || endianness == ValueEndianness.NotApplicable || Endianness == endianness)
+				return this;
+
+			return endianness == ValueEndianness.BigEndian ? AsBigEndian() : AsLittleEndian();
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public IHashValue ReverseEndianness()
+		{
+			if (Endianness == ValueEndianness.NotApplicable)
+				return this;
+
+			return new HashValue(Endianness == ValueEndianness.BigEndian ? ValueEndianness.LittleEndian : ValueEndianness.BigEndian, Hash.Reverse().ToImmutableArray(), BitLength);
 		}
 
 		/// <summary>
@@ -679,4 +703,3 @@ namespace HashifyNet.Core.Utilities
 		}
 	}
 }
-

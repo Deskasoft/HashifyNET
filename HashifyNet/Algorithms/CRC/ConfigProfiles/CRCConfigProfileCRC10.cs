@@ -44,10 +44,10 @@ namespace HashifyNet.Algorithms.CRC
 		{
 			HashSizeInBits = 10;
 			Polynomial = 0x233;
-			InitialValue = unchecked((long)0x0);
+			InitialValue = unchecked(0x0);
 			ReflectIn = false;
 			ReflectOut = false;
-			XOrOut = unchecked((long)0x0);
+			XOrOut = unchecked(0x0);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,25 +27,16 @@
 // ******************************************************************************
 // *
 
-namespace HashifyNet.Algorithms.SHA1
+namespace HashifyNet
 {
 	/// <summary>
-	/// Represents the configuration settings for the SHA1 cryptographic hash algorithm.
+	/// Contains a set of options for modifying the global behaviour of <see cref="IHashValue"/> aka <see cref="HashifyNet.Core.Utilities.HashValue"/>.
 	/// </summary>
-	/// <remarks>This interface extends <see cref="ICryptographicHashConfig{T}"/> to provide configuration specific
-	/// to the SHA1 algorithm. The <see cref="HashSizeInBits"/> property is fixed at <c>160</c> bits, as defined by the SHA1
-	/// standard.</remarks>
-	public interface ISHA1Config : ICryptographicHashConfig<ISHA1Config>
+	public static class HashValueOptions
 	{
 		/// <summary>
-		/// <inheritdoc cref="IHashConfigBase.HashSizeInBits"/>
-		/// <para>For SHA1, this is always fixed at <c>160</c> bits.</para>
+		/// Gets or sets a fixed endianness for all <see cref="IHashValue"/> instances.
 		/// </summary>
-		new int HashSizeInBits { get; }
-
-		/// <summary>
-		/// Gets the secret key for the hash algorithm.
-		/// </summary>
-		byte[] Key { get; }
+		public static ValueEndianness? FixedEndianness { get; set; } = null;
 	}
 }

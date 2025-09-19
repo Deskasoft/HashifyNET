@@ -28,6 +28,7 @@
 // *
 
 using HashifyNet.Core;
+using System.Security.Cryptography;
 
 namespace HashifyNet.Algorithms.MD5
 {
@@ -38,7 +39,7 @@ namespace HashifyNet.Algorithms.MD5
 	internal class MD5_Implementation : HashAlgorithmWrapperBase<IMD5Config>,
 		  IMD5
 	{
-		public MD5_Implementation(IMD5Config config) : base(config, () => System.Security.Cryptography.MD5.Create())
+		public MD5_Implementation(IMD5Config config) : base(config, () => config.Key == null ? IncrementalHash.CreateHash(HashAlgorithmName.MD5) : IncrementalHash.CreateHMAC(HashAlgorithmName.MD5, config.Key))
 		{
 		}
 	}

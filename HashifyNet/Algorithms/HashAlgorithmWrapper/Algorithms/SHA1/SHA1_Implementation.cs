@@ -28,6 +28,7 @@
 // *
 
 using HashifyNet.Core;
+using System.Security.Cryptography;
 
 namespace HashifyNet.Algorithms.SHA1
 {
@@ -38,7 +39,7 @@ namespace HashifyNet.Algorithms.SHA1
 	internal class SHA1_Implementation : HashAlgorithmWrapperBase<ISHA1Config>,
 		  ISHA1
 	{
-		public SHA1_Implementation(ISHA1Config config) : base(config, () => System.Security.Cryptography.SHA1.Create())
+		public SHA1_Implementation(ISHA1Config config) : base(config, () => config.Key == null ? IncrementalHash.CreateHash(HashAlgorithmName.SHA1) : IncrementalHash.CreateHMAC(HashAlgorithmName.SHA1, config.Key))
 		{
 		}
 	}

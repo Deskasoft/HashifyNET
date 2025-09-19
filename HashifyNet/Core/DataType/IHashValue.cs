@@ -46,6 +46,11 @@ namespace HashifyNet
 		int BitLength { get; }
 
 		/// <summary>
+		/// Gets the endianness of the hash value.
+		/// </summary>
+		ValueEndianness Endianness { get; }
+
+		/// <summary>
 		/// Gets the hash value as an immutable array of bytes.
 		/// </summary>
 		ImmutableArray<byte> Hash { get; }
@@ -130,7 +135,7 @@ namespace HashifyNet
 		string AsBinaryString();
 
 		/// <summary>
-		/// Gets the hash value as a Base85-encoded string. If the bit length is not a multiple of 8, the last byte is padded with zeros.
+		/// Gets the hash value as a Base85-encoded string in the <seealso cref="Base85Variant.Ascii85"/> standard. If the bit length is not a multiple of 8, the last byte is padded with zeros.
 		/// </summary>
 		/// <returns>The generated base85 string.</returns>
 		string AsBase85String();
@@ -150,29 +155,34 @@ namespace HashifyNet
 		string AsBase64String(Base64FormattingOptions formattingOptions = Base64FormattingOptions.None);
 
 		/// <summary>
-		/// Gets the hash value as a Base58-encoded string. If the bit length is not a multiple of 8, the last byte is padded with zeros.
+		/// Gets the hash value as a Base58-encoded string using the <seealso cref="Base58Variant.Bitcoin"/> variant. If the bit length is not a multiple of 8, the last byte is padded with zeros.
 		/// </summary>
 		/// <returns>The generated base58 string.</returns>
 		string AsBase58String();
 
 		/// <summary>
-		/// Gets the hash value as a Base32-encoded string. If the bit length is not a multiple of 8, the last byte is padded with zeros.
+		/// Encodes the current data as a Base58-encoded string using the specified variant.
+		/// </summary>
+		/// <returns>The generated base58 string in the specified variant.</returns>
+		string AsBase58String(Base58Variant variant);
+
+		/// <summary>
+		/// Gets the hash value as a Base32-encoded string in the <seealso cref="Base32Variant.Rfc4648"/> standard. If the bit length is not a multiple of 8, the last byte is padded with zeros.
 		/// </summary>
 		/// <returns>The generated base32 string.</returns>
 		string AsBase32String();
 
 		/// <summary>
-		/// Gets the hash value as a hexadecimal string, using lowercase letters for 'a' to 'f'.
+		/// Gets the hash value as a Base32-encoded string in the specified standard. If the bit length is not a multiple of 8, the last byte is padded with zeros.
+		/// </summary>
+		/// <returns>The generated base32 string.</returns>
+		string AsBase32String(Base32Variant variant);
+
+		/// <summary>
+		/// Gets the hash value as a hexadecimal string, using uppercase letters for 'a' to 'f'.
 		/// </summary>
 		/// <returns>The hexadecimal string.</returns>
 		string AsHexString();
-
-		/// <summary>
-		/// Gets the hash value as a hexadecimal string.
-		/// </summary>
-		/// <param name="uppercase">Indicating to use uppercase letters.</param>
-		/// <returns>The hexadecimal string.</returns>
-		string AsHexString(bool uppercase);
 
 		/// <summary>
 		/// Gets the hash value as a <see cref="BitArray"/>.
@@ -193,5 +203,30 @@ namespace HashifyNet
 		/// <returns>An <see cref="IHashValue"/> instance representing the hash value coerced to the specified bit length.</returns>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="bitLength"/> is less than 1.</exception>
 		IHashValue Coerce(int bitLength);
+
+		/// <summary>
+		/// Converts the current hash value to a new representation with the specified endianness of little-endian.
+		/// </summary>
+		/// <returns>The new <see cref="IHashValue"/> instance with little-endian byte order. If the current instance is already in little-endian format, it returns the same instance.</returns>
+		IHashValue AsLittleEndian();
+
+		/// <summary>
+		/// Converts the current hash value to a new representation with the specified endianness of big-endian.
+		/// </summary>
+		/// <returns>The new <see cref="IHashValue"/> instance with big-endian byte order. If the current instance is already in big-endian format, it returns the same instance.</returns>
+		IHashValue AsBigEndian();
+
+		/// <summary>
+		/// Converts the current hash value to a new representation with the specified endianness.
+		/// </summary>
+		/// <param name="endianness">The desired <see cref="ValueEndianness"/> of the resulting hash value.</param>
+		/// <returns>The new <see cref="IHashValue"/> instance with the specified byte order. If the current instance is already in the specified format, it returns the same instance.</returns>
+		IHashValue ToEndianness(ValueEndianness endianness);
+
+		/// <summary>
+		/// Reverses the endianness of the current hash value. If the current endianness is <see cref="ValueEndianness.NotApplicable"/>, no changes are made.
+		/// </summary>
+		/// <returns>The new <see cref="IHashValue"/> instance with reversed byte order. If the current instance has <see cref="ValueEndianness.NotApplicable"/>, it returns the same instance.</returns>
+		IHashValue ReverseEndianness();
 	}
 }

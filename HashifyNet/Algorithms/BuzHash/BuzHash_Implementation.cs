@@ -131,24 +131,22 @@ namespace HashifyNet.Algorithms.BuzHash
 				other._hashValue = _hashValue;
 				other._rtab = _rtab;
 			}
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
-			{
-				var dataArray = data.Array;
-				var dataCount = data.Count;
-				var endOffset = data.Offset + dataCount;
 
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
+			{
 				var tempHashValue = _hashValue;
 				var tempRtab = _rtab;
 
-				for (var currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
+				for (var currentOffset = 0; currentOffset < data.Length; ++currentOffset)
 				{
-					tempHashValue = (byte)(CShift(tempHashValue, 1, _shiftDirection) ^ (byte)tempRtab[dataArray[currentOffset]]);
+					tempHashValue = (byte)(CShift(tempHashValue, 1, _shiftDirection) ^ (byte)tempRtab[data[currentOffset]]);
 				}
 
 				_hashValue = tempHashValue;
 			}
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(new byte[] { _hashValue }, 8);
+
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken) =>
+				new HashValue(ValueEndianness.NotApplicable, new byte[] { _hashValue }, 8);
 		}
 
 		private class BlockTransformer_16Bit
@@ -180,24 +178,20 @@ namespace HashifyNet.Algorithms.BuzHash
 				other._rtab = _rtab;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataCount = data.Count;
-				var endOffset = data.Offset + dataCount;
-
 				var tempHashValue = _hashValue;
 				var tempRtab = _rtab;
 
-				for (var currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
+				for (var currentOffset = 0; currentOffset < data.Length; ++currentOffset)
 				{
-					tempHashValue = (ushort)(CShift(tempHashValue, 1, _shiftDirection) ^ (ushort)tempRtab[dataArray[currentOffset]]);
+					tempHashValue = (ushort)(CShift(tempHashValue, 1, _shiftDirection) ^ (ushort)tempRtab[data[currentOffset]]);
 				}
 
 				_hashValue = tempHashValue;
 			}
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(Endianness.GetBytesLittleEndian(_hashValue), 16);
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken) =>
+				new HashValue(ValueEndianness.LittleEndian, Endianness.GetBytesLittleEndian(_hashValue), 16);
 		}
 		private class BlockTransformer_32Bit
 		: BlockTransformerBase<BlockTransformer_32Bit>
@@ -228,25 +222,21 @@ namespace HashifyNet.Algorithms.BuzHash
 				other._rtab = _rtab;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataCount = data.Count;
-				var endOffset = data.Offset + dataCount;
-
 				var tempHashValue = _hashValue;
 				var tempRtab = _rtab;
 
-				for (var currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
+				for (var currentOffset = 0; currentOffset < data.Length; ++currentOffset)
 				{
-					tempHashValue = CShift(tempHashValue, 1, _shiftDirection) ^ (uint)tempRtab[dataArray[currentOffset]];
+					tempHashValue = CShift(tempHashValue, 1, _shiftDirection) ^ (uint)tempRtab[data[currentOffset]];
 				}
 
 				_hashValue = tempHashValue;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(Endianness.GetBytesLittleEndian(_hashValue), 32);
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken) =>
+				new HashValue(ValueEndianness.LittleEndian, Endianness.GetBytesLittleEndian(_hashValue), 32);
 		}
 
 		private class BlockTransformer_64Bit
@@ -278,24 +268,20 @@ namespace HashifyNet.Algorithms.BuzHash
 				other._rtab = _rtab;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataCount = data.Count;
-				var endOffset = data.Offset + dataCount;
-
 				var tempHashValue = _hashValue;
 				var tempRtab = _rtab;
 
-				for (var currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
+				for (var currentOffset = 0; currentOffset < data.Length; ++currentOffset)
 				{
-					tempHashValue = CShift(tempHashValue, 1, _shiftDirection) ^ tempRtab[dataArray[currentOffset]];
+					tempHashValue = CShift(tempHashValue, 1, _shiftDirection) ^ tempRtab[data[currentOffset]];
 				}
 
 				_hashValue = tempHashValue;
 			}
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(Endianness.GetBytesLittleEndian(_hashValue), 64);
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken) =>
+				new HashValue(ValueEndianness.LittleEndian, Endianness.GetBytesLittleEndian(_hashValue), 64);
 		}
 
 		#region CShift

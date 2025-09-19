@@ -250,39 +250,23 @@ namespace HashifyNet.Algorithms.Blake3
 				_singleChunkCv = null;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				if (dataArray == null || dataCount == 0)
+				for (int currentOffset = 0; currentOffset < data.Length; currentOffset += CHUNK_LEN)
 				{
-					return;
-				}
-
-				// Base ensures dataCount is a multiple of inputBlockSize (CHUNK_LEN)
-				int endOffset = dataOffset + dataCount;
-				for (int currentOffset = dataOffset; currentOffset < endOffset; currentOffset += CHUNK_LEN)
-				{
-					EmitFullChunk(dataArray, currentOffset);
+					EmitFullChunk(data.Slice(currentOffset, CHUNK_LEN));
 				}
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				cancellationToken.ThrowIfCancellationRequested();
-
-				var remainder = FinalizeInputBuffer;
-				int remainderCount = (remainder?.Length).GetValueOrDefault();
-
 				byte[] result;
 				int outLen = _hashSizeInBits / 8;
 
 				// Case A: no full chunks were emitted
 				if (_chunkCvs.Count == 0)
 				{
-					int totalLen = remainderCount;
+					int totalLen = leftover.Length;
 					int blocks = (totalLen + BLOCK_LEN - 1) / BLOCK_LEN;
 					if (totalLen == 0)
 					{
@@ -310,7 +294,7 @@ namespace HashifyNet.Algorithms.Blake3
 							flags |= CHUNK_END;
 						}
 
-						var m = LoadBlockWords(remainder ?? Array.Empty<byte>(), blockOffset, blockLen);
+						var m = LoadBlockWords(leftover, blockOffset, blockLen);
 
 						if (b == blocks - 1)
 						{
@@ -329,11 +313,11 @@ namespace HashifyNet.Algorithms.Blake3
 					FillXof(cv, lastBlockWords ?? new uint[16], chunkCounter, lastBlockLen, lastFlags, result);
 
 					ResetState();
-					return new HashValue(result, _hashSizeInBits);
+					return new HashValue(ValueEndianness.NotApplicable, result, _hashSizeInBits);
 				}
 
 				// Case B: exactly one full chunk emitted and no remainder
-				if (_chunkCvs.Count == 1 && remainderCount == 0)
+				if (_chunkCvs.Count == 1 && leftover.Length == 0)
 				{
 					if (_singleChunkCv == null || _singleChunkLastBlockWords == null)
 					{
@@ -344,15 +328,15 @@ namespace HashifyNet.Algorithms.Blake3
 					FillXof(_singleChunkCv, _singleChunkLastBlockWords, _singleChunkCounter, _singleChunkLastBlockLen, _singleChunkLastBlockFlags, result);
 
 					ResetState();
-					return new HashValue(result, _hashSizeInBits);
+					return new HashValue(ValueEndianness.NotApplicable, result, _hashSizeInBits);
 				}
 
 				// Case C: true multi-chunk (>=2), or 1 chunk + tail (will become >=2 after tail)
 				var cvList = new List<uint[]>(_chunkCvs);
 
-				if (remainderCount > 0)
+				if (leftover.Length > 0)
 				{
-					var lastCv = CompressChunkToCv(_currentIV, remainder, 0, remainderCount, _chunkCounter);
+					var lastCv = CompressChunkToCv(_currentIV, leftover, 0, leftover.Length, _chunkCounter);
 					cvList.Add(lastCv);
 					_chunkCounter++;
 				}
@@ -369,17 +353,17 @@ namespace HashifyNet.Algorithms.Blake3
 				FillXof(_currentIV, rootMessageBlock, 0UL, BLOCK_LEN, PARENT, result);
 
 				ResetState();
-				return new HashValue(result, _hashSizeInBits);
+				return new HashValue(ValueEndianness.NotApplicable, result, _hashSizeInBits);
 			}
 
-			private void EmitFullChunk(byte[] src, int offset)
+			private void EmitFullChunk(ReadOnlySpan<byte> src)
 			{
-				var cv = CompressChunkToCv(_currentIV, src, offset, CHUNK_LEN, _chunkCounter);
+				var cv = CompressChunkToCv(_currentIV, src, 0, CHUNK_LEN, _chunkCounter);
 				_chunkCvs.Add(cv);
 
 				if (_chunkCvs.Count == 1)
 				{
-					_singleChunkLastBlockWords = LoadBlockWords(src, offset + CHUNK_LEN - BLOCK_LEN, BLOCK_LEN);
+					_singleChunkLastBlockWords = LoadBlockWords(src, CHUNK_LEN - BLOCK_LEN, BLOCK_LEN);
 					_singleChunkLastBlockLen = BLOCK_LEN;
 					_singleChunkLastBlockFlags = CHUNK_END;
 					_singleChunkCounter = _chunkCounter;
@@ -479,7 +463,7 @@ namespace HashifyNet.Algorithms.Blake3
 			return outWords;
 		}
 
-		private static uint[] LoadBlockWords(byte[] input, int offset, int blockLen)
+		private static uint[] LoadBlockWords(ReadOnlySpan<byte> input, int offset, int blockLen)
 		{
 			uint[] m = new uint[16];
 			int i = 0, pos = offset;
@@ -518,7 +502,7 @@ namespace HashifyNet.Algorithms.Blake3
 		}
 
 		// Derive chunk CV: iterate blocks, updating CV for every block; return final CV.
-		private static uint[] CompressChunkToCv(uint[] key, byte[] input, int offset, int length, ulong chunkCounter)
+		private static uint[] CompressChunkToCv(uint[] key, ReadOnlySpan<byte> input, int offset, int length, ulong chunkCounter)
 		{
 			uint[] cv = (uint[])key.Clone();
 			int blocks = (length + BLOCK_LEN - 1) / BLOCK_LEN;
@@ -621,5 +605,4 @@ namespace HashifyNet.Algorithms.Blake3
 			}
 		}
 	}
-
 }

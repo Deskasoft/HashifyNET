@@ -638,83 +638,74 @@ namespace HashifyNet.Algorithms.Gost
 
 				if (_hashSizeInBits == 256)
 				{
-					Array.Copy(IV256, _h, 8);
+					Array.Copy(IV256, 0, _h, 0, 8);
 				}
 				else
 				{
-					Array.Copy(IV512, _h, 8);
+					Array.Copy(IV512, 0, _h, 0, 8);
 				}
 			}
 
 			protected override void CopyStateTo(BlockTransformer other)
 			{
-				Array.Copy(_h, other._h, _h.Length);
-				Array.Copy(_n, other._n, _n.Length);
-				Array.Copy(_s, other._s, _s.Length);
+				Array.Copy(_h, 0, other._h, 0, _h.Length);
+				Array.Copy(_n, 0, other._n, 0, _n.Length);
+				Array.Copy(_s, 0, other._s, 0, _s.Length);
 				base.CopyStateTo(other);
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				int offset = data.Offset;
-				int count = data.Count;
-
-				var m = new ulong[8];
-				while (count >= 64)
-				{
-					BytesToUlongsLE(dataArray, offset, m);
-					ProcessBlock(m);
-
-					offset += 64;
-					count -= 64;
-				}
+				Span<ulong> m = stackalloc ulong[8];
+				BytesToUlongsLE(data, 0, m);
+				ProcessBlock(m);
 			}
 
-			private void ProcessBlock(ulong[] m)
+			private void ProcessBlock(Span<ulong> m)
 			{
 				GN(_n, _h, m);
 				Add512(_n, Stage2Constant_512);
 				Add512(_s, m);
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				byte[] tail = FinalizeInputBuffer ?? Array.Empty<byte>();
+				Span<ulong> finalM = stackalloc ulong[8];
+				Span<byte> finalBlock = stackalloc byte[64];
+				finalBlock.Clear();
 
-				var finalBuffer = new byte[64];
-				tail.CopyTo(finalBuffer, 0);
-				finalBuffer[tail.Length] = 0x01;
+				leftover.CopyTo(finalBlock);
 
-				var finalM = new ulong[8];
-				BytesToUlongsLE(finalBuffer, finalM);
+				finalBlock[leftover.Length] = 0x01;
 
-				GN(_n, _h, finalM);
+				BytesToUlongsLE(finalBlock, 0, finalM);
 
-				ulong[] unprocessedBitsCount = { (ulong)tail.Length * 8, 0, 0, 0, 0, 0, 0, 0 };
+				GN(_n.AsSpan(), _h.AsSpan(), finalM);
+
+				ulong[] unprocessedBitsCount = { (ulong)leftover.Length * 8, 0, 0, 0, 0, 0, 0, 0 };
 				Add512(_n, unprocessedBitsCount);
 				Add512(_s, finalM);
 
-				GN(IV512, _h, _n);
-				GN(IV512, _h, _s);
+				GN(IV512, _h.AsSpan(), _n.AsSpan());
+				GN(IV512, _h.AsSpan(), _s.AsSpan());
 
-				var hBytes = new byte[64];
+				Span<byte> hBytes = stackalloc byte[64];
 				UlongsToBytesLE(_h, hBytes);
 
-				var finalHashBytes = new byte[_hashSizeInBits / 8];
-				Buffer.BlockCopy(hBytes, 64 - finalHashBytes.Length, finalHashBytes, 0, finalHashBytes.Length);
+				byte[] finalHashBytes = new byte[_hashSizeInBits / 8];
+				hBytes.Slice(hBytes.Length - finalHashBytes.Length).CopyTo(finalHashBytes);
 
-				return new HashValue(finalHashBytes, _hashSizeInBits);
+				return new HashValue(ValueEndianness.LittleEndian, finalHashBytes, _hashSizeInBits);
 			}
 
-			private void GN(ulong[] n, ulong[] h, ulong[] m)
+			private void GN(Span<ulong> n, Span<ulong> h, Span<ulong> m)
 			{
-				ulong[] k = new ulong[8];
-				ulong[] state = new ulong[8];
-				ulong[] temp = new ulong[8];
+				Span<ulong> k = stackalloc ulong[8];
+				Span<ulong> state = stackalloc ulong[8];
+				Span<ulong> temp = stackalloc ulong[8];
 
-				ulong[] h_in = new ulong[8];
-				Array.Copy(h, h_in, 8);
+				Span<ulong> h_in = stackalloc ulong[8];
+				h.CopyTo(h_in);
 
 				Xor512(h_in, n, temp);
 				LPS(temp, k);
@@ -738,7 +729,7 @@ namespace HashifyNet.Algorithms.Gost
 				Xor512(state, m, h);
 			}
 
-			private static void LPS(ulong[] input, ulong[] output)
+			private static void LPS(Span<ulong> input, Span<ulong> output)
 			{
 				ulong r0 = input[0];
 				ulong r1 = input[1];
@@ -763,7 +754,7 @@ namespace HashifyNet.Algorithms.Gost
 				}
 			}
 
-			private static void Xor512(ulong[] a, ulong[] b, ulong[] result)
+			private static void Xor512(Span<ulong> a, Span<ulong> b, Span<ulong> result)
 			{
 				for (int i = 0; i < 8; i++)
 				{
@@ -771,7 +762,7 @@ namespace HashifyNet.Algorithms.Gost
 				}
 			}
 
-			private static void Add512(ulong[] a, ulong[] b)
+			private static void Add512(Span<ulong> a, Span<ulong> b)
 			{
 				ulong carry = 0;
 				for (int i = 0; i < 8; i++)
@@ -785,12 +776,7 @@ namespace HashifyNet.Algorithms.Gost
 				}
 			}
 
-			private static void BytesToUlongsLE(byte[] input, ulong[] output)
-			{
-				BytesToUlongsLE(input, 0, output);
-			}
-
-			private static void BytesToUlongsLE(byte[] input, int offset, ulong[] output)
+			private static void BytesToUlongsLE(ReadOnlySpan<byte> input, int offset, Span<ulong> output)
 			{
 				for (int i = 0; i < 8; i++)
 				{
@@ -798,15 +784,13 @@ namespace HashifyNet.Algorithms.Gost
 				}
 			}
 
-			private static void UlongsToBytesLE(ulong[] input, byte[] output)
+			private static void UlongsToBytesLE(ulong[] input, Span<byte> output)
 			{
 				for (int i = 0; i < 8; i++)
 				{
-					var bytes = Endianness.GetBytesLittleEndian(input[i]);
-					Array.Copy(bytes, 0, output, i * 8, 8);
+					Endianness.ToLittleEndianBytes(input[i], output, i * 8);
 				}
 			}
 		}
 	}
-
 }

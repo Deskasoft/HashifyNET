@@ -117,19 +117,14 @@ namespace HashifyNet.Algorithms.MurmurHash
 				other._bytesProcessed = _bytesProcessed;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
-
+				var dataCount = data.Length;
 				var tempHashValue = _hashValue;
 
-				for (var currentOffset = dataOffset; currentOffset < endOffset; currentOffset += 4)
+				for (var currentOffset = 0; currentOffset < dataCount; currentOffset += 4)
 				{
-					uint k1 = Endianness.ToUInt32LittleEndian(dataArray, currentOffset);
+					uint k1 = Endianness.ToUInt32LittleEndian(data, currentOffset);
 
 					k1 *= c1_32;
 					k1 = RotateLeft(k1, 15);
@@ -145,11 +140,9 @@ namespace HashifyNet.Algorithms.MurmurHash
 				_bytesProcessed += dataCount;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				var remainder = FinalizeInputBuffer;
-				var remainderCount = (remainder?.Length).GetValueOrDefault();
-
+				var remainderCount = leftover.Length;
 				var tempHashValue = _hashValue;
 
 				var tempBytesProcessed = _bytesProcessed;
@@ -160,10 +153,10 @@ namespace HashifyNet.Algorithms.MurmurHash
 
 					switch (remainderCount)
 					{
-						case 3: k2 ^= (uint)remainder[2] << 16; goto case 2;
-						case 2: k2 ^= (uint)remainder[1] << 8; goto case 1;
+						case 3: k2 ^= (uint)leftover[2] << 16; goto case 2;
+						case 2: k2 ^= (uint)leftover[1] << 8; goto case 1;
 						case 1:
-							k2 ^= remainder[0];
+							k2 ^= leftover[0];
 							break;
 					}
 
@@ -179,6 +172,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 				Mix(ref tempHashValue);
 
 				return new HashValue(
+					ValueEndianness.LittleEndian,
 					Endianness.GetBytesLittleEndian(tempHashValue),
 					32);
 			}
@@ -232,21 +226,17 @@ namespace HashifyNet.Algorithms.MurmurHash
 				other._bytesProcessed = _bytesProcessed;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
+				var dataCount = data.Length;
 
 				var tempHashValue1 = _hashValue1;
 				var tempHashValue2 = _hashValue2;
 
-				for (var currentOffset = dataOffset; currentOffset < endOffset; currentOffset += 16)
+				for (var currentOffset = 0; currentOffset < dataCount; currentOffset += 16)
 				{
-					ulong k1 = Endianness.ToUInt64LittleEndian(dataArray, currentOffset);
-					ulong k2 = Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 8);
+					ulong k1 = Endianness.ToUInt64LittleEndian(data, currentOffset);
+					ulong k2 = Endianness.ToUInt64LittleEndian(data, currentOffset + 8);
 
 					k1 *= c1_128;
 					k1 = RotateLeft(k1, 31);
@@ -273,10 +263,9 @@ namespace HashifyNet.Algorithms.MurmurHash
 				_bytesProcessed += dataCount;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				var remainder = FinalizeInputBuffer;
-				var remainderCount = (remainder?.Length).GetValueOrDefault();
+				var remainderCount = leftover.Length;
 
 				var tempHashValue1 = _hashValue1;
 				var tempHashValue2 = _hashValue2;
@@ -290,14 +279,14 @@ namespace HashifyNet.Algorithms.MurmurHash
 
 					switch (remainderCount)
 					{
-						case 15: k2 ^= (ulong)remainder[14] << 48; goto case 14;
-						case 14: k2 ^= (ulong)remainder[13] << 40; goto case 13;
-						case 13: k2 ^= (ulong)remainder[12] << 32; goto case 12;
-						case 12: k2 ^= (ulong)remainder[11] << 24; goto case 11;
-						case 11: k2 ^= (ulong)remainder[10] << 16; goto case 10;
-						case 10: k2 ^= (ulong)remainder[9] << 8; goto case 9;
+						case 15: k2 ^= (ulong)leftover[14] << 48; goto case 14;
+						case 14: k2 ^= (ulong)leftover[13] << 40; goto case 13;
+						case 13: k2 ^= (ulong)leftover[12] << 32; goto case 12;
+						case 12: k2 ^= (ulong)leftover[11] << 24; goto case 11;
+						case 11: k2 ^= (ulong)leftover[10] << 16; goto case 10;
+						case 10: k2 ^= (ulong)leftover[9] << 8; goto case 9;
 						case 9:
-							k2 ^= remainder[8];
+							k2 ^= leftover[8];
 							k2 *= c2_128;
 							k2 = RotateLeft(k2, 33);
 							k2 *= c1_128;
@@ -306,17 +295,17 @@ namespace HashifyNet.Algorithms.MurmurHash
 							goto case 8;
 
 						case 8:
-							k1 ^= Endianness.ToUInt64LittleEndian(remainder, 0);
+							k1 ^= Endianness.ToUInt64LittleEndian(leftover, 0);
 							break;
 
-						case 7: k1 ^= (ulong)remainder[6] << 48; goto case 6;
-						case 6: k1 ^= (ulong)remainder[5] << 40; goto case 5;
-						case 5: k1 ^= (ulong)remainder[4] << 32; goto case 4;
-						case 4: k1 ^= (ulong)remainder[3] << 24; goto case 3;
-						case 3: k1 ^= (ulong)remainder[2] << 16; goto case 2;
-						case 2: k1 ^= (ulong)remainder[1] << 8; goto case 1;
+						case 7: k1 ^= (ulong)leftover[6] << 48; goto case 6;
+						case 6: k1 ^= (ulong)leftover[5] << 40; goto case 5;
+						case 5: k1 ^= (ulong)leftover[4] << 32; goto case 4;
+						case 4: k1 ^= (ulong)leftover[3] << 24; goto case 3;
+						case 3: k1 ^= (ulong)leftover[2] << 16; goto case 2;
+						case 2: k1 ^= (ulong)leftover[1] << 8; goto case 1;
 						case 1:
-							k1 ^= remainder[0];
+							k1 ^= leftover[0];
 							break;
 					}
 
@@ -344,7 +333,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 					.Concat(Endianness.GetBytesLittleEndian(tempHashValue2))
 					.ToArray();
 
-				return new HashValue(hashValueBytes, 128);
+				return new HashValue(ValueEndianness.LittleEndian, hashValueBytes, 128);
 			}
 
 			private static void Mix(ref ulong k)

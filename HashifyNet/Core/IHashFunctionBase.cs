@@ -94,23 +94,21 @@ namespace HashifyNet
 		IHashValue ComputeHash(byte[] data, int offset, int count, CancellationToken cancellationToken);
 
 		/// <summary>
-		/// Computes hash value for given array segment.
+		/// Computes hash value for given read-only span of bytes.
 		/// </summary>
-		/// <param name="data">Array segment of data to hash.</param>
+		/// <param name="data">Read-only span of data to hash.</param>
 		/// <returns>
 		/// Hash value of the data.
 		/// </returns>
-		IHashValue ComputeHash(ArraySegment<byte> data);
+		IHashValue ComputeHash(ReadOnlySpan<byte> data);
 
 		/// <summary>
-		/// Computes hash value for given array segment.
+		/// Computes hash value for given read-only span of bytes.
 		/// </summary>
-		/// <param name="data">Array segment of data to hash.</param>
+		/// <param name="data">Read-only span of data to hash.</param>
 		/// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while calculating the hash value.</param>
-		/// <returns>
-		/// Hash value of the data.
-		/// </returns>
+		/// <returns>Hash value of the data.</returns>
 		/// <exception cref="TaskCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
-		IHashValue ComputeHash(ArraySegment<byte> data, CancellationToken cancellationToken);
+		IHashValue ComputeHash(ReadOnlySpan<byte> data, CancellationToken cancellationToken);
 	}
 }

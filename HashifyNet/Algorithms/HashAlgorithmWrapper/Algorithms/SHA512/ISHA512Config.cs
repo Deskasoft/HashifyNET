@@ -42,5 +42,10 @@ namespace HashifyNet.Algorithms.SHA512
 		/// <para>For SHA512, this is always fixed at <c>512</c> bits.</para>
 		/// </summary>
 		new int HashSizeInBits { get; }
+
+		/// <summary>
+		/// Gets the secret key for the hash algorithm.
+		/// </summary>
+		byte[] Key { get; }
 	}
 }

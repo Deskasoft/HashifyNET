@@ -44,6 +44,11 @@ namespace HashifyNet.Algorithms.SHA3_384
 		/// <para>For SHA3_384, this is always fixed at <c>384</c> bits.</para>
 		/// </summary>
 		new int HashSizeInBits { get; }
+
+		/// <summary>
+		/// Gets the secret key for the hash algorithm.
+		/// </summary>
+		byte[] Key { get; }
 	}
 }
 

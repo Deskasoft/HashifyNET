@@ -113,31 +113,25 @@ namespace HashifyNet.Algorithms.Tiger
 				other._messageLength = _messageLength;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				if (data.Count != 64)
-				{
-					throw new InvalidOperationException("Expected 64 bytes per byte group.");
-				}
-
-				_messageLength += (ulong)data.Count;
+				_messageLength += (ulong)data.Length;
 				var block = new ulong[8];
 				for (int i = 0; i < 8; i++)
 				{
-					block[i] = Endianness.ToUInt64LittleEndian(data.Array, data.Offset + (i * 8));
+					block[i] = Endianness.ToUInt64LittleEndian(data, i * 8);
 				}
 
 				ProcessBlock(block);
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				var remainder = FinalizeInputBuffer ?? Array.Empty<byte>();
-				int remainderCount = remainder.Length;
+				int remainderCount = leftover.Length;
 				ulong totalBytesProcessed = _messageLength + (ulong)remainderCount;
 				var finalData = new byte[128];
 
-				Buffer.BlockCopy(remainder, 0, finalData, 0, remainderCount);
+				leftover.CopyTo(finalData.AsSpan());
 
 				finalData[remainderCount] = _padding;
 
@@ -181,10 +175,10 @@ namespace HashifyNet.Algorithms.Tiger
 				{
 					var truncated = new byte[bytesNeeded];
 					Array.Copy(fullHash, 0, truncated, 0, bytesNeeded);
-					return new HashValue(truncated, _hashSizeInBits);
+					return new HashValue(ValueEndianness.LittleEndian, truncated, _hashSizeInBits);
 				}
 
-				return new HashValue(fullHash, 192);
+				return new HashValue(ValueEndianness.LittleEndian, fullHash, 192);
 			}
 
 			private void ProcessBlock(ulong[] x)

@@ -29,6 +29,7 @@
 
 using HashifyNet.Core.Utilities;
 using System;
+using System.Security.Cryptography;
 using System.Threading;
 
 namespace HashifyNet.Core.HashAlgorithm
@@ -40,7 +41,7 @@ namespace HashifyNet.Core.HashAlgorithm
 		public override IHashAlgorithmWrapperConfig Config => _config.Clone();
 
 		private readonly IHashAlgorithmWrapperConfig _config;
-		private readonly System.Security.Cryptography.HashAlgorithm hashAlgorithm;
+		private readonly IncrementalHash hashAlgorithm;
 		public HashAlgorithmWrapper_Implementation(IHashAlgorithmWrapperConfig config)
 		{
 			if (config == null)
@@ -56,15 +57,15 @@ namespace HashifyNet.Core.HashAlgorithm
 
 			hashAlgorithm = _config.InstanceFactory() ?? throw new InvalidOperationException("The hash algorithm factory returned null.");
 
-			if (_config.HashSizeInBits != hashAlgorithm.HashSize)
+			if (_config.HashSizeInBits < 1)
 			{
-				throw new InvalidOperationException($"{nameof(_config)}.{nameof(_config.HashSizeInBits)} does not match the underlying {nameof(_config.InstanceFactory)} hash algorithm's size. Expected {_config.HashSizeInBits} bits but got {hashAlgorithm.HashSize} bits.");
+				throw new InvalidOperationException($"{nameof(_config)}.{nameof(_config.HashSizeInBits)} must be greater than 0.");
 			}
 		}
 
 		public override IBlockTransformer CreateBlockTransformer()
 		{
-			return new BlockTransformer(hashAlgorithm);
+			return new BlockTransformer(hashAlgorithm, _config.HashSizeInBits);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -83,9 +84,11 @@ namespace HashifyNet.Core.HashAlgorithm
 			{
 			}
 
-			private System.Security.Cryptography.HashAlgorithm _algo;
-			public BlockTransformer(System.Security.Cryptography.HashAlgorithm algorithm) : this()
+			private IncrementalHash _algo;
+			private readonly int _hashSizeInBits;
+			public BlockTransformer(IncrementalHash algorithm, int hashSizeInBits) : this()
 			{
+				_hashSizeInBits = hashSizeInBits;
 				_algo = algorithm ?? throw new ArgumentNullException(nameof(algorithm));
 			}
 
@@ -94,24 +97,25 @@ namespace HashifyNet.Core.HashAlgorithm
 				other._algo = _algo;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				if (_algo.TransformBlock(data.Array, data.Offset, data.Count, null, 0) != data.Count)
-				{
-					throw new Exception("Hash algorithm did not process all input data.");
-				}
+#if NET8_0_OR_GREATER
+				_algo.AppendData(data);
+#else
+				byte[] dataArray = data.ToArray();
+				_algo.AppendData(dataArray);
+#endif
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				byte[] lastBytes = FinalizeInputBuffer ?? Array.Empty<byte>();
-				byte[] lastResult = _algo.TransformFinalBlock(lastBytes, 0, lastBytes.Length);
-				if (lastResult == null || lastResult.Length != lastBytes.Length)
+				if (leftover.Length > 0)
 				{
-					throw new Exception("Hash algorithm did not process all input data.");
+					TransformByteGroupsInternal(leftover);
 				}
 
-				return new HashValue(_algo.Hash, _algo.HashSize);
+				byte[] result = _algo.GetHashAndReset();
+				return new HashValue(_algo.AlgorithmName == HashAlgorithmName.MD5 ? ValueEndianness.LittleEndian : ValueEndianness.BigEndian, result, _hashSizeInBits);
 			}
 		}
 	}

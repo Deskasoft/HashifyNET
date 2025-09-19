@@ -78,19 +78,15 @@ namespace HashifyNet.Algorithms.FNV
 			{
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataCount = data.Count;
-				var endOffset = data.Offset + dataCount;
-
 				var tempHashValue = _hashValue;
 				var tempPrime = _prime;
 
-				for (int currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
+				for (int currentOffset = 0; currentOffset < data.Length; ++currentOffset)
 				{
 					tempHashValue *= tempPrime;
-					tempHashValue ^= dataArray[currentOffset];
+					tempHashValue ^= data[currentOffset];
 				}
 
 				_hashValue = tempHashValue;
@@ -110,19 +106,15 @@ namespace HashifyNet.Algorithms.FNV
 			{
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataCount = data.Count;
-				var endOffset = data.Offset + dataCount;
-
 				var tempHashValue = _hashValue;
 				var tempPrime = _prime;
 
-				for (int currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
+				for (int currentOffset = 0; currentOffset < data.Length; ++currentOffset)
 				{
 					tempHashValue *= tempPrime;
-					tempHashValue ^= dataArray[currentOffset];
+					tempHashValue ^= data[currentOffset];
 				}
 
 				_hashValue = tempHashValue;
@@ -141,21 +133,17 @@ namespace HashifyNet.Algorithms.FNV
 			{
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataCount = data.Count;
-				var endOffset = data.Offset + dataCount;
-
 				var tempHashValue = _hashValue;
 				var tempPrime = _prime;
 
 				var tempHashSizeInBytes = _hashSizeInBytes;
 
-				for (int currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
+				for (int currentOffset = 0; currentOffset < data.Length; ++currentOffset)
 				{
 					tempHashValue = ExtendedMultiply(tempHashValue, tempPrime, tempHashSizeInBytes);
-					tempHashValue[0] ^= dataArray[currentOffset];
+					tempHashValue[0] ^= data[currentOffset];
 				}
 
 				_hashValue = tempHashValue;

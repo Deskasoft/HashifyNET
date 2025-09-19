@@ -134,13 +134,9 @@ namespace HashifyNet.Algorithms.XxHash
 				other._bytesProcessed = _bytesProcessed;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
+				var dataCount = data.Length;
 
 				var tempA = _a;
 				var tempB = _b;
@@ -150,21 +146,21 @@ namespace HashifyNet.Algorithms.XxHash
 				var tempPrime0 = _primes32[0];
 				var tempPrime1 = _primes32[1];
 
-				for (var currentIndex = dataOffset; currentIndex < endOffset; currentIndex += 16)
+				for (var currentIndex = 0; currentIndex < dataCount; currentIndex += 16)
 				{
-					tempA += Endianness.ToUInt32LittleEndian(dataArray, currentIndex) * tempPrime1;
+					tempA += Endianness.ToUInt32LittleEndian(data, currentIndex) * tempPrime1;
 					tempA = RotateLeft(tempA, 13);
 					tempA *= tempPrime0;
 
-					tempB += Endianness.ToUInt32LittleEndian(dataArray, currentIndex + 4) * tempPrime1;
+					tempB += Endianness.ToUInt32LittleEndian(data, currentIndex + 4) * tempPrime1;
 					tempB = RotateLeft(tempB, 13);
 					tempB *= tempPrime0;
 
-					tempC += Endianness.ToUInt32LittleEndian(dataArray, currentIndex + 8) * tempPrime1;
+					tempC += Endianness.ToUInt32LittleEndian(data, currentIndex + 8) * tempPrime1;
 					tempC = RotateLeft(tempC, 13);
 					tempC *= tempPrime0;
 
-					tempD += Endianness.ToUInt32LittleEndian(dataArray, currentIndex + 12) * tempPrime1;
+					tempD += Endianness.ToUInt32LittleEndian(data, currentIndex + 12) * tempPrime1;
 					tempD = RotateLeft(tempD, 13);
 					tempD *= tempPrime0;
 				}
@@ -177,7 +173,7 @@ namespace HashifyNet.Algorithms.XxHash
 				_bytesProcessed += (ulong)dataCount;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
 				uint hashValue;
 				{
@@ -191,8 +187,7 @@ namespace HashifyNet.Algorithms.XxHash
 					}
 				}
 
-				var remainder = FinalizeInputBuffer;
-				var remainderLength = (remainder?.Length).GetValueOrDefault();
+				var remainderLength = leftover.Length;
 
 				hashValue += (uint)(_bytesProcessed + (ulong)remainderLength);
 
@@ -204,7 +199,7 @@ namespace HashifyNet.Algorithms.XxHash
 
 						for (var currentOffset = 0; currentOffset < endOffset; currentOffset += 4)
 						{
-							hashValue += Endianness.ToUInt32LittleEndian(remainder, currentOffset) * _primes32[2];
+							hashValue += Endianness.ToUInt32LittleEndian(leftover, currentOffset) * _primes32[2];
 							hashValue = RotateLeft(hashValue, 17) * _primes32[3];
 						}
 					}
@@ -216,7 +211,7 @@ namespace HashifyNet.Algorithms.XxHash
 
 						for (var currentOffset = startOffset; currentOffset < endOffset; currentOffset += 1)
 						{
-							hashValue += remainder[currentOffset] * _primes32[4];
+							hashValue += leftover[currentOffset] * _primes32[4];
 							hashValue = RotateLeft(hashValue, 11) * _primes32[0];
 						}
 					}
@@ -229,6 +224,7 @@ namespace HashifyNet.Algorithms.XxHash
 				hashValue ^= hashValue >> 16;
 
 				return new HashValue(
+					ValueEndianness.LittleEndian,
 					Endianness.GetBytesLittleEndian(hashValue),
 					32);
 			}
@@ -294,13 +290,9 @@ namespace HashifyNet.Algorithms.XxHash
 				other._bytesProcessed = _bytesProcessed;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
+				var dataCount = data.Length;
 
 				var tempA = _a;
 				var tempB = _b;
@@ -310,21 +302,21 @@ namespace HashifyNet.Algorithms.XxHash
 				var tempPrime0 = _primes64[0];
 				var tempPrime1 = _primes64[1];
 
-				for (var currentIndex = dataOffset; currentIndex < endOffset; currentIndex += 32)
+				for (var currentIndex = 0; currentIndex < dataCount; currentIndex += 32)
 				{
-					tempA += Endianness.ToUInt64LittleEndian(dataArray, currentIndex) * tempPrime1;
+					tempA += Endianness.ToUInt64LittleEndian(data, currentIndex) * tempPrime1;
 					tempA = RotateLeft(tempA, 31);
 					tempA *= tempPrime0;
 
-					tempB += Endianness.ToUInt64LittleEndian(dataArray, currentIndex + 8) * tempPrime1;
+					tempB += Endianness.ToUInt64LittleEndian(data, currentIndex + 8) * tempPrime1;
 					tempB = RotateLeft(tempB, 31);
 					tempB *= tempPrime0;
 
-					tempC += Endianness.ToUInt64LittleEndian(dataArray, currentIndex + 16) * tempPrime1;
+					tempC += Endianness.ToUInt64LittleEndian(data, currentIndex + 16) * tempPrime1;
 					tempC = RotateLeft(tempC, 31);
 					tempC *= tempPrime0;
 
-					tempD += Endianness.ToUInt64LittleEndian(dataArray, currentIndex + 24) * tempPrime1;
+					tempD += Endianness.ToUInt64LittleEndian(data, currentIndex + 24) * tempPrime1;
 					tempD = RotateLeft(tempD, 31);
 					tempD *= tempPrime0;
 				}
@@ -337,7 +329,7 @@ namespace HashifyNet.Algorithms.XxHash
 				_bytesProcessed += (ulong)dataCount;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
 				ulong hashValue;
 				{
@@ -388,17 +380,16 @@ namespace HashifyNet.Algorithms.XxHash
 					}
 				}
 
-				var remainder = FinalizeInputBuffer;
-				var remainderLength = (remainder?.Length).GetValueOrDefault();
+				var remainderLength = leftover.Length;
 
 				hashValue += _bytesProcessed + (ulong)remainderLength;
 
 				if (remainderLength > 0)
 				{
 					// In 8-byte chunks, process all full chunks
-					for (int x = 0; x < remainder.Length / 8; ++x)
+					for (int x = 0; x < leftover.Length / 8; ++x)
 					{
-						hashValue ^= RotateLeft(Endianness.ToUInt64LittleEndian(remainder, x * 8) * _primes64[1], 31) * _primes64[0];
+						hashValue ^= RotateLeft(Endianness.ToUInt64LittleEndian(leftover, x * 8) * _primes64[1], 31) * _primes64[0];
 						hashValue = (RotateLeft(hashValue, 27) * _primes64[0]) + _primes64[3];
 					}
 
@@ -407,7 +398,7 @@ namespace HashifyNet.Algorithms.XxHash
 					{
 						var startOffset = remainderLength - (remainderLength % 8);
 
-						hashValue ^= Endianness.ToUInt32LittleEndian(remainder, startOffset) * _primes64[0];
+						hashValue ^= Endianness.ToUInt32LittleEndian(leftover, startOffset) * _primes64[0];
 						hashValue = (RotateLeft(hashValue, 23) * _primes64[1]) + _primes64[2];
 					}
 
@@ -418,7 +409,7 @@ namespace HashifyNet.Algorithms.XxHash
 
 						for (var currentOffset = startOffset; currentOffset < endOffset; currentOffset += 1)
 						{
-							hashValue ^= remainder[currentOffset] * _primes64[4];
+							hashValue ^= leftover[currentOffset] * _primes64[4];
 							hashValue = RotateLeft(hashValue, 11) * _primes64[0];
 						}
 					}
@@ -431,6 +422,7 @@ namespace HashifyNet.Algorithms.XxHash
 				hashValue ^= hashValue >> 32;
 
 				return new HashValue(
+					ValueEndianness.LittleEndian,
 					Endianness.GetBytesLittleEndian(hashValue),
 					64);
 			}
@@ -446,4 +438,3 @@ namespace HashifyNet.Algorithms.XxHash
 		}
 	}
 }
-

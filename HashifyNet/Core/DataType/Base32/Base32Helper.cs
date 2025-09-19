@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,25 +27,63 @@
 // ******************************************************************************
 // *
 
-namespace HashifyNet.Algorithms.SHA1
-{
-	/// <summary>
-	/// Represents the configuration settings for the SHA1 cryptographic hash algorithm.
-	/// </summary>
-	/// <remarks>This interface extends <see cref="ICryptographicHashConfig{T}"/> to provide configuration specific
-	/// to the SHA1 algorithm. The <see cref="HashSizeInBits"/> property is fixed at <c>160</c> bits, as defined by the SHA1
-	/// standard.</remarks>
-	public interface ISHA1Config : ICryptographicHashConfig<ISHA1Config>
-	{
-		/// <summary>
-		/// <inheritdoc cref="IHashConfigBase.HashSizeInBits"/>
-		/// <para>For SHA1, this is always fixed at <c>160</c> bits.</para>
-		/// </summary>
-		new int HashSizeInBits { get; }
+using System.Text;
 
-		/// <summary>
-		/// Gets the secret key for the hash algorithm.
-		/// </summary>
-		byte[] Key { get; }
+namespace HashifyNet
+{
+	internal static class Base32Helper
+	{
+		public static string AsBase32String(byte[] data, Base32Variant variant)
+		{
+			string alphabet;
+			bool usePadding;
+
+			switch (variant)
+			{
+				case Base32Variant.Crockford:
+					alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+					usePadding = false;
+					break;
+
+				case Base32Variant.Rfc4648:
+					alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+					usePadding = true;
+					break;
+
+				default:
+					throw new System.NotSupportedException($"Unsupported base32 variant '{variant}'.");
+			}
+
+			var builder = new StringBuilder();
+			int bitsRead = 0;
+			ulong buffer = 0;
+
+			foreach (byte b in data)
+			{
+				buffer = (buffer << 8) | b;
+				bitsRead += 8;
+
+				while (bitsRead >= 5)
+				{
+					int index = (int)(buffer >> (bitsRead - 5)) & 31;
+					builder.Append(alphabet[index]);
+					bitsRead -= 5;
+				}
+			}
+
+			if (bitsRead > 0)
+			{
+				int index = (int)(buffer << (5 - bitsRead)) & 31;
+				builder.Append(alphabet[index]);
+			}
+
+			if (usePadding)
+			{
+				int padding = (8 - (builder.Length % 8)) % 8;
+				builder.Append('=', padding);
+			}
+
+			return builder.ToString();
+		}
 	}
 }

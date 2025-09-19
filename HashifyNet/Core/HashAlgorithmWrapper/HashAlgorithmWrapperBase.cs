@@ -30,6 +30,7 @@
 using HashifyNet.Core;
 using HashifyNet.Core.HashAlgorithm;
 using System;
+using System.Security.Cryptography;
 
 namespace HashifyNet
 {
@@ -40,7 +41,7 @@ namespace HashifyNet
 		private readonly TConfig _config;
 		private readonly IHashAlgorithmWrapper _wrapper;
 
-		public HashAlgorithmWrapperBase(TConfig config, Func<System.Security.Cryptography.HashAlgorithm> factory)
+		public HashAlgorithmWrapperBase(TConfig config, Func<IncrementalHash> factory)
 		{
 			if (config == null)
 			{

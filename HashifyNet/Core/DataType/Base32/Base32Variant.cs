@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,25 +27,20 @@
 // ******************************************************************************
 // *
 
-namespace HashifyNet.Algorithms.SHA1
+namespace HashifyNet
 {
 	/// <summary>
-	/// Represents the configuration settings for the SHA1 cryptographic hash algorithm.
+	/// The variant of Base32 encoding to use.
 	/// </summary>
-	/// <remarks>This interface extends <see cref="ICryptographicHashConfig{T}"/> to provide configuration specific
-	/// to the SHA1 algorithm. The <see cref="HashSizeInBits"/> property is fixed at <c>160</c> bits, as defined by the SHA1
-	/// standard.</remarks>
-	public interface ISHA1Config : ICryptographicHashConfig<ISHA1Config>
+	public enum Base32Variant
 	{
 		/// <summary>
-		/// <inheritdoc cref="IHashConfigBase.HashSizeInBits"/>
-		/// <para>For SHA1, this is always fixed at <c>160</c> bits.</para>
+		/// The RFC 4648 variant, using the alphabet A-Z2-7 and padding with '='.
 		/// </summary>
-		new int HashSizeInBits { get; }
-
+		Rfc4648,
 		/// <summary>
-		/// Gets the secret key for the hash algorithm.
+		/// The Crockford variant, using the alphabet 0-9A-Z without padding.
 		/// </summary>
-		byte[] Key { get; }
+		Crockford
 	}
 }

@@ -28,7 +28,7 @@
 // *
 
 using System;
-using SystemHashAlgorithm = System.Security.Cryptography.HashAlgorithm;
+using SystemHashAlgorithm = System.Security.Cryptography.IncrementalHash;
 
 namespace HashifyNet.Core.HashAlgorithm
 {

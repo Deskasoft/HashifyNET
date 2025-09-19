@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,25 +27,38 @@
 // ******************************************************************************
 // *
 
-namespace HashifyNet.Algorithms.SHA1
+namespace HashifyNet
 {
 	/// <summary>
-	/// Represents the configuration settings for the SHA1 cryptographic hash algorithm.
+	/// Specifies the supported Base85 encoding variants.
 	/// </summary>
-	/// <remarks>This interface extends <see cref="ICryptographicHashConfig{T}"/> to provide configuration specific
-	/// to the SHA1 algorithm. The <see cref="HashSizeInBits"/> property is fixed at <c>160</c> bits, as defined by the SHA1
-	/// standard.</remarks>
-	public interface ISHA1Config : ICryptographicHashConfig<ISHA1Config>
+	/// <remarks>Base85 encoding is a binary-to-text encoding scheme that represents binary data in an ASCII-safe
+	/// format. This enumeration defines the available variants of Base85 encoding, each with its own specific use case and
+	/// encoding rules: <list type="bullet"> <item> <term><see cref="Ascii85"/></term> <description>The Adobe standard used
+	/// in PostScript and PDF, with '&lt;~' and '~&gt;' delimiters.</description> </item> <item> <term><see
+	/// cref="Z85"/></term> <description>The ZeroMQ standard (RFC 32/Z85), designed to be safe for inclusion in source
+	/// code.</description> </item> <item> <term><see cref="Rfc1924"/></term> <description>The variant defined in RFC 1924,
+	/// originally created for encoding IPv6 addresses.</description> </item> </list></remarks>
+	public enum Base85Variant
 	{
 		/// <summary>
-		/// <inheritdoc cref="IHashConfigBase.HashSizeInBits"/>
-		/// <para>For SHA1, this is always fixed at <c>160</c> bits.</para>
+		/// The default Base85 encoding variant.
 		/// </summary>
-		new int HashSizeInBits { get; }
+		Ascii85,
 
 		/// <summary>
-		/// Gets the secret key for the hash algorithm.
+		/// The Adobe standard used in PostScript and PDF, with '&lt;~' and '~&gt;' delimiters.
 		/// </summary>
-		byte[] Key { get; }
+		AdobeAscii85,
+
+		/// <summary>
+		/// The ZeroMQ standard (RFC 32/Z85), designed to be safe for source code.
+		/// </summary>
+		Z85,
+
+		/// <summary>
+		/// The standard defined in RFC 1924, originally for IPv6 addresses.
+		/// </summary>
+		Rfc1924
 	}
 }

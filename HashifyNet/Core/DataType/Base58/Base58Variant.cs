@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,25 +27,27 @@
 // ******************************************************************************
 // *
 
-namespace HashifyNet.Algorithms.SHA1
+namespace HashifyNet
 {
 	/// <summary>
-	/// Represents the configuration settings for the SHA1 cryptographic hash algorithm.
+	/// A list of supported base58 variants.
 	/// </summary>
-	/// <remarks>This interface extends <see cref="ICryptographicHashConfig{T}"/> to provide configuration specific
-	/// to the SHA1 algorithm. The <see cref="HashSizeInBits"/> property is fixed at <c>160</c> bits, as defined by the SHA1
-	/// standard.</remarks>
-	public interface ISHA1Config : ICryptographicHashConfig<ISHA1Config>
+	public enum Base58Variant
 	{
 		/// <summary>
-		/// <inheritdoc cref="IHashConfigBase.HashSizeInBits"/>
-		/// <para>For SHA1, this is always fixed at <c>160</c> bits.</para>
+		/// The Bitcoin variant.
+		/// <para>Alphabet: 123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz</para>
 		/// </summary>
-		new int HashSizeInBits { get; }
-
+		Bitcoin,
 		/// <summary>
-		/// Gets the secret key for the hash algorithm.
+		/// The Flickr variant.
+		/// <para>Alphabet: 123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ</para>
 		/// </summary>
-		byte[] Key { get; }
+		Flickr,
+		/// <summary>
+		/// The Ripple variant.
+		/// <para>Alphabet: rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz</para>
+		/// </summary>
+		Ripple
 	}
 }

@@ -92,14 +92,16 @@ namespace HashifyNet.Algorithms.FNV
 				_prime = fnvPrimeOffset.Prime[0];
 				_hashValue = fnvPrimeOffset.Offset[0];
 			}
+
 			protected override void CopyStateTo(TSelf other)
 			{
 				base.CopyStateTo(other);
 				other._prime = _prime;
 				other._hashValue = _hashValue;
 			}
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(Endianness.GetBytesLittleEndian(_hashValue), 32);
+
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken) =>
+				new HashValue(ValueEndianness.LittleEndian, Endianness.GetBytesLittleEndian(_hashValue), 32);
 		}
 
 		protected abstract class BlockTransformer_64BitBase<TSelf>
@@ -111,6 +113,7 @@ namespace HashifyNet.Algorithms.FNV
 			public BlockTransformer_64BitBase()
 			{
 			}
+
 			public BlockTransformer_64BitBase(FNVPrimeOffset fnvPrimeOffset)
 				: this()
 			{
@@ -125,8 +128,8 @@ namespace HashifyNet.Algorithms.FNV
 				other._hashValue = _hashValue;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(Endianness.GetBytesLittleEndian(_hashValue), 64);
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken) =>
+				new HashValue(ValueEndianness.LittleEndian, Endianness.GetBytesLittleEndian(_hashValue), 64);
 		}
 
 		protected abstract class BlockTransformer_ExtendedBase<TSelf>
@@ -158,8 +161,8 @@ namespace HashifyNet.Algorithms.FNV
 				other._hashSizeInBytes = _hashSizeInBytes;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken) =>
-				new HashValue(UInt32ArrayToBytes(_hashValue), _hashSizeInBytes * 8);
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken) =>
+				new HashValue(ValueEndianness.LittleEndian, UInt32ArrayToBytes(_hashValue), _hashSizeInBytes * 8);
 		}
 
 		/// <summary>

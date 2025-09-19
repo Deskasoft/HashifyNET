@@ -28,7 +28,6 @@
 // *
 
 using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -49,30 +48,28 @@ namespace HashifyNet.Core
 		protected const int DefaultCancellationBatchSize = 4096;
 
 		/// <summary>
-		/// The default block size to pass to <see cref="TransformByteGroupsInternal(ArraySegment{byte})"/>.
+		/// The default block size to pass to <see cref="TransformByteGroupsInternal(ReadOnlySpan{byte})"/>.
 		/// </summary>
 		protected const int DefaultInputBlockSize = 1;
-
-		/// <summary>
-		/// The input buffer that should be fetched during the <see cref="FinalizeHashValueInternal(CancellationToken)" /> methods.
-		/// </summary>
-		protected byte[] FinalizeInputBuffer { get => _inputBuffer; }
 
 		private readonly int _cancellationBatchSize;
 		private readonly int _inputBlockSize;
 
-		private byte[] _inputBuffer = null;
+		private readonly byte[] _leftover = null;
+		private int _leftoverCount = 0;
 		private bool _isCorrupted = false;
 
 		/// <summary>
 		/// Construct <see cref="BlockTransformerBase{TSelf}"/> with optional parameters to configure features.
 		/// </summary>
 		/// <param name="cancellationBatchSize">Maximum number of bytes to process before re-checking the cancellation token.</param>
-		/// <param name="inputBlockSize">Block size to pass to <see cref="TransformByteGroupsInternal(ArraySegment{byte})"/>.</param>
+		/// <param name="inputBlockSize">Block size to pass to <see cref="TransformByteGroupsInternal(ReadOnlySpan{byte})"/>.</param>
 		protected BlockTransformerBase(int cancellationBatchSize = DefaultCancellationBatchSize, int inputBlockSize = DefaultInputBlockSize)
 		{
 			_cancellationBatchSize = cancellationBatchSize;
 			_inputBlockSize = inputBlockSize;
+
+			_leftover = new byte[_inputBlockSize];
 
 			// Ensure _cancellationBatchSize is a multiple of _inputBlockSize, preferrably rounding down.
 			{
@@ -91,21 +88,17 @@ namespace HashifyNet.Core
 		}
 
 		/// <summary>
-		/// Updates the internal state of this transformer with the given data.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">The data to process into this transformer's internal state.</param>
-		/// <exception cref="ArgumentNullException"><paramref name="data"/></exception>
-		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
+		/// <param name="data"><inheritdoc/></param>
 		public void TransformBytes(byte[] data) => TransformBytes(data, CancellationToken.None);
 
 		/// <summary>
-		/// Updates the internal state of this transformer with the given data.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">The data to process into this transformer's internal state.</param>
-		/// <param name="cancellationToken">A <see cref="CancellationToken"/> to cease processing of the provided data.</param>
-		/// <exception cref="ArgumentNullException"><paramref name="data"/></exception>
-		/// <exception cref="TaskCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
-		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
+		/// <param name="data"><inheritdoc/></param>
+		/// <param name="cancellationToken"><inheritdoc/></param>
+		/// <exception cref="ArgumentNullException"><inheritdoc/></exception>
 		public void TransformBytes(byte[] data, CancellationToken cancellationToken)
 		{
 			ThrowIfCorrupted();
@@ -119,30 +112,24 @@ namespace HashifyNet.Core
 		}
 
 		/// <summary>
-		/// Updates the internal state of this transformer with the given data.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">The data to process into this transformer's internal state.</param>
-		/// <param name="offset">The offset from which to begin using the data.</param>
-		/// <param name="count">The number of bytes to use as data.</param>
-		/// <exception cref="ArgumentNullException"><paramref name="data"/></exception>
-		/// <exception cref="ArgumentOutOfRangeException"><paramref name="offset"/>;Offset must be a value greater than or equal to zero and less than the length of the array minus one.</exception>
-		/// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/>;Count must be a value greater than zero and less than the the remaining length of the array after the offset value.</exception>
-		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
+		/// <param name="data"><inheritdoc/></param>
+		/// <param name="offset"><inheritdoc/></param>
+		/// <param name="count"><inheritdoc/></param>
 		public void TransformBytes(byte[] data, int offset, int count) =>
 			TransformBytes(data, 0, data.Length, CancellationToken.None);
 
 		/// <summary>
-		/// Updates the internal state of this transformer with the given data.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">The data to process into this transformer's internal state.</param>
-		/// <param name="offset">The offset from which to begin using the data.</param>
-		/// <param name="count">The number of bytes to use as data.</param>
-		/// <param name="cancellationToken">A <see cref="CancellationToken"/> to cease processing of the provided data.</param>
-		/// <exception cref="ArgumentNullException"><paramref name="data"/></exception>
-		/// <exception cref="ArgumentOutOfRangeException"><paramref name="offset"/>;Offset must be a value greater than or equal to zero and less than the length of the array minus one.</exception>
-		/// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/>;Count must be a value greater than zero and less than the the remaining length of the array after the offset value.</exception>
-		/// <exception cref="TaskCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
-		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
+		/// <param name="data"><inheritdoc/></param>
+		/// <param name="offset"><inheritdoc/></param>
+		/// <param name="count"><inheritdoc/></param>
+		/// <param name="cancellationToken"><inheritdoc/></param>
+		/// <exception cref="ArgumentNullException"><inheritdoc/></exception>
+		/// <exception cref="ArgumentException"><inheritdoc/></exception>
+		/// <exception cref="ArgumentOutOfRangeException"><inheritdoc/></exception>
 		public void TransformBytes(byte[] data, int offset, int count, CancellationToken cancellationToken)
 		{
 			ThrowIfCorrupted();
@@ -167,68 +154,60 @@ namespace HashifyNet.Core
 				throw new ArgumentOutOfRangeException(nameof(count), "Count must be a value greater than zero and less than the remaining length of the array after the offset value.");
 			}
 
-			TransformBytes(new ArraySegment<byte>(data, offset, count), cancellationToken);
+			TransformBytes(new ReadOnlySpan<byte>(data, offset, count), cancellationToken);
 		}
 
 		/// <summary>
-		/// Updates the internal state of this transformer with the given data.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">The data to process into this transformer's internal state.</param>
-		/// <exception cref="ArgumentException">data must be an ArraySegment of Count > 0.;<paramref name="data"/></exception>
-		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
-		public void TransformBytes(ArraySegment<byte> data) =>
+		/// <param name="data"><inheritdoc/></param>
+		public void TransformBytes(ReadOnlySpan<byte> data) =>
 			TransformBytes(data, CancellationToken.None);
 
 		/// <summary>
-		/// Updates the internal state of this transformer with the given data.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">The data to process into this transformer's internal state.</param>
-		/// <param name="cancellationToken">A <see cref="CancellationToken"/> to cease processing of the provided data.</param>
-		/// <exception cref="ArgumentException">data must be an ArraySegment of Count > 0.;<paramref name="data"/></exception>
-		/// <exception cref="TaskCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
-		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
-		public void TransformBytes(ArraySegment<byte> data, CancellationToken cancellationToken)
+		/// <param name="data"><inheritdoc/></param>
+		/// <param name="cancellationToken"><inheritdoc/></param>
+		/// <exception cref="ArgumentException"><inheritdoc/></exception>
+		public void TransformBytes(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 		{
-			if (data.Count == 0)
+			if (data.IsEmpty)
 			{
-				throw new ArgumentException("data must be an ArraySegment of Count > 0.", nameof(data));
+				throw new ArgumentException("data must point to a non-empty valid ReadOnlySpan<byte>.", nameof(data));
 			}
 
 			TransformBytesInternal(data, cancellationToken);
 		}
 
 		/// <summary>
-		/// Completes any finalization processing and returns the resulting <see cref="IHashValue"/>.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <remarks>Internal state will remain unmodified, therefore this method will not invalidate future calls to any other TransformBytes or FinalizeTransformation calls.</remarks>
-		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
+		/// <returns><inheritdoc/></returns>
 		public IHashValue FinalizeHashValue() =>
 			FinalizeHashValue(CancellationToken.None);
 
 		/// <summary>
-		/// Completes any finalization processing and returns the resulting <see cref="IHashValue"/>.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="cancellationToken">A <see cref="CancellationToken"/> to cease any final processing.</param>
-		/// <remarks>Internal state will remain unmodified, therefore this method will not invalidate future calls to any other TransformBytes or FinalizeTransformation calls.</remarks>
-		/// <exception cref="TaskCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
-		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
+		/// <param name="cancellationToken"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
 		public IHashValue FinalizeHashValue(CancellationToken cancellationToken)
 		{
 			ThrowIfCorrupted();
 
-			return FinalizeHashValueInternal(cancellationToken);
+			return FinalizeHashValueInternal(FinalizeInputBuffer(), cancellationToken);
 		}
 
 		/// <summary>
-		/// Clones this transformer's internal state to a new, unassociated instance of this transformer.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <returns>A new, unassociated instance of this transformer.</returns>
+		/// <returns><inheritdoc/></returns>
 		public IBlockTransformer Clone()
 		{
 			ThrowIfCorrupted();
 
 			var clone = new TSelf();
-
 			CopyStateTo(clone);
 
 			return clone;
@@ -241,7 +220,10 @@ namespace HashifyNet.Core
 		/// <remarks>All overriders should ensure base.CopyStateTo(other) is called.</remarks>
 		protected virtual void CopyStateTo(TSelf other)
 		{
-			other._inputBuffer = _inputBuffer;
+			if (_leftover != null && _leftover.Length > 0)
+			{
+				Buffer.BlockCopy(_leftover, 0, other._leftover, 0, _leftoverCount);
+			}
 		}
 
 		/// <summary>
@@ -269,100 +251,79 @@ namespace HashifyNet.Core
 		/// </summary>
 		/// <param name="data">The data to process into this transformer's internal state.</param>
 		/// <param name="cancellationToken">A <see cref="CancellationToken"/> to cease processing of the provided data.</param>
-		protected void TransformBytesInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
+		protected void TransformBytesInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 		{
-			var dataArray = data.Array;
-			var dataCurrentOffset = data.Offset;
-			var dataRemainingCount = data.Count;
-
-			var totalBytesToProcess = (_inputBuffer?.Length).GetValueOrDefault() + dataRemainingCount;
-			var processingRemainder = totalBytesToProcess % _inputBlockSize;
-
-			// Determine how many bytes will inevitably be rolled over into the next input buffer and prepare that buffer.
-			byte[] nextInputBuffer = null;
+			try
 			{
-				if (processingRemainder > 0)
+				if (_leftoverCount > 0)
 				{
-					nextInputBuffer = new byte[processingRemainder];
+					int fit = _inputBlockSize - _leftoverCount;
 
-					if (dataRemainingCount >= processingRemainder)
+					Span<byte> newLeftOverS = _leftover.AsSpan().Slice(_leftoverCount, fit);
+					if (data.Length >= fit)
 					{
-						// All of the data can be fetched from newest data
-						var copyFromOffset = dataCurrentOffset + dataRemainingCount - processingRemainder;
+						ReadOnlySpan<byte> fill = data.Slice(0, fit);
+						fill.CopyTo(newLeftOverS);
+						TransformByteGroupsInternal(new ReadOnlySpan<byte>(_leftover, 0, _inputBlockSize));
+						_leftoverCount = 0;
+						data = data.Slice(fit);
 
-						Array.Copy(dataArray, copyFromOffset, nextInputBuffer, 0, processingRemainder);
-
-						dataRemainingCount -= processingRemainder;
+						// If no more data, return now.
+						if (data.IsEmpty)
+						{
+							return;
+						}
 					}
 					else
 					{
-						var bytesRolledOver = 0;
-
-						if (_inputBuffer != null)
-						{
-							Array.Copy(_inputBuffer, nextInputBuffer, _inputBuffer.Length);
-
-							bytesRolledOver = _inputBuffer.Length;
-						}
-
-						Array.Copy(dataArray, 0, nextInputBuffer, bytesRolledOver, processingRemainder - bytesRolledOver);
-
-						dataRemainingCount = 0;
+						data.CopyTo(newLeftOverS);
+						_leftoverCount += data.Length;
+						return;
 					}
 				}
-			}
 
-			// Process the full groups available
-			if (dataRemainingCount > 0)
+				int bytesSinceLastCancelCheck = 0;
+				while (data.Length >= _inputBlockSize)
+				{
+					ReadOnlySpan<byte> blockToProcess = data.Slice(0, _inputBlockSize);
+					TransformByteGroupsInternal(blockToProcess);
+
+					bytesSinceLastCancelCheck += _inputBlockSize;
+					if (bytesSinceLastCancelCheck >= _cancellationBatchSize)
+					{
+						cancellationToken.ThrowIfCancellationRequested();
+						bytesSinceLastCancelCheck = 0;
+					}
+
+					data = data.Slice(_inputBlockSize);
+				}
+
+				// Ensure a single call at least to make sure no cancellation is requested.
+				cancellationToken.ThrowIfCancellationRequested();
+
+				if (data.Length > 0)
+				{
+					data.CopyTo(_leftover);
+					_leftoverCount = data.Length;
+				}
+			}
+			catch (TaskCanceledException)
 			{
-				try
-				{
-					if (_inputBuffer != null)
-					{
-						var overrideInputBuffer = new byte[_inputBlockSize];
-						var dataBytesToRead = overrideInputBuffer.Length - _inputBuffer.Length;
+				MarkSelfCorrupted();
+				throw;
+			}
+		}
 
-						Array.Copy(_inputBuffer, overrideInputBuffer, _inputBuffer.Length);
-						Array.Copy(dataArray, dataCurrentOffset, overrideInputBuffer, _inputBuffer.Length, dataBytesToRead);
-
-						dataCurrentOffset += dataBytesToRead;
-						dataRemainingCount -= dataBytesToRead;
-
-						TransformByteGroupsInternal(new ArraySegment<byte>(overrideInputBuffer, 0, overrideInputBuffer.Length));
-					}
-
-					while (dataRemainingCount > 0)
-					{
-						if (((dataCurrentOffset - data.Offset) / _cancellationBatchSize) > (((dataCurrentOffset - data.Offset) - _inputBlockSize) / _cancellationBatchSize))
-						{
-							if (dataCurrentOffset > data.Offset)
-							{
-								cancellationToken.ThrowIfCancellationRequested();
-							}
-						}
-
-						var bytesToProcess = Math.Min(dataRemainingCount, _inputBlockSize);
-
-						TransformByteGroupsInternal(new ArraySegment<byte>(data.Array, dataCurrentOffset, bytesToProcess));
-
-						dataCurrentOffset += bytesToProcess;
-						dataRemainingCount -= bytesToProcess;
-					}
-
-					// Ensure a single call at least to make sure no cancellation is requested.
-					cancellationToken.ThrowIfCancellationRequested();
-
-					Debug.Assert(dataRemainingCount == 0);
-				}
-				catch (TaskCanceledException)
-				{
-					MarkSelfCorrupted();
-					throw;
-				}
+		private ReadOnlySpan<byte> FinalizeInputBuffer()
+		{
+			if (_leftoverCount < 1)
+			{
+				return ReadOnlySpan<byte>.Empty;
 			}
 
-			// Update input buffer
-			_inputBuffer = nextInputBuffer;
+			var result = new ReadOnlySpan<byte>(_leftover, 0, _leftoverCount);
+			_leftoverCount = 0;
+			return result;
 		}
 
 		/// <summary>
@@ -371,15 +332,13 @@ namespace HashifyNet.Core
 		/// The data's size will be a multiple of the provided inputBlockSize in the constructor.
 		/// </summary>
 		/// <param name="data">The data to process into this transformer's internal state.</param>
-		protected abstract void TransformByteGroupsInternal(ArraySegment<byte> data);
+		protected abstract void TransformByteGroupsInternal(ReadOnlySpan<byte> data);
 
 		/// <summary>
 		/// Completes any finalization processing and returns the resulting <see cref="IHashValue"/>.
 		/// </summary>
 		/// <remarks>Internal state will remain unmodified, therefore this method will not invalidate future calls to any other TransformBytes or FinalizeTransformation calls.</remarks>
 		/// <exception cref="InvalidOperationException">A previous transformation cancellation has resulted in an undefined internal state.</exception>
-		protected abstract IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken);
+		protected abstract IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken);
 	}
-
 }
-

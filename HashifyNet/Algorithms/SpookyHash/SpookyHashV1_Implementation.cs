@@ -31,7 +31,6 @@ using HashifyNet.Core;
 using HashifyNet.Core.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -163,13 +162,12 @@ namespace HashifyNet.Algorithms.SpookyHash
 				other._bytesProcessed = _bytesProcessed;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
 				// Handle buffering for short hash
 				if (_bytesProcessed < 192)
 				{
-					var dataArray = data.Array;
-					var dataCount = data.Count;
+					var dataCount = data.Length;
 
 					if (dataCount + _bytesProcessed < 192)
 					{
@@ -178,7 +176,8 @@ namespace HashifyNet.Algorithms.SpookyHash
 							_shortHashBuffer = new byte[192];
 						}
 
-						Array.Copy(dataArray, data.Offset, _shortHashBuffer, _bytesProcessed, dataCount);
+						//Array.Copy(dataArray, data.Offset, _shortHashBuffer, _bytesProcessed, dataCount);
+						data.CopyTo(new Span<byte>(_shortHashBuffer, _bytesProcessed, dataCount));
 
 						_bytesProcessed += dataCount;
 						return;
@@ -186,8 +185,6 @@ namespace HashifyNet.Algorithms.SpookyHash
 
 					if (_shortHashBuffer != null)
 					{
-						Debug.Assert(_bytesProcessed == 96 || _bytesProcessed == 192);
-
 						Mix(_hashValue, new ArraySegment<byte>(_shortHashBuffer, 0, _bytesProcessed));
 
 						_shortHashBuffer = null;
@@ -195,30 +192,25 @@ namespace HashifyNet.Algorithms.SpookyHash
 				}
 
 				Mix(_hashValue, data);
-				_bytesProcessed += data.Count;
+				_bytesProcessed += data.Length;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
 				// ShortHash
 				if (_bytesProcessed < 192)
 				{
-					return ComputeShortHashInternal(cancellationToken);
+					return ComputeShortHashInternal(leftover, cancellationToken);
 				}
 
 				var finalHashValue = _hashValue.ToArray();
 				var finalMixBuffer = new byte[96];
 
-				var remainder = FinalizeInputBuffer;
+				var remainderCount = leftover.Length;
 
-				if (remainder != null)
-				{
-					var remainderCount = remainder.Length;
+				leftover.CopyTo(new Span<byte>(finalMixBuffer, 0, remainderCount));
 
-					Array.Copy(remainder, 0, finalMixBuffer, 0, remainderCount);
-
-					finalMixBuffer[95] = (byte)remainderCount;
-				}
+				finalMixBuffer[95] = (byte)remainderCount;
 
 				Mix(finalHashValue, new ArraySegment<byte>(finalMixBuffer, 0, 96));
 				End(finalHashValue);
@@ -227,11 +219,13 @@ namespace HashifyNet.Algorithms.SpookyHash
 				{
 					case 32:
 						return new HashValue(
+							ValueEndianness.LittleEndian,
 							Endianness.GetBytesLittleEndian((uint)finalHashValue[0]),
 							32);
 
 					case 64:
 						return new HashValue(
+							ValueEndianness.LittleEndian,
 							Endianness.GetBytesLittleEndian(finalHashValue[0]),
 							64);
 
@@ -244,14 +238,14 @@ namespace HashifyNet.Algorithms.SpookyHash
 						Endianness.GetBytesLittleEndian(finalHashValue[1])
 							.CopyTo(hashValueResult, 8);
 
-						return new HashValue(hashValueResult, 128);
+						return new HashValue(ValueEndianness.LittleEndian, hashValueResult, 128);
 
 					default:
 						throw new NotImplementedException();
 				}
 			}
 
-			private IHashValue ComputeShortHashInternal(CancellationToken cancellationToken)
+			private IHashValue ComputeShortHashInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
 				var tempHashValue = new ulong[4] {
 					_hashValue[0],
@@ -264,7 +258,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 				int dataCount;
 				{
 					var shortHashBufferLength = _bytesProcessed;
-					var finalizeInputBufferLength = (FinalizeInputBuffer?.Length).GetValueOrDefault();
+					var finalizeInputBufferLength = leftover.Length;
 
 					dataCount = shortHashBufferLength + finalizeInputBufferLength;
 
@@ -274,12 +268,12 @@ namespace HashifyNet.Algorithms.SpookyHash
 
 						if (shortHashBufferLength > 0)
 						{
-							Array.Copy(_shortHashBuffer, 0, dataArray, 0, shortHashBufferLength);
+							new Span<byte>(_shortHashBuffer, 0, shortHashBufferLength).CopyTo(new Span<byte>(dataArray, 0, shortHashBufferLength));
 						}
 
 						if (finalizeInputBufferLength > 0)
 						{
-							Array.Copy(FinalizeInputBuffer, 0, dataArray, shortHashBufferLength, finalizeInputBufferLength);
+							leftover.CopyTo(new Span<byte>(dataArray, shortHashBufferLength, finalizeInputBufferLength));
 						}
 					}
 				}
@@ -350,11 +344,13 @@ namespace HashifyNet.Algorithms.SpookyHash
 				{
 					case 32:
 						return new HashValue(
+							ValueEndianness.LittleEndian,
 							Endianness.GetBytesLittleEndian((uint)tempHashValue[0]),
 							32);
 
 					case 64:
 						return new HashValue(
+							ValueEndianness.LittleEndian,
 							Endianness.GetBytesLittleEndian(tempHashValue[0]),
 							64);
 
@@ -368,6 +364,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 							.CopyTo(finalHashValue, 8);
 
 						return new HashValue(
+							ValueEndianness.LittleEndian,
 							finalHashValue,
 							128);
 
@@ -376,19 +373,15 @@ namespace HashifyNet.Algorithms.SpookyHash
 				}
 			}
 
-			private static void Mix(ulong[] hashValue, ArraySegment<byte> data)
+			private static void Mix(ulong[] hashValue, ReadOnlySpan<byte> data)
 			{
-				Debug.Assert(data.Count % 96 == 0);
+				var dataCount = data.Length;
 
-				var dataArray = data.Array;
-				var dataCount = data.Count;
-				var endOffset = data.Offset + dataCount;
-
-				for (var currentOffset = data.Offset; currentOffset < endOffset; currentOffset += 96)
+				for (var currentOffset = 0; currentOffset < dataCount; currentOffset += 96)
 				{
 					for (var i = 0; i < 12; ++i)
 					{
-						hashValue[i] += Endianness.ToUInt64LittleEndian(dataArray, currentOffset + (i * 8));
+						hashValue[i] += Endianness.ToUInt64LittleEndian(data, currentOffset + (i * 8));
 						hashValue[(i + 2) % 12] ^= hashValue[(i + 10) % 12];
 						hashValue[(i + 11) % 12] ^= hashValue[i];
 						hashValue[i] = RotateLeft(hashValue[i], _MixRotationParameters[i]);
