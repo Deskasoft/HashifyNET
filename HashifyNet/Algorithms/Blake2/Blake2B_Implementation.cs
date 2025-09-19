@@ -282,8 +282,6 @@ namespace HashifyNet.Algorithms.Blake2
 
 				if (_delayedInputBuffer != null)
 				{
-					cancellationToken.ThrowIfCancellationRequested();
-
 					tempCounter += new UInt128(0, 128);
 
 					Compress(
@@ -295,15 +293,6 @@ namespace HashifyNet.Algorithms.Blake2
 
 				if (leftover.Length > 0 || _delayedInputBuffer == null)
 				{
-					cancellationToken.ThrowIfCancellationRequested();
-
-					//var finalBuffer = new byte[128];
-
-					//if (leftover > 0)
-					//{
-					//	Array.Copy(remainder, 0, finalBuffer, 0, remainderCount);
-					//}
-
 					tempCounter += new UInt128(0, (ulong)leftover.Length);
 
 					Compress(
