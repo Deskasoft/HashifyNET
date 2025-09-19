@@ -122,7 +122,7 @@ namespace HashifyNet.Algorithms.Keccak
 				int bytesToSqueeze = (_hashSizeInBits + 7) / 8;
 				byte[] hash = Squeeze(bytesToSqueeze);
 
-				return new HashValue(ValueEndianness.NotApplicable, hash, _hashSizeInBits);
+				return new HashValue(ValueEndianness.BigEndian, hash, _hashSizeInBits);
 			}
 
 			private void Absorb(ReadOnlySpan<byte> data)
