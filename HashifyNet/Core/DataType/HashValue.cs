@@ -536,6 +536,57 @@ namespace HashifyNet.Core.Utilities
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
+		/// <param name="start"><inheritdoc/></param>
+		/// <param name="length"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		public ReadOnlySpan<byte> AsSpan(int start, int length)
+		{
+			return Hash.AsSpan(start, length);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="length"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		public ReadOnlySpan<byte> AsSpan(int length)
+		{
+			return AsSpan(0, length);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public ReadOnlySpan<byte> AsSpan()
+		{
+			return AsSpan(0, Hash.Length);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="start"><inheritdoc/></param>
+		/// <param name="length"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		public IHashValue Slice(int start, int length)
+		{
+			return new HashValue(Endianness, Hash.AsSpan(start, length).ToImmutableArray(), length * 8);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="length"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		public IHashValue Slice(int length)
+		{
+			return Slice(0, length);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
 		/// <param name="bitLength"><inheritdoc/></param>
 		/// <returns><inheritdoc/></returns>
 		/// <exception cref="ArgumentOutOfRangeException"><inheritdoc/></exception>
