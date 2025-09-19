@@ -313,7 +313,7 @@ namespace HashifyNet.Algorithms.Blake3
 					FillXof(cv, lastBlockWords ?? new uint[16], chunkCounter, lastBlockLen, lastFlags, result);
 
 					ResetState();
-					return new HashValue(ValueEndianness.NotApplicable, result, _hashSizeInBits);
+					return new HashValue(ValueEndianness.LittleEndian, result, _hashSizeInBits);
 				}
 
 				// Case B: exactly one full chunk emitted and no remainder
@@ -328,7 +328,7 @@ namespace HashifyNet.Algorithms.Blake3
 					FillXof(_singleChunkCv, _singleChunkLastBlockWords, _singleChunkCounter, _singleChunkLastBlockLen, _singleChunkLastBlockFlags, result);
 
 					ResetState();
-					return new HashValue(ValueEndianness.NotApplicable, result, _hashSizeInBits);
+					return new HashValue(ValueEndianness.LittleEndian, result, _hashSizeInBits);
 				}
 
 				// Case C: true multi-chunk (>=2), or 1 chunk + tail (will become >=2 after tail)
@@ -353,7 +353,7 @@ namespace HashifyNet.Algorithms.Blake3
 				FillXof(_currentIV, rootMessageBlock, 0UL, BLOCK_LEN, PARENT, result);
 
 				ResetState();
-				return new HashValue(ValueEndianness.NotApplicable, result, _hashSizeInBits);
+				return new HashValue(ValueEndianness.LittleEndian, result, _hashSizeInBits);
 			}
 
 			private void EmitFullChunk(ReadOnlySpan<byte> src)
