@@ -592,6 +592,9 @@ namespace HashifyNet.Core.Utilities
 		/// <exception cref="ArgumentOutOfRangeException"><inheritdoc/></exception>
 		public virtual IHashValue Coerce(int bitLength)
 		{
+			if (BitLength == bitLength)
+				return this;
+
 			return new HashValue(Endianness, ArrayHelpers.CoerceToArray(Hash.ToArray(), bitLength), bitLength);
 		}
 
