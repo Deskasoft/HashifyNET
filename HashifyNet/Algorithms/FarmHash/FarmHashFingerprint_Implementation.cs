@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -75,14 +75,14 @@ namespace HashifyNet.Algorithms.FarmHash
 			}
 		}
 
-		protected override IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
+		protected override IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 		{
 			return _impl.ComputeHashInternal(data, cancellationToken);
 		}
 
 		private interface IFarmHashFingerprintInternal
 		{
-			IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken);
+			IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken);
 		}
 
 		private class FarmHashFingerprint32 : IFarmHashFingerprintInternal
@@ -90,9 +90,9 @@ namespace HashifyNet.Algorithms.FarmHash
 			private const uint c1 = 0xcc9e2d51;
 			private const uint c2 = 0x1b873593;
 
-			public IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
+			public IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 			{
-				var dataCount = data.Count;
+				var dataCount = data.Length;
 				uint hashValue;
 
 				if (dataCount > 24)
@@ -116,28 +116,24 @@ namespace HashifyNet.Algorithms.FarmHash
 				}
 
 				return new HashValue(
+					ValueEndianness.LittleEndian,
 					Endianness.GetBytesLittleEndian(hashValue),
 					32);
 			}
 
-			private static uint ComputeHash25Plus(ArraySegment<byte> data, CancellationToken cancellationToken)
+			private static uint ComputeHash25Plus(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
-
+				var dataCount = data.Length;
 
 				var h = (uint)dataCount;
 				var g = (uint)(c1 * dataCount);
 				var f = g;
 
-				var a0 = RotateRight(Endianness.ToUInt32LittleEndian(dataArray, endOffset - 4) * c1, 17) * c2;
-				var a1 = RotateRight(Endianness.ToUInt32LittleEndian(dataArray, endOffset - 8) * c1, 17) * c2;
-				var a2 = RotateRight(Endianness.ToUInt32LittleEndian(dataArray, endOffset - 16) * c1, 17) * c2;
-				var a3 = RotateRight(Endianness.ToUInt32LittleEndian(dataArray, endOffset - 12) * c1, 17) * c2;
-				var a4 = RotateRight(Endianness.ToUInt32LittleEndian(dataArray, endOffset - 20) * c1, 17) * c2;
+				var a0 = RotateRight(Endianness.ToUInt32LittleEndian(data, dataCount - 4) * c1, 17) * c2;
+				var a1 = RotateRight(Endianness.ToUInt32LittleEndian(data, dataCount - 8) * c1, 17) * c2;
+				var a2 = RotateRight(Endianness.ToUInt32LittleEndian(data, dataCount - 16) * c1, 17) * c2;
+				var a3 = RotateRight(Endianness.ToUInt32LittleEndian(data, dataCount - 12) * c1, 17) * c2;
+				var a4 = RotateRight(Endianness.ToUInt32LittleEndian(data, dataCount - 20) * c1, 17) * c2;
 
 				h ^= a0;
 				h = RotateRight(h, 19);
@@ -156,16 +152,16 @@ namespace HashifyNet.Algorithms.FarmHash
 
 				// Process groups of 20 bytes, leaving 1 to 20 bytes remaining.
 				{
-					var groupEndOffset = endOffset - 20;
+					var groupEndOffset = dataCount - 20;
 
-					for (var currentOffset = dataOffset; currentOffset < groupEndOffset; currentOffset += 20)
+					for (var currentOffset = 0; currentOffset < groupEndOffset; currentOffset += 20)
 					{
 
-						var a = Endianness.ToUInt32LittleEndian(dataArray, currentOffset);
-						var b = Endianness.ToUInt32LittleEndian(dataArray, currentOffset + 4);
-						var c = Endianness.ToUInt32LittleEndian(dataArray, currentOffset + 8);
-						var d = Endianness.ToUInt32LittleEndian(dataArray, currentOffset + 12);
-						var e = Endianness.ToUInt32LittleEndian(dataArray, currentOffset + 16);
+						var a = Endianness.ToUInt32LittleEndian(data, currentOffset);
+						var b = Endianness.ToUInt32LittleEndian(data, currentOffset + 4);
+						var c = Endianness.ToUInt32LittleEndian(data, currentOffset + 8);
+						var d = Endianness.ToUInt32LittleEndian(data, currentOffset + 12);
+						var e = Endianness.ToUInt32LittleEndian(data, currentOffset + 16);
 
 						h += a;
 						g += b;
@@ -193,20 +189,16 @@ namespace HashifyNet.Algorithms.FarmHash
 				return h;
 			}
 
-			private static uint ComputeHash13To24(ArraySegment<byte> data)
+			private static uint ComputeHash13To24(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
+				var dataCount = data.Length;
 
-				var endOffset = dataOffset + dataCount;
-
-				var a = Endianness.ToUInt32LittleEndian(dataArray, dataOffset + (dataCount >> 1) - 4);
-				var b = Endianness.ToUInt32LittleEndian(dataArray, dataOffset + 4);
-				var c = Endianness.ToUInt32LittleEndian(dataArray, endOffset - 8);
-				var d = Endianness.ToUInt32LittleEndian(dataArray, dataOffset + (dataCount >> 1));
-				var e = Endianness.ToUInt32LittleEndian(dataArray, dataOffset);
-				var f = Endianness.ToUInt32LittleEndian(dataArray, endOffset - 4);
+				var a = Endianness.ToUInt32LittleEndian(data, (dataCount >> 1) - 4);
+				var b = Endianness.ToUInt32LittleEndian(data, 4);
+				var c = Endianness.ToUInt32LittleEndian(data, dataCount - 8);
+				var d = Endianness.ToUInt32LittleEndian(data, dataCount >> 1);
+				var e = Endianness.ToUInt32LittleEndian(data, 0);
+				var f = Endianness.ToUInt32LittleEndian(data, dataCount - 4);
 				var h = (d * c1) + (uint)dataCount;
 
 				a = RotateRight(a, 12) + f;
@@ -219,40 +211,32 @@ namespace HashifyNet.Algorithms.FarmHash
 				return FMix(h);
 			}
 
-			private static uint ComputeHash5To12(ArraySegment<byte> data)
+			private static uint ComputeHash5To12(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
+				var dataCount = data.Length;
 
 				var a = (uint)dataCount;
 				var b = (uint)(dataCount * 5);
 				var c = 9U;
 				var d = b;
 
-				a += Endianness.ToUInt32LittleEndian(dataArray, dataOffset);
-				b += Endianness.ToUInt32LittleEndian(dataArray, endOffset - 4);
-				c += Endianness.ToUInt32LittleEndian(dataArray, dataOffset + ((dataCount >> 1) & 4));
+				a += Endianness.ToUInt32LittleEndian(data, 0);
+				b += Endianness.ToUInt32LittleEndian(data, dataCount - 4);
+				c += Endianness.ToUInt32LittleEndian(data, (dataCount >> 1) & 4);
 
 				return FMix(Mur(c, Mur(b, Mur(a, d))));
 			}
 
-			private static uint ComputeHash0To4(ArraySegment<byte> data)
+			private static uint ComputeHash0To4(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
+				var dataCount = data.Length;
 
 				var b = 0U;
 				var c = 9U;
 
-				for (var currentOffset = dataOffset; currentOffset < endOffset; currentOffset += 1)
+				for (var currentOffset = 0; currentOffset < data.Length; currentOffset += 1)
 				{
-					var v = (sbyte)dataArray[currentOffset];
+					var v = (sbyte)data[currentOffset];
 
 					b = (uint)((b * c1) + v);
 					c ^= b;
@@ -305,9 +289,9 @@ namespace HashifyNet.Algorithms.FarmHash
 			private const ulong _k2 = 0x9ae16a3b2f90404fUL;
 			private const ulong _seed = 81UL;
 
-			public IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
+			public IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 			{
-				var dataCount = data.Count;
+				var dataCount = data.Length;
 				ulong hashValue;
 
 				if (dataCount > 64)
@@ -331,6 +315,7 @@ namespace HashifyNet.Algorithms.FarmHash
 				}
 
 				return new HashValue(
+					ValueEndianness.LittleEndian,
 					Endianness.GetBytesLittleEndian(hashValue),
 					64);
 			}
@@ -347,19 +332,15 @@ namespace HashifyNet.Algorithms.FarmHash
 				return b;
 			}
 
-			private static ulong ComputeHash0To16(ArraySegment<byte> data)
+			private static ulong ComputeHash0To16(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
+				var dataCount = data.Length;
 
 				if (dataCount >= 8)
 				{
 					var mul = _k2 + (ulong)(dataCount * 2);
-					var a = Endianness.ToUInt64LittleEndian(dataArray, dataOffset) + _k2;
-					var b = Endianness.ToUInt64LittleEndian(dataArray, endOffset - 8);
+					var a = Endianness.ToUInt64LittleEndian(data, 0) + _k2;
+					var b = Endianness.ToUInt64LittleEndian(data, dataCount - 8);
 					var c = (RotateRight(b, 37) * mul) + a;
 					var d = (RotateRight(a, 25) + b) * mul;
 
@@ -369,16 +350,16 @@ namespace HashifyNet.Algorithms.FarmHash
 				if (dataCount >= 4)
 				{
 					var mul = _k2 + ((ulong)dataCount * 2);
-					ulong a = Endianness.ToUInt32LittleEndian(dataArray, dataOffset);
+					ulong a = Endianness.ToUInt32LittleEndian(data, 0);
 
-					return ComputeHash16((ulong)dataCount + (a << 3), Endianness.ToUInt32LittleEndian(dataArray, endOffset - 4), mul);
+					return ComputeHash16((ulong)dataCount + (a << 3), Endianness.ToUInt32LittleEndian(data, dataCount - 4), mul);
 				}
 
 				if (dataCount > 0)
 				{
-					var a = dataArray[dataOffset];
-					var b = dataArray[dataOffset + (dataCount >> 1)];
-					var c = dataArray[endOffset - 1];
+					var a = data[0];
+					var b = data[dataCount >> 1];
+					var c = data[dataCount - 1];
 
 					var y = a + (((uint)b) << 8);
 					var z = (uint)dataCount + (((uint)c) << 2);
@@ -389,19 +370,15 @@ namespace HashifyNet.Algorithms.FarmHash
 				return _k2;
 			}
 
-			private static ulong ComputeHash17To32(ArraySegment<byte> data)
+			private static ulong ComputeHash17To32(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
+				var dataCount = data.Length;
 
 				var mul = _k2 + ((ulong)dataCount * 2);
-				var a = Endianness.ToUInt64LittleEndian(dataArray, dataOffset) * _k1;
-				var b = Endianness.ToUInt64LittleEndian(dataArray, dataOffset + 8);
-				var c = Endianness.ToUInt64LittleEndian(dataArray, endOffset - 8) * mul;
-				var d = Endianness.ToUInt64LittleEndian(dataArray, endOffset - 16) * _k2;
+				var a = Endianness.ToUInt64LittleEndian(data, 0) * _k1;
+				var b = Endianness.ToUInt64LittleEndian(data, 8);
+				var c = Endianness.ToUInt64LittleEndian(data, dataCount - 8) * mul;
+				var d = Endianness.ToUInt64LittleEndian(data, dataCount - 16) * _k2;
 
 				return ComputeHash16(
 					RotateRight(a + b, 43) + RotateRight(c, 30) + d,
@@ -423,7 +400,7 @@ namespace HashifyNet.Algorithms.FarmHash
 				return new UInt128(b + c, a + z);
 			}
 
-			private static UInt128 WeakHashLen32WithSeeds(byte[] dataArray, int dataOffset, ulong a, ulong b) =>
+			private static UInt128 WeakHashLen32WithSeeds(ReadOnlySpan<byte> dataArray, int dataOffset, ulong a, ulong b) =>
 				WeakHashLen32WithSeeds(
 					Endianness.ToUInt64LittleEndian(dataArray, dataOffset),
 					Endianness.ToUInt64LittleEndian(dataArray, dataOffset + 8),
@@ -432,27 +409,23 @@ namespace HashifyNet.Algorithms.FarmHash
 					a,
 					b);
 
-			private static ulong ComputeHash33To64(ArraySegment<byte> data)
+			private static ulong ComputeHash33To64(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
+				var dataCount = data.Length;
 
 				var mul = _k2 + ((ulong)dataCount * 2);
-				var a = Endianness.ToUInt64LittleEndian(dataArray, dataOffset) * _k2;
-				var b = Endianness.ToUInt64LittleEndian(dataArray, dataOffset + 8);
-				var c = Endianness.ToUInt64LittleEndian(dataArray, endOffset - 8) * mul;
-				var d = Endianness.ToUInt64LittleEndian(dataArray, endOffset - 16) * _k2;
+				var a = Endianness.ToUInt64LittleEndian(data, 0) * _k2;
+				var b = Endianness.ToUInt64LittleEndian(data, 8);
+				var c = Endianness.ToUInt64LittleEndian(data, dataCount - 8) * mul;
+				var d = Endianness.ToUInt64LittleEndian(data, dataCount - 16) * _k2;
 
 				var y = RotateRight(a + b, 43) + RotateRight(c, 30) + d;
 				var z = ComputeHash16(y, a + RotateRight(b + _k2, 18) + c, mul);
 
-				var e = Endianness.ToUInt64LittleEndian(dataArray, dataOffset + 16) * mul;
-				var f = Endianness.ToUInt64LittleEndian(dataArray, dataOffset + 24);
-				var g = (y + Endianness.ToUInt64LittleEndian(dataArray, endOffset - 32)) * mul;
-				var h = (z + Endianness.ToUInt64LittleEndian(dataArray, endOffset - 24)) * mul;
+				var e = Endianness.ToUInt64LittleEndian(data, 16) * mul;
+				var f = Endianness.ToUInt64LittleEndian(data, 24);
+				var g = (y + Endianness.ToUInt64LittleEndian(data, dataCount - 32)) * mul;
+				var h = (z + Endianness.ToUInt64LittleEndian(data, dataCount - 24)) * mul;
 
 				return ComputeHash16(
 					RotateRight(e + f, 43) + RotateRight(g, 30) + h,
@@ -460,13 +433,9 @@ namespace HashifyNet.Algorithms.FarmHash
 					mul);
 			}
 
-			private static ulong ComputeHash65Plus(ArraySegment<byte> data, CancellationToken cancellationToken)
+			private static ulong ComputeHash65Plus(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
+				var dataCount = data.Length;
 
 				var x = _seed;
 				var y = unchecked(_seed * _k1) + 113;
@@ -475,23 +444,23 @@ namespace HashifyNet.Algorithms.FarmHash
 				var v = new UInt128();
 				var w = new UInt128();
 
-				x = (x * _k2) + Endianness.ToUInt64LittleEndian(dataArray, dataOffset);
+				x = (x * _k2) + Endianness.ToUInt64LittleEndian(data, 0);
 
 				// Process 64-byte groups, leaving a final group of 1-64 bytes in size.
 				{
-					var groupEndOffset = endOffset - 64;
+					var groupEndOffset = dataCount - 64;
 
-					for (var currentOffset = dataOffset; currentOffset < groupEndOffset; currentOffset += 64)
+					for (var currentOffset = 0; currentOffset < groupEndOffset; currentOffset += 64)
 					{
 						cancellationToken.ThrowIfCancellationRequested();
 
-						x = RotateRight(x + y + v.GetLower() + Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 8), 37) * _k1;
-						y = RotateRight(y + v.GetUpper() + Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 48), 42) * _k1;
+						x = RotateRight(x + y + v.GetLower() + Endianness.ToUInt64LittleEndian(data, currentOffset + 8), 37) * _k1;
+						y = RotateRight(y + v.GetUpper() + Endianness.ToUInt64LittleEndian(data, currentOffset + 48), 42) * _k1;
 						x ^= w.GetUpper();
-						y += v.GetLower() + Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 40);
+						y += v.GetLower() + Endianness.ToUInt64LittleEndian(data, currentOffset + 40);
 						z = RotateRight(z + w.GetLower(), 33) * _k1;
-						v = WeakHashLen32WithSeeds(dataArray, currentOffset, v.GetUpper() * _k1, x + w.GetLower());
-						w = WeakHashLen32WithSeeds(dataArray, currentOffset + 32, z + w.GetUpper(), y + Endianness.ToUInt64LittleEndian(dataArray, currentOffset + 16));
+						v = WeakHashLen32WithSeeds(data, currentOffset, v.GetUpper() * _k1, x + w.GetLower());
+						w = WeakHashLen32WithSeeds(data, currentOffset + 32, z + w.GetUpper(), y + Endianness.ToUInt64LittleEndian(data, currentOffset + 16));
 
 						Swap(ref z, ref x);
 					}
@@ -505,15 +474,15 @@ namespace HashifyNet.Algorithms.FarmHash
 				v = new UInt128(v.GetUpper(), v.GetLower() + w.GetLower());
 				w = new UInt128(w.GetUpper(), w.GetLower() + v.GetLower());
 
-				x = RotateRight(x + y + v.GetLower() + Endianness.ToUInt64LittleEndian(dataArray, endOffset - 56), 37) * mul;
-				y = RotateRight(y + v.GetUpper() + Endianness.ToUInt64LittleEndian(dataArray, endOffset - 16), 42) * mul;
+				x = RotateRight(x + y + v.GetLower() + Endianness.ToUInt64LittleEndian(data, dataCount - 56), 37) * mul;
+				y = RotateRight(y + v.GetUpper() + Endianness.ToUInt64LittleEndian(data, dataCount - 16), 42) * mul;
 
 				x ^= w.GetUpper() * 9;
-				y += (v.GetLower() * 9) + Endianness.ToUInt64LittleEndian(dataArray, endOffset - 24);
+				y += (v.GetLower() * 9) + Endianness.ToUInt64LittleEndian(data, dataCount - 24);
 				z = RotateRight(z + w.GetLower(), 33) * mul;
 
-				v = WeakHashLen32WithSeeds(dataArray, endOffset - 64, v.GetUpper() * mul, x + w.GetLower());
-				w = WeakHashLen32WithSeeds(dataArray, endOffset - 32, z + w.GetUpper(), y + Endianness.ToUInt64LittleEndian(dataArray, endOffset - 48));
+				v = WeakHashLen32WithSeeds(data, dataCount - 64, v.GetUpper() * mul, x + w.GetLower());
+				w = WeakHashLen32WithSeeds(data, dataCount - 32, z + w.GetUpper(), y + Endianness.ToUInt64LittleEndian(data, dataCount - 48));
 
 				Swap(ref z, ref x);
 
@@ -556,22 +525,19 @@ namespace HashifyNet.Algorithms.FarmHash
 			private const ulong k1 = 0xb492b66fbe98f273UL;
 			private const ulong k2 = 0x9ae16a3b2f90404fUL;
 
-			public IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
+			public IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 			{
-				var dataCount = data.Count;
+				var dataCount = data.Length;
 
 				UInt128 hashValue;
 
 				if (dataCount >= 16)
 				{
-					var dataArray = data.Array;
-					var dataOffset = data.Offset;
-
 					hashValue = CityHash128WithSeed(
-						new ArraySegment<byte>(dataArray, dataOffset + 16, dataCount - 16),
+						data.Slice(16, dataCount - 16),
 						new UInt128(
-							Endianness.ToUInt64LittleEndian(dataArray, dataOffset + 8) + k0,
-							Endianness.ToUInt64LittleEndian(dataArray, dataOffset)),
+							Endianness.ToUInt64LittleEndian(data, 8) + k0,
+							Endianness.ToUInt64LittleEndian(data, 0)),
 						cancellationToken);
 
 				}
@@ -583,37 +549,32 @@ namespace HashifyNet.Algorithms.FarmHash
 				var hashValueBytes = Endianness.GetBytesLittleEndian(hashValue.GetLower())
 					.Concat(Endianness.GetBytesLittleEndian(hashValue.GetUpper()));
 
-				return new HashValue(hashValueBytes, 128);
+				return new HashValue(ValueEndianness.LittleEndian, hashValueBytes, 128);
 			}
 
-			private UInt128 CityHash128WithSeed(ArraySegment<byte> data, UInt128 seed, CancellationToken cancellationToken)
+			private UInt128 CityHash128WithSeed(ReadOnlySpan<byte> data, UInt128 seed, CancellationToken cancellationToken)
 			{
 				cancellationToken.ThrowIfCancellationRequested();
 
-				var dataCount = data.Count;
+				var dataCount = data.Length;
 
 				if (dataCount < 128)
 				{
 					return CityMurmur(data, seed);
 				}
 
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-
-				var endOffset = dataOffset + dataCount;
-
 				// We expect len >= 128 to be the common case.  Keep 56 bytes of state:
 				// v, w, x, y, and z.
 				UInt128 v;
 				{
-					var vLow = (RotateRight(seed.GetUpper() ^ k1, 49) * k1) + Endianness.ToUInt64LittleEndian(dataArray, dataOffset);
+					var vLow = (RotateRight(seed.GetUpper() ^ k1, 49) * k1) + Endianness.ToUInt64LittleEndian(data, 0);
 					v = new UInt128(
-						(RotateRight(vLow, 42) * k1) + Endianness.ToUInt64LittleEndian(dataArray, dataOffset + 8),
+						(RotateRight(vLow, 42) * k1) + Endianness.ToUInt64LittleEndian(data, 8),
 						vLow);
 				}
 
 				UInt128 w = new UInt128(
-					RotateRight(seed.GetLower() + Endianness.ToUInt64LittleEndian(dataArray, dataOffset + 88), 53) * k1,
+					RotateRight(seed.GetLower() + Endianness.ToUInt64LittleEndian(data, 88), 53) * k1,
 					(RotateRight(seed.GetUpper() + ((ulong)dataCount * k1), 35) * k1) + seed.GetLower());
 
 				ulong x = seed.GetLower();
@@ -623,19 +584,19 @@ namespace HashifyNet.Algorithms.FarmHash
 				// This is the same inner loop as CityHash64()
 				int lastGroupEndOffset;
 				{
-					var groupEndOffset = dataOffset + (dataCount - (dataCount % 128));
+					var groupEndOffset = dataCount - (dataCount % 128);
 
-					for (var groupCurrentOffset = dataOffset; groupCurrentOffset < groupEndOffset; groupCurrentOffset += 128)
+					for (var groupCurrentOffset = 0; groupCurrentOffset < groupEndOffset; groupCurrentOffset += 128)
 					{
 						cancellationToken.ThrowIfCancellationRequested();
 
-						x = RotateRight(x + y + v.GetLower() + Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset + 8), 37) * k1;
-						y = RotateRight(y + v.GetUpper() + Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset + 48), 42) * k1;
+						x = RotateRight(x + y + v.GetLower() + Endianness.ToUInt64LittleEndian(data, groupCurrentOffset + 8), 37) * k1;
+						y = RotateRight(y + v.GetUpper() + Endianness.ToUInt64LittleEndian(data, groupCurrentOffset + 48), 42) * k1;
 						x ^= w.GetUpper();
-						y += v.GetLower() + Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset + 40);
+						y += v.GetLower() + Endianness.ToUInt64LittleEndian(data, groupCurrentOffset + 40);
 						z = RotateRight(z + w.GetLower(), 33) * k1;
-						v = WeakHashLen32WithSeeds(dataArray, groupCurrentOffset, v.GetUpper() * k1, x + w.GetLower());
-						w = WeakHashLen32WithSeeds(dataArray, groupCurrentOffset + 32, z + w.GetUpper(), y + Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset + 16));
+						v = WeakHashLen32WithSeeds(data, groupCurrentOffset, v.GetUpper() * k1, x + w.GetLower());
+						w = WeakHashLen32WithSeeds(data, groupCurrentOffset + 32, z + w.GetUpper(), y + Endianness.ToUInt64LittleEndian(data, groupCurrentOffset + 16));
 
 						{
 							ulong temp = z;
@@ -643,13 +604,13 @@ namespace HashifyNet.Algorithms.FarmHash
 							x = temp;
 						}
 
-						x = RotateRight(x + y + v.GetLower() + Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset + 72), 37) * k1;
-						y = RotateRight(y + v.GetUpper() + Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset + 112), 42) * k1;
+						x = RotateRight(x + y + v.GetLower() + Endianness.ToUInt64LittleEndian(data, groupCurrentOffset + 72), 37) * k1;
+						y = RotateRight(y + v.GetUpper() + Endianness.ToUInt64LittleEndian(data, groupCurrentOffset + 112), 42) * k1;
 						x ^= w.GetUpper();
-						y += v.GetLower() + Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset + 104);
+						y += v.GetLower() + Endianness.ToUInt64LittleEndian(data, groupCurrentOffset + 104);
 						z = RotateRight(z + w.GetLower(), 33) * k1;
-						v = WeakHashLen32WithSeeds(dataArray, groupCurrentOffset + 64, v.GetUpper() * k1, x + w.GetLower());
-						w = WeakHashLen32WithSeeds(dataArray, groupCurrentOffset + 96, z + w.GetUpper(), y + Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset + 80));
+						v = WeakHashLen32WithSeeds(data, groupCurrentOffset + 64, v.GetUpper() * k1, x + w.GetLower());
+						w = WeakHashLen32WithSeeds(data, groupCurrentOffset + 96, z + w.GetUpper(), y + Endianness.ToUInt64LittleEndian(data, groupCurrentOffset + 80));
 
 						{
 							ulong temp = z;
@@ -673,16 +634,16 @@ namespace HashifyNet.Algorithms.FarmHash
 				{
 					var groupEndOffset = lastGroupEndOffset - 32;
 
-					for (var groupCurrentOffset = endOffset - 32; groupCurrentOffset > groupEndOffset; groupCurrentOffset -= 32)
+					for (var groupCurrentOffset = dataCount - 32; groupCurrentOffset > groupEndOffset; groupCurrentOffset -= 32)
 					{
 						cancellationToken.ThrowIfCancellationRequested();
 
 						y = (RotateRight(x + y, 42) * k0) + v.GetUpper();
-						w = new UInt128(w.GetUpper(), w.GetLower() + Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset + 16));
+						w = new UInt128(w.GetUpper(), w.GetLower() + Endianness.ToUInt64LittleEndian(data, groupCurrentOffset + 16));
 						x = (x * k0) + w.GetLower();
-						z += w.GetUpper() + Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset);
+						z += w.GetUpper() + Endianness.ToUInt64LittleEndian(data, groupCurrentOffset);
 						w = new UInt128(w.GetUpper() + v.GetLower(), w.GetLower());
-						v = WeakHashLen32WithSeeds(dataArray, groupCurrentOffset, v.GetLower() + z, v.GetUpper());
+						v = WeakHashLen32WithSeeds(data, groupCurrentOffset, v.GetLower() + z, v.GetUpper());
 						v = new UInt128(v.GetUpper(), v.GetLower() * k0);
 					}
 				}
@@ -700,13 +661,9 @@ namespace HashifyNet.Algorithms.FarmHash
 
 			// A subroutine for CityHash128().  Returns a decent 128-bit hash for strings
 			// of any length representable in signed long.  Based on City and Murmur.
-			private static UInt128 CityMurmur(ArraySegment<byte> data, UInt128 seed)
+			private static UInt128 CityMurmur(ReadOnlySpan<byte> data, UInt128 seed)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-
-				var endOffset = dataOffset + dataCount;
+				var dataCount = data.Length;
 
 				ulong a = seed.GetLower();
 				ulong b = seed.GetUpper();
@@ -718,23 +675,23 @@ namespace HashifyNet.Algorithms.FarmHash
 					// len <= 16
 					a = Mix(a * k1) * k1;
 					c = (b * k1) + HashLen0to16(data);
-					d = Mix(a + (dataCount >= 8 ? Endianness.ToUInt64LittleEndian(dataArray, dataOffset) : c));
+					d = Mix(a + (dataCount >= 8 ? Endianness.ToUInt64LittleEndian(data, 0) : c));
 				}
 				else
 				{
 					// len > 16
-					c = HashLen16(Endianness.ToUInt64LittleEndian(dataArray, endOffset - 8) + k1, a);
-					d = HashLen16(b + (ulong)dataCount, c + Endianness.ToUInt64LittleEndian(dataArray, endOffset - 16));
+					c = HashLen16(Endianness.ToUInt64LittleEndian(data, dataCount - 8) + k1, a);
+					d = HashLen16(b + (ulong)dataCount, c + Endianness.ToUInt64LittleEndian(data, dataCount - 16));
 					a += d;
 
-					var groupEndOffset = dataOffset + dataCount - 16;
+					var groupEndOffset = dataCount - 16;
 
-					for (var groupCurrentOffset = dataOffset; groupCurrentOffset < groupEndOffset; groupCurrentOffset += 16)
+					for (var groupCurrentOffset = 0; groupCurrentOffset < groupEndOffset; groupCurrentOffset += 16)
 					{
-						a ^= Mix(Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset) * k1) * k1;
+						a ^= Mix(Endianness.ToUInt64LittleEndian(data, groupCurrentOffset) * k1) * k1;
 						a *= k1;
 						b ^= a;
-						c ^= Mix(Endianness.ToUInt64LittleEndian(dataArray, groupCurrentOffset + 8) * k1) * k1;
+						c ^= Mix(Endianness.ToUInt64LittleEndian(data, groupCurrentOffset + 8) * k1) * k1;
 						c *= k1;
 						d ^= c;
 					}
@@ -763,18 +720,15 @@ namespace HashifyNet.Algorithms.FarmHash
 				return b;
 			}
 
-			private static ulong HashLen0to16(ArraySegment<byte> data)
+			private static ulong HashLen0to16(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
-				var endOffset = dataOffset + dataCount;
+				var dataCount = data.Length;
 
 				if (dataCount >= 8)
 				{
 					ulong mul = k2 + ((ulong)dataCount * 2);
-					ulong a = Endianness.ToUInt64LittleEndian(dataArray, dataOffset) + k2;
-					ulong b = Endianness.ToUInt64LittleEndian(dataArray, endOffset - 8);
+					ulong a = Endianness.ToUInt64LittleEndian(data, 0) + k2;
+					ulong b = Endianness.ToUInt64LittleEndian(data, dataCount - 8);
 					ulong c = (RotateRight(b, 37) * mul) + a;
 					ulong d = (RotateRight(a, 25) + b) * mul;
 
@@ -784,15 +738,15 @@ namespace HashifyNet.Algorithms.FarmHash
 				if (dataCount >= 4)
 				{
 					ulong mul = k2 + ((ulong)dataCount * 2);
-					ulong a = Endianness.ToUInt32LittleEndian(dataArray, dataOffset);
-					return HashLen16((ulong)dataCount + (a << 3), Endianness.ToUInt32LittleEndian(dataArray, endOffset - 4), mul);
+					ulong a = Endianness.ToUInt32LittleEndian(data, 0);
+					return HashLen16((ulong)dataCount + (a << 3), Endianness.ToUInt32LittleEndian(data, dataCount - 4), mul);
 				}
 
 				if (dataCount > 0)
 				{
-					byte a = dataArray[dataOffset];
-					byte b = dataArray[dataOffset + (dataCount >> 1)];
-					byte c = dataArray[endOffset - 1];
+					byte a = data[0];
+					byte b = data[dataCount >> 1];
+					byte c = data[dataCount - 1];
 
 					uint y = a + ((uint)b << 8);
 					uint z = (uint)dataCount + ((uint)c << 2);
@@ -835,7 +789,7 @@ namespace HashifyNet.Algorithms.FarmHash
 			}
 
 			// Return a 16-byte hash for s[0] ... s[31], a, and b.  Quick and dirty.
-			private static UInt128 WeakHashLen32WithSeeds(byte[] data, int startIndex, ulong a, ulong b)
+			private static UInt128 WeakHashLen32WithSeeds(ReadOnlySpan<byte> data, int startIndex, ulong a, ulong b)
 			{
 				return WeakHashLen32WithSeeds(
 					Endianness.ToUInt64LittleEndian(data, startIndex),

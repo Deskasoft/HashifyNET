@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -103,20 +103,19 @@ namespace HashifyNet.Algorithms.SM3
 				other._messageLength = _messageLength;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				_messageLength += data.Count;
-				ProcessBlock(data.Array, data.Offset);
+				_messageLength += data.Length;
+				ProcessBlock(data);
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				byte[] remainder = FinalizeInputBuffer ?? Array.Empty<byte>();
-				byte[] finalBlock = CreatePaddedBlock(remainder);
+				ReadOnlySpan<byte> finalBlock = CreatePaddedBlock(leftover);
 
 				for (int i = 0; i < finalBlock.Length; i += 64)
 				{
-					ProcessBlock(finalBlock, i);
+					ProcessBlock(finalBlock.Slice(i, 64));
 				}
 
 				byte[] hash = new byte[32];
@@ -126,35 +125,34 @@ namespace HashifyNet.Algorithms.SM3
 					Buffer.BlockCopy(wordBytes, 0, hash, i * 4, 4);
 				}
 
-				return new HashValue(hash, 256);
+				return new HashValue(ValueEndianness.BigEndian, hash, 256);
 			}
 
-			private byte[] CreatePaddedBlock(byte[] remainder)
+			private ReadOnlySpan<byte> CreatePaddedBlock(ReadOnlySpan<byte> remainder)
 			{
 				long totalBits = (_messageLength + remainder.Length) * 8;
 				int remainderLen = remainder.Length;
 
 				int paddingLen = (remainderLen < 56) ? (56 - remainderLen) : (120 - remainderLen);
-				byte[] padded = new byte[remainderLen + paddingLen + 8];
-
-				Buffer.BlockCopy(remainder, 0, padded, 0, remainderLen);
+				Span<byte> padded = new Span<byte>(new byte[remainderLen + paddingLen + 8]);
+				remainder.CopyTo(padded.Slice(0, remainderLen));
 
 				padded[remainderLen] = 0x80;
 
 				byte[] lengthBytes = Endianness.GetBytesBigEndian((ulong)totalBits);
-				Buffer.BlockCopy(lengthBytes, 0, padded, padded.Length - 8, 8);
+				lengthBytes.AsSpan().CopyTo(padded.Slice(padded.Length - 8, 8));
 
 				return padded;
 			}
 
-			private void ProcessBlock(byte[] block, int offset)
+			private void ProcessBlock(ReadOnlySpan<byte> block)
 			{
 				uint[] W = new uint[68];
 				uint[] W_prime = new uint[64];
 
 				for (int i = 0; i < 16; i++)
 				{
-					W[i] = Endianness.ToUInt32BigEndian(block, offset + (i * 4));
+					W[i] = Endianness.ToUInt32BigEndian(block, i * 4);
 				}
 
 				for (int j = 16; j < 68; j++)

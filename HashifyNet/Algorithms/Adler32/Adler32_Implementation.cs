@@ -94,17 +94,14 @@ namespace HashifyNet.Algorithms.Adler32
 				other._s2 = _s2;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
 				uint s1 = _s1;
 				uint s2 = _s2;
 
-				var dataArray = data.Array;
-				var endOffset = data.Offset + data.Count;
-
-				for (int currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
+				for (int currentOffset = 0; currentOffset < data.Length; ++currentOffset)
 				{
-					s1 = (s1 + dataArray[currentOffset]) % MOD_ADLER;
+					s1 = (s1 + data[currentOffset]) % MOD_ADLER;
 					s2 = (s2 + s1) % MOD_ADLER;
 				}
 
@@ -112,13 +109,12 @@ namespace HashifyNet.Algorithms.Adler32
 				_s2 = s2;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				var remainder = FinalizeInputBuffer;
-				if (remainder != null && remainder.Length > 0)
+				if (leftover.Length > 0)
 				{
 					// Process the final remaining bytes
-					TransformByteGroupsInternal(new ArraySegment<byte>(remainder));
+					TransformByteGroupsInternal(leftover);
 				}
 
 				cancellationToken.ThrowIfCancellationRequested();
@@ -126,9 +122,8 @@ namespace HashifyNet.Algorithms.Adler32
 				// Combine s2 and s1 into the final 32-bit checksum
 				uint finalValue = (_s2 << 16) | _s1;
 
-				return new HashValue(Endianness.GetBytesBigEndian(finalValue), 32);
+				return new HashValue(ValueEndianness.BigEndian, Endianness.GetBytesBigEndian(finalValue), 32);
 			}
 		}
 	}
-
 }

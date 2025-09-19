@@ -47,10 +47,10 @@ namespace HashifyNet.UnitTests
 
 				using (var ms = new SlowAsyncStream(new MemoryStream(knownValue.TestValue)))
 				{
-					var hashResults = await hf.ComputeHashAsync(ms);
+					var hashResults = GetResult(await hf.ComputeHashAsync(ms));
 
 					Assert.Equal(
-						new HashValue(knownValue.ExpectedValue.Take((config.HashSizeInBits + 7) / 8), config.HashSizeInBits),
+						new HashValue(ValueEndianness.NotApplicable, knownValue.ExpectedValue.Take((config.HashSizeInBits + 7) / 8), config.HashSizeInBits),
 						hashResults);
 				}
 			}
@@ -67,10 +67,10 @@ namespace HashifyNet.UnitTests
 
 				using (var ms = new SlowAsyncStream(new MemoryStream(knownValue.TestValue)))
 				{
-					var hashResults = await hf.ComputeHashAsync(ms);
+					var hashResults = GetResult(await hf.ComputeHashAsync(ms));
 
 					Assert.Equal(
-						new HashValue(knownValue.ExpectedValue.Take((config.HashSizeInBits + 7) / 8), config.HashSizeInBits),
+						new HashValue(ValueEndianness.NotApplicable, knownValue.ExpectedValue.Take((config.HashSizeInBits + 7) / 8), config.HashSizeInBits),
 						hashResults);
 				}
 			}

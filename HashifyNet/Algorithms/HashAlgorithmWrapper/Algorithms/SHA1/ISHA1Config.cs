@@ -42,5 +42,10 @@ namespace HashifyNet.Algorithms.SHA1
 		/// <para>For SHA1, this is always fixed at <c>160</c> bits.</para>
 		/// </summary>
 		new int HashSizeInBits { get; }
+
+		/// <summary>
+		/// Gets the secret key for the hash algorithm.
+		/// </summary>
+		byte[] Key { get; }
 	}
 }

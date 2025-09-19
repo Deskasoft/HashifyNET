@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -80,20 +80,24 @@ namespace HashifyNet.Algorithms.Argon2id
 			}
 		}
 
-		protected override IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
+		protected override IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 		{
 			byte[] salt;
 			if (_config.Salt != null)
+			{
 				salt = _config.Salt;
+			}
 			else
+			{
 				salt = Argon2idHelpers.GenerateSalt();
+			}
 
 			return ComputeHashWithSaltInternal(data, salt);
 		}
 
-		internal IHashValue ComputeHashWithSaltInternal(ArraySegment<byte> data, byte[] salt)
+		internal IHashValue ComputeHashWithSaltInternal(ReadOnlySpan<byte> data, byte[] salt)
 		{
-			Argon2Config config = Argon2idHelpers.GetArgon2Config(_config, data.Array, salt);
+			Argon2Config config = Argon2idHelpers.GetArgon2Config(_config, data.ToArray(), salt);
 			string hash = Argon2.Hash(config);
 
 			byte[] encodedHash = Argon2idSerializer.Serialize(hash);
@@ -105,7 +109,7 @@ namespace HashifyNet.Algorithms.Argon2id
 
 			try
 			{
-				return new EncodedHashValue(encodedHash, (i) => Argon2idSerializer.Deserialize((byte[])i), buffer.Buffer, _config.HashSizeInBits);
+				return new EncodedHashValue(ValueEndianness.NotApplicable, encodedHash, (i) => Argon2idSerializer.Deserialize((byte[])i), buffer.Buffer, _config.HashSizeInBits);
 			}
 			finally
 			{

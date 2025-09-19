@@ -1,6 +1,4 @@
-#if NET8_0_OR_GREATER
-
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -29,15 +27,38 @@
 // ******************************************************************************
 // *
 
-namespace HashifyNet.Algorithms.HMACSHA3_256
+namespace HashifyNet
 {
 	/// <summary>
-	/// Represents the HMACSHA3_256 cryptographic hash function, providing functionality to compute HMACSHA3_256 hashes for data streams and
-	/// other inputs.
+	/// Specifies the supported Base85 encoding variants.
 	/// </summary>
-	public interface IHMACSHA3_256 : ICryptographicStreamableHashFunction<IHMACSHA3_256Config>, IHashAlgorithmWrapperPlatformDependentAlgorithm<System.Security.Cryptography.HMACSHA3_256>
+	/// <remarks>Base85 encoding is a binary-to-text encoding scheme that represents binary data in an ASCII-safe
+	/// format. This enumeration defines the available variants of Base85 encoding, each with its own specific use case and
+	/// encoding rules: <list type="bullet"> <item> <term><see cref="Ascii85"/></term> <description>The Adobe standard used
+	/// in PostScript and PDF, with '&lt;~' and '~&gt;' delimiters.</description> </item> <item> <term><see
+	/// cref="Z85"/></term> <description>The ZeroMQ standard (RFC 32/Z85), designed to be safe for inclusion in source
+	/// code.</description> </item> <item> <term><see cref="Rfc1924"/></term> <description>The variant defined in RFC 1924,
+	/// originally created for encoding IPv6 addresses.</description> </item> </list></remarks>
+	public enum Base85Variant
 	{
+		/// <summary>
+		/// The default Base85 encoding variant.
+		/// </summary>
+		Ascii85,
+
+		/// <summary>
+		/// The Adobe standard used in PostScript and PDF, with '&lt;~' and '~&gt;' delimiters.
+		/// </summary>
+		AdobeAscii85,
+
+		/// <summary>
+		/// The ZeroMQ standard (RFC 32/Z85), designed to be safe for source code.
+		/// </summary>
+		Z85,
+
+		/// <summary>
+		/// The standard defined in RFC 1924, originally for IPv6 addresses.
+		/// </summary>
+		Rfc1924
 	}
 }
-
-#endif // NET8_0_OR_GREATER

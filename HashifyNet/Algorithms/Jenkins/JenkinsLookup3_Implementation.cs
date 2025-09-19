@@ -69,9 +69,9 @@ namespace HashifyNet.Algorithms.Jenkins
 			}
 		}
 
-		protected override IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
+		protected override IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 		{
-			uint a = 0xdeadbeef + (uint)data.Count + (uint)_config.Seed;
+			uint a = 0xdeadbeef + (uint)data.Length + (uint)_config.Seed;
 			uint b = a;
 			uint c = a;
 
@@ -80,9 +80,7 @@ namespace HashifyNet.Algorithms.Jenkins
 				c += (uint)_config.Seed2;
 			}
 
-			var dataArray = data.Array;
-			var dataOffset = data.Offset;
-			var dataCount = data.Count;
+			var dataCount = data.Length;
 
 			var remainderCount = dataCount % 12;
 			{
@@ -92,16 +90,16 @@ namespace HashifyNet.Algorithms.Jenkins
 				}
 			}
 
-			var remainderOffset = dataOffset + dataCount - remainderCount;
+			var remainderOffset = dataCount - remainderCount;
 
 			// Main group processing
-			int currentOffset = dataOffset;
+			int currentOffset = 0;
 			{
 				while (currentOffset < remainderOffset)
 				{
-					a += Endianness.ToUInt32LittleEndian(dataArray, currentOffset);
-					b += Endianness.ToUInt32LittleEndian(dataArray, currentOffset + 4);
-					c += Endianness.ToUInt32LittleEndian(dataArray, currentOffset + 8);
+					a += Endianness.ToUInt32LittleEndian(data, currentOffset);
+					b += Endianness.ToUInt32LittleEndian(data, currentOffset + 4);
+					c += Endianness.ToUInt32LittleEndian(data, currentOffset + 8);
 
 					Mix(ref a, ref b, ref c);
 
@@ -117,31 +115,31 @@ namespace HashifyNet.Algorithms.Jenkins
 				switch (remainderCount)
 				{
 					case 12:
-						c += Endianness.ToUInt32LittleEndian(dataArray, currentOffset + 8);
+						c += Endianness.ToUInt32LittleEndian(data, currentOffset + 8);
 						goto case 8;
 
-					case 11: c += (uint)dataArray[currentOffset + 10] << 16; goto case 10;
-					case 10: c += (uint)dataArray[currentOffset + 9] << 8; goto case 9;
-					case 9: c += dataArray[currentOffset + 8]; goto case 8;
+					case 11: c += (uint)data[currentOffset + 10] << 16; goto case 10;
+					case 10: c += (uint)data[currentOffset + 9] << 8; goto case 9;
+					case 9: c += data[currentOffset + 8]; goto case 8;
 
 					case 8:
-						b += Endianness.ToUInt32LittleEndian(dataArray, currentOffset + 4);
+						b += Endianness.ToUInt32LittleEndian(data, currentOffset + 4);
 						goto case 4;
 
-					case 7: b += (uint)dataArray[currentOffset + 6] << 16; goto case 6;
-					case 6: b += (uint)dataArray[currentOffset + 5] << 8; goto case 5;
-					case 5: b += dataArray[currentOffset + 4]; goto case 4;
+					case 7: b += (uint)data[currentOffset + 6] << 16; goto case 6;
+					case 6: b += (uint)data[currentOffset + 5] << 8; goto case 5;
+					case 5: b += data[currentOffset + 4]; goto case 4;
 
 					case 4:
-						a += Endianness.ToUInt32LittleEndian(dataArray, currentOffset);
+						a += Endianness.ToUInt32LittleEndian(data, currentOffset);
 
 						Final(ref a, ref b, ref c);
 						break;
 
-					case 3: a += (uint)dataArray[currentOffset + 2] << 16; goto case 2;
-					case 2: a += (uint)dataArray[currentOffset + 1] << 8; goto case 1;
+					case 3: a += (uint)data[currentOffset + 2] << 16; goto case 2;
+					case 2: a += (uint)data[currentOffset + 1] << 8; goto case 1;
 					case 1:
-						a += dataArray[currentOffset];
+						a += data[currentOffset];
 
 						Final(ref a, ref b, ref c);
 						break;
@@ -164,7 +162,7 @@ namespace HashifyNet.Algorithms.Jenkins
 					throw new NotImplementedException();
 			}
 
-			return new HashValue(hash, _config.HashSizeInBits);
+			return new HashValue(ValueEndianness.LittleEndian, hash, _config.HashSizeInBits);
 		}
 
 		private void Mix(ref uint a, ref uint b, ref uint c)

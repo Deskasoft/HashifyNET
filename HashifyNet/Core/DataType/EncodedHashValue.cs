@@ -49,11 +49,12 @@ namespace HashifyNet.Core.Utilities
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EncodedHashValue"/> class with an encoded hash value and its bit length.
 		/// </summary>
+		/// <param name="endianness">The endianness of the hash value.</param>
 		/// <param name="encodedHash">The encoded hash value as a sequence of bytes.</param>
 		/// <param name="decodeOp">The function to be called for decoding the encoded hash into a string.</param>
 		/// <param name="actualHash">The hash value as a sequence of bytes.</param>
 		/// <param name="bitLength">The length of the hash value in bits.</param>
-		public EncodedHashValue(IEnumerable<byte> encodedHash, Func<IEnumerable<byte>, string> decodeOp, IEnumerable<byte> actualHash, int bitLength) : base(actualHash, bitLength)
+		public EncodedHashValue(ValueEndianness endianness, IEnumerable<byte> encodedHash, Func<IEnumerable<byte>, string> decodeOp, IEnumerable<byte> actualHash, int bitLength) : base(endianness, actualHash, bitLength)
 		{
 			_ = encodedHash ?? throw new ArgumentNullException(nameof(encodedHash));
 			_decodeOp = decodeOp ?? throw new ArgumentNullException(nameof(decodeOp));
@@ -78,7 +79,7 @@ namespace HashifyNet.Core.Utilities
 		public override IHashValue Coerce(int bitLength)
 		{
 			IHashValue val = base.Coerce(bitLength);
-			return new EncodedHashValue(EncodedHash, _decodeOp, val.AsByteArray(), bitLength);
+			return new EncodedHashValue(Endianness, EncodedHash, _decodeOp, val.AsByteArray(), bitLength);
 		}
 	}
 }

@@ -143,7 +143,7 @@ namespace HashifyNet.Algorithms.HighwayHash
 				_v0[1] = key[1] ^ _mul0[1];
 				_v0[2] = key[2] ^ _mul0[2];
 				_v0[3] = key[3] ^ _mul0[3];
-	
+
 				_v1[0] = ((key[0] >> 32) | (key[0] << 32)) ^ _mul1[0];
 				_v1[1] = ((key[1] >> 32) | (key[1] << 32)) ^ _mul1[1];
 				_v1[2] = ((key[2] >> 32) | (key[2] << 32)) ^ _mul1[2];
@@ -159,19 +159,19 @@ namespace HashifyNet.Algorithms.HighwayHash
 				other._mul1 = (ulong[])_mul1.Clone();
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				if (data.Count != 32)
+				if (data.Length != 32)
 				{
-					throw new ArgumentException("Data segment must be exactly 32 bytes for HighwayHash block processing. The current is " + data.Count + " bytes.");
+					throw new ArgumentException("Data segment must be exactly 32 bytes for HighwayHash block processing. The current is " + data.Length + " bytes.");
 				}
 
-				var span = new ReadOnlySpan<byte>(data.Array, data.Offset, data.Count);
 				Span<ulong> packet = stackalloc ulong[4];
 				for (int i = 0; i < 4; i++)
 				{
-					packet[i] = BinaryPrimitives.ReadUInt64LittleEndian(span.Slice(i * 8, 8));
+					packet[i] = BinaryPrimitives.ReadUInt64LittleEndian(data.Slice(i * 8, 8));
 				}
+
 				Update(packet);
 			}
 
@@ -229,12 +229,9 @@ namespace HashifyNet.Algorithms.HighwayHash
 				return ((ulong)hi << 32) | lo;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				ReadOnlySpan<byte> rem = (FinalizeInputBuffer == null || FinalizeInputBuffer.Length < 1)
-					? ReadOnlySpan<byte>.Empty
-					: FinalizeInputBuffer.AsSpan();
-
+				ReadOnlySpan<byte> rem = leftover;
 				int r = rem.Length;
 
 				if (r > 0)
@@ -307,7 +304,7 @@ namespace HashifyNet.Algorithms.HighwayHash
 					ulong h0 = _v0[0] + _v1[0] + _mul0[0] + _mul1[0];
 					Span<byte> out64 = stackalloc byte[8];
 					BinaryPrimitives.WriteUInt64LittleEndian(out64, h0);
-					return new HashValue(out64.ToArray(), 64);
+					return new HashValue(ValueEndianness.LittleEndian, out64.ToArray(), 64);
 				}
 
 				if (_hashSizeInBits == 128)
@@ -317,7 +314,7 @@ namespace HashifyNet.Algorithms.HighwayHash
 					Span<byte> out128 = stackalloc byte[16];
 					BinaryPrimitives.WriteUInt64LittleEndian(out128.Slice(0, 8), h0);
 					BinaryPrimitives.WriteUInt64LittleEndian(out128.Slice(8, 8), h1);
-					return new HashValue(out128.ToArray(), 128);
+					return new HashValue(ValueEndianness.LittleEndian, out128.ToArray(), 128);
 				}
 
 				// 256-bit hash
@@ -341,11 +338,9 @@ namespace HashifyNet.Algorithms.HighwayHash
 					BinaryPrimitives.WriteUInt64LittleEndian(out256.Slice(8, 8), h1);
 					BinaryPrimitives.WriteUInt64LittleEndian(out256.Slice(16, 8), h2);
 					BinaryPrimitives.WriteUInt64LittleEndian(out256.Slice(24, 8), h3);
-					return new HashValue(out256.ToArray(), 256);
+					return new HashValue(ValueEndianness.LittleEndian, out256.ToArray(), 256);
 				}
 			}
 		}
 	}
-
 }
-

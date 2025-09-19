@@ -30,30 +30,13 @@
 namespace HashifyNet
 {
 	/// <summary>
-	/// Specifies the supported Base85 encoding variants.
+	/// Contains a set of options for modifying the global behaviour of <see cref="IHashValue"/> aka <see cref="HashifyNet.Core.Utilities.HashValue"/>.
 	/// </summary>
-	/// <remarks>Base85 encoding is a binary-to-text encoding scheme that represents binary data in an ASCII-safe
-	/// format. This enumeration defines the available variants of Base85 encoding, each with its own specific use case and
-	/// encoding rules: <list type="bullet"> <item> <term><see cref="Ascii85"/></term> <description>The Adobe standard used
-	/// in PostScript and PDF, with '&lt;~' and '~&gt;' delimiters.</description> </item> <item> <term><see
-	/// cref="Z85"/></term> <description>The ZeroMQ standard (RFC 32/Z85), designed to be safe for inclusion in source
-	/// code.</description> </item> <item> <term><see cref="Rfc1924"/></term> <description>The variant defined in RFC 1924,
-	/// originally created for encoding IPv6 addresses.</description> </item> </list></remarks>
-	public enum Base85Variant
+	public static class HashValueOptions
 	{
 		/// <summary>
-		/// The Adobe standard used in PostScript and PDF, with '&lt;~' and '~&gt;' delimiters.
+		/// Gets or sets a fixed endianness for all <see cref="IHashValue"/> instances.
 		/// </summary>
-		Ascii85,
-
-		/// <summary>
-		/// The ZeroMQ standard (RFC 32/Z85), designed to be safe for source code.
-		/// </summary>
-		Z85,
-
-		/// <summary>
-		/// The standard defined in RFC 1924, originally for IPv6 addresses.
-		/// </summary>
-		Rfc1924
+		public static ValueEndianness? FixedEndianness { get; set; } = null;
 	}
 }

@@ -86,14 +86,9 @@ namespace HashifyNet.Algorithms.Whirlpool
 				other._processedBytes = _processedBytes;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				if (data.Count != 64)
-				{
-					throw new ArgumentException($"Data must be exactly 64 bytes for Whirlpool.", nameof(data));
-				}
-
-				_processedBytes += (ulong)data.Count;
+				_processedBytes += (ulong)data.Length;
 
 				var block = new ulong[8];
 				for (int i = 0; i < 8; i++)
@@ -101,17 +96,16 @@ namespace HashifyNet.Algorithms.Whirlpool
 					block[i] = 0;
 					for (int j = 0; j < 8; j++)
 					{
-						block[i] = (block[i] << 8) | data.Array[data.Offset + (i * 8) + j];
+						block[i] = (block[i] << 8) | data[(i * 8) + j];
 					}
 				}
 
 				ProcessBlock(block);
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				var remainder = FinalizeInputBuffer;
-				int remainderCount = remainder?.Length ?? 0;
+				int remainderCount = leftover.Length;
 
 				int padIndex;
 				if (remainderCount > 31)
@@ -139,9 +133,10 @@ namespace HashifyNet.Algorithms.Whirlpool
 				var finalData = new byte[remainderCount + pad.Length];
 				if (remainderCount > 0)
 				{
-					Buffer.BlockCopy(remainder, 0, finalData, 0, remainderCount);
+					leftover.CopyTo(finalData);
 				}
-				Buffer.BlockCopy(pad, 0, finalData, remainderCount, pad.Length);
+
+				pad.CopyTo(finalData.AsSpan(remainderCount));
 
 				for (int offset = 0; offset < finalData.Length; offset += 64)
 				{
@@ -166,7 +161,7 @@ namespace HashifyNet.Algorithms.Whirlpool
 					}
 				}
 
-				return new HashValue(hashValueBytes, 512);
+				return new HashValue(ValueEndianness.BigEndian, hashValueBytes, 512);
 			}
 
 			private void ProcessBlock(ulong[] data)

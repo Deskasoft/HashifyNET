@@ -74,7 +74,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 			}
 		}
 
-		protected override IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
+		protected override IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 		{
 			switch (_config.HashSizeInBits)
 			{
@@ -89,24 +89,20 @@ namespace HashifyNet.Algorithms.MurmurHash
 			}
 		}
 
-		protected IHashValue ComputeHash32(ArraySegment<byte> data, CancellationToken cancellationToken)
+		protected IHashValue ComputeHash32(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 		{
-			var dataArray = data.Array;
-			var dataOffset = data.Offset;
-			var dataCount = data.Count;
-
-			var endOffset = dataOffset + dataCount;
+			var dataCount = data.Length;
 			var remainderCount = dataCount % 4;
 
 			uint hashValue = (uint)_config.Seed ^ (uint)dataCount;
 
 			// Process 4-byte groups
 			{
-				var groupEndOffset = endOffset - remainderCount;
+				var groupEndOffset = dataCount - remainderCount;
 
-				for (var currentOffset = dataOffset; currentOffset < groupEndOffset; currentOffset += 4)
+				for (var currentOffset = 0; currentOffset < groupEndOffset; currentOffset += 4)
 				{
-					uint k = Endianness.ToUInt32LittleEndian(dataArray, currentOffset);
+					uint k = Endianness.ToUInt32LittleEndian(data, currentOffset);
 
 					k *= _mixConstant32;
 					k ^= k >> 24;
@@ -120,14 +116,14 @@ namespace HashifyNet.Algorithms.MurmurHash
 			// Process remainder
 			if (remainderCount > 0)
 			{
-				var remainderOffset = endOffset - remainderCount;
+				var remainderOffset = dataCount - remainderCount;
 
 				switch (remainderCount)
 				{
-					case 3: hashValue ^= (uint)dataArray[remainderOffset + 2] << 16; goto case 2;
-					case 2: hashValue ^= (uint)dataArray[remainderOffset + 1] << 8; goto case 1;
+					case 3: hashValue ^= (uint)data[remainderOffset + 2] << 16; goto case 2;
+					case 2: hashValue ^= (uint)data[remainderOffset + 1] << 8; goto case 1;
 					case 1:
-						hashValue ^= dataArray[remainderOffset];
+						hashValue ^= data[remainderOffset];
 						break;
 				}
 				;
@@ -140,28 +136,25 @@ namespace HashifyNet.Algorithms.MurmurHash
 			hashValue ^= hashValue >> 15;
 
 			return new HashValue(
+				ValueEndianness.LittleEndian,
 				Endianness.GetBytesLittleEndian(hashValue),
 				32);
 		}
 
-		protected IHashValue ComputeHash64(ArraySegment<byte> data, CancellationToken cancellationToken)
+		protected IHashValue ComputeHash64(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 		{
-			var dataArray = data.Array;
-			var dataOffset = data.Offset;
-			var dataCount = data.Count;
-
-			var endOffset = dataOffset + dataCount;
+			var dataCount = data.Length;
 			var remainderCount = dataCount % 8;
 
 			ulong hashValue = (ulong)_config.Seed ^ ((ulong)dataCount * _mixConstant64);
 
 			// Process 8-byte groups
 			{
-				var groupEndOffset = endOffset - remainderCount;
+				var groupEndOffset = dataCount - remainderCount;
 
-				for (var currentOffset = dataOffset; currentOffset < groupEndOffset; currentOffset += 8)
+				for (var currentOffset = 0; currentOffset < groupEndOffset; currentOffset += 8)
 				{
-					ulong k = Endianness.ToUInt64LittleEndian(dataArray, currentOffset);
+					ulong k = Endianness.ToUInt64LittleEndian(data, currentOffset);
 
 					k *= _mixConstant64;
 					k ^= k >> 47;
@@ -175,21 +168,21 @@ namespace HashifyNet.Algorithms.MurmurHash
 			// Process remainder
 			if (remainderCount > 0)
 			{
-				var remainderOffset = endOffset - remainderCount;
+				var remainderOffset = dataCount - remainderCount;
 
 				switch (remainderCount)
 				{
-					case 7: hashValue ^= (ulong)dataArray[remainderOffset + 6] << 48; goto case 6;
-					case 6: hashValue ^= (ulong)dataArray[remainderOffset + 5] << 40; goto case 5;
-					case 5: hashValue ^= (ulong)dataArray[remainderOffset + 4] << 32; goto case 4;
+					case 7: hashValue ^= (ulong)data[remainderOffset + 6] << 48; goto case 6;
+					case 6: hashValue ^= (ulong)data[remainderOffset + 5] << 40; goto case 5;
+					case 5: hashValue ^= (ulong)data[remainderOffset + 4] << 32; goto case 4;
 					case 4:
-						hashValue ^= Endianness.ToUInt32LittleEndian(dataArray, remainderOffset);
+						hashValue ^= Endianness.ToUInt32LittleEndian(data, remainderOffset);
 						break;
 
-					case 3: hashValue ^= (ulong)dataArray[remainderOffset + 2] << 16; goto case 2;
-					case 2: hashValue ^= (ulong)dataArray[remainderOffset + 1] << 8; goto case 1;
+					case 3: hashValue ^= (ulong)data[remainderOffset + 2] << 16; goto case 2;
+					case 2: hashValue ^= (ulong)data[remainderOffset + 1] << 8; goto case 1;
 					case 1:
-						hashValue ^= dataArray[remainderOffset];
+						hashValue ^= data[remainderOffset];
 						break;
 				}
 				;
@@ -202,6 +195,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 			hashValue ^= hashValue >> 47;
 
 			return new HashValue(
+				ValueEndianness.LittleEndian,
 				Endianness.GetBytesLittleEndian(hashValue),
 				64);
 		}

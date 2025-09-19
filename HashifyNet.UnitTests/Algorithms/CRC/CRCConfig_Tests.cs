@@ -866,4 +866,3 @@ namespace HashifyNet.UnitTests.Algorithms.CRC
 			};
 	}
 }
-

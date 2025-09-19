@@ -1,6 +1,4 @@
-#if NET8_0_OR_GREATER
-
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -29,23 +27,27 @@
 // ******************************************************************************
 // *
 
-using HashifyNet.Core;
-using HashifyNet.Core.HashAlgorithm;
-using System;
-
-namespace HashifyNet.Algorithms.HMACSHA3_256
+namespace HashifyNet
 {
 	/// <summary>
-	/// Provides an implementation of the HMACSHA3_256 cryptographic hash function.
+	/// A list of supported base58 variants.
 	/// </summary>
-	[HashAlgorithmImplementation(typeof(IHMACSHA3_256), typeof(HMACSHA3_256Config))]
-	internal class HMACSHA3_256_Implementation : HashAlgorithmWrapperBase<IHMACSHA3_256Config>,
-		  IHMACSHA3_256
+	public enum Base58Variant
 	{
-		public HMACSHA3_256_Implementation(IHMACSHA3_256Config config) : base(config, () => config.Key == null ? new System.Security.Cryptography.HMACSHA3_256() : new System.Security.Cryptography.HMACSHA3_256(config.Key))
-		{
-		}
+		/// <summary>
+		/// The Bitcoin variant.
+		/// <para>Alphabet: 123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz</para>
+		/// </summary>
+		Bitcoin,
+		/// <summary>
+		/// The Flickr variant.
+		/// <para>Alphabet: 123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ</para>
+		/// </summary>
+		Flickr,
+		/// <summary>
+		/// The Ripple variant.
+		/// <para>Alphabet: rpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2bcdeCg65jkm8oFqi1tuvAxyz</para>
+		/// </summary>
+		Ripple
 	}
 }
-
-#endif // NET8_0_OR_GREATER

@@ -104,30 +104,28 @@ namespace HashifyNet.Algorithms.Keccak
 				Buffer.BlockCopy(_state, 0, other._state, 0, 25 * sizeof(ulong));
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				Absorb(data.Array, data.Offset);
+				Absorb(data);
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				byte[] remainder = FinalizeInputBuffer ?? Array.Empty<byte>();
 				byte paddingByte = _useSha3Padding ? (byte)0x06 : (byte)0x01;
-
-				byte[] padded = new byte[_rateInBytes];
-				Buffer.BlockCopy(remainder, 0, padded, 0, remainder.Length);
-				padded[remainder.Length] = paddingByte;
+				Span<byte> padded = stackalloc byte[_rateInBytes];
+				leftover.CopyTo(padded);
+				padded[leftover.Length] = paddingByte;
 				padded[_rateInBytes - 1] |= 0x80;
 
-				Absorb(padded, 0);
+				Absorb(padded);
 
 				int bytesToSqueeze = (_hashSizeInBits + 7) / 8;
 				byte[] hash = Squeeze(bytesToSqueeze);
 
-				return new HashValue(hash, _hashSizeInBits);
+				return new HashValue(ValueEndianness.BigEndian, hash, _hashSizeInBits);
 			}
 
-			private void Absorb(byte[] data, int offset)
+			private void Absorb(ReadOnlySpan<byte> data)
 			{
 				int byteIndex = 0;
 				for (int y = 0; y < 5; y++)
@@ -136,7 +134,7 @@ namespace HashifyNet.Algorithms.Keccak
 					{
 						if (byteIndex < _rateInBytes)
 						{
-							_state[x, y] ^= Endianness.ToUInt64LittleEndian(data, offset + byteIndex);
+							_state[x, y] ^= Endianness.ToUInt64LittleEndian(data, byteIndex);
 							byteIndex += 8;
 						}
 						else

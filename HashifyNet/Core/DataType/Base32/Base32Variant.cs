@@ -1,6 +1,4 @@
-#if NET8_0_OR_GREATER
-
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -29,27 +27,20 @@
 // ******************************************************************************
 // *
 
-namespace HashifyNet.Algorithms.HMACSHA3_384
+namespace HashifyNet
 {
 	/// <summary>
-	/// Represents the configuration settings for the HMACSHA3_384 cryptographic hash algorithm.
+	/// The variant of Base32 encoding to use.
 	/// </summary>
-	/// <remarks>This interface extends <see cref="ICryptographicHashConfig{T}"/> to provide configuration specific
-	/// to the HMACSHA3_384 algorithm. The <see cref="HashSizeInBits"/> property is fixed at <c>384</c> bits, as defined by the HMACSHA3_384
-	/// standard.</remarks>
-	public interface IHMACSHA3_384Config : ICryptographicHashConfig<IHMACSHA3_384Config>
+	public enum Base32Variant
 	{
 		/// <summary>
-		/// <inheritdoc cref="IHashConfigBase.HashSizeInBits"/>
-		/// <para>For HMACSHA3_384, this is always fixed at <c>384</c> bits.</para>
+		/// The RFC 4648 variant, using the alphabet A-Z2-7 and padding with '='.
 		/// </summary>
-		new int HashSizeInBits { get; }
-
+		Rfc4648,
 		/// <summary>
-		/// Gets the secret key for the hash algorithm.
+		/// The Crockford variant, using the alphabet 0-9A-Z without padding.
 		/// </summary>
-		byte[] Key { get; }
+		Crockford
 	}
 }
-
-#endif // NET8_0_OR_GREATER

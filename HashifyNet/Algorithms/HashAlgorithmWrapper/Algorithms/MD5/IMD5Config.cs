@@ -42,5 +42,10 @@ namespace HashifyNet.Algorithms.MD5
 		/// <para>For MD5, this is always fixed at <c>128</c> bits.</para>
 		/// </summary>
 		new int HashSizeInBits { get; }
+
+		/// <summary>
+		/// Gets the secret key for the hash algorithm.
+		/// </summary>
+		byte[] Key { get; }
 	}
 }

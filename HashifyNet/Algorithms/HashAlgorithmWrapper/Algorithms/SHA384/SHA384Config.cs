@@ -27,6 +27,8 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core.Utilities;
+
 namespace HashifyNet.Algorithms.SHA384
 {
 	/// <summary>
@@ -52,12 +54,28 @@ namespace HashifyNet.Algorithms.SHA384
 		public int HashSizeInBits { get; private set; }
 
 		/// <summary>
+		/// Gets or sets the secret key for the hash algorithm.
+		/// </summary>
+#if NET8_0_OR_GREATER
+#nullable enable
+		public byte[]?
+#nullable restore
+#else
+		public byte[]
+#endif // NET8_0_OR_GREATER
+		Key
+		{ get; set; } = null;
+
+		/// <summary>
 		/// Creates a deep copy of the current <see cref="SHA384Config"/> instance.
 		/// </summary>
 		/// <returns>A new <see cref="SHA384Config"/> instance with the same settings.</returns>
 		public ISHA384Config Clone()
 		{
-			return new SHA384Config();
+			return new SHA384Config()
+			{
+				Key = (byte[])Key?.Clone(),
+			};
 		}
 
 		/// <summary>
@@ -73,7 +91,10 @@ namespace HashifyNet.Algorithms.SHA384
 			{
 				if (disposing)
 				{
-					// Nothing to dispose.
+					if (Key != null)
+					{
+						ArrayHelpers.ZeroFill(Key);
+					}
 				}
 
 				// TODO: free unmanaged resources (unmanaged objects) and override finalizer

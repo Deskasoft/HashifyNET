@@ -55,7 +55,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, bool data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data));
+				new byte[1] { data ? (byte)1 : (byte)0 });
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, char data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data));
+				Endianness.GetBytesLittleEndian(data));
 		}
 
 		/// <summary>
@@ -97,7 +97,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, double data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data));
+				Endianness.GetBytesLittleEndian(data));
 		}
 
 		/// <summary>
@@ -111,7 +111,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, float data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data));
+				Endianness.GetBytesLittleEndian(data));
 		}
 
 		/// <summary>
@@ -125,7 +125,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, int data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data));
+				Endianness.GetBytesLittleEndian(data));
 		}
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, long data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data));
+				Endianness.GetBytesLittleEndian(data));
 		}
 
 		/// <summary>
@@ -168,7 +168,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, short data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data));
+				Endianness.GetBytesLittleEndian(data));
 		}
 
 		/// <summary>
@@ -200,7 +200,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, uint data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data));
+				Endianness.GetBytesLittleEndian(data));
 		}
 
 		/// <summary>
@@ -215,7 +215,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, ulong data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data));
+				Endianness.GetBytesLittleEndian(data));
 		}
 
 		/// <summary>
@@ -230,7 +230,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, ushort data) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data));
+				Endianness.GetBytesLittleEndian(data));
 		}
 
 		#endregion
@@ -249,8 +249,8 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, bool data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data),
-				desiredHashSize);
+				new byte[1] { data ? (byte)1 : (byte)0 },
+			desiredHashSize);
 		}
 
 		/// <summary>
@@ -281,7 +281,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, char data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data),
+				Endianness.GetBytesLittleEndian(data),
 				desiredHashSize);
 		}
 
@@ -297,7 +297,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, double data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data),
+				Endianness.GetBytesLittleEndian(data),
 				desiredHashSize);
 		}
 
@@ -313,7 +313,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, float data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data),
+				Endianness.GetBytesLittleEndian(data),
 				desiredHashSize);
 		}
 
@@ -329,7 +329,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, int data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data),
+				Endianness.GetBytesLittleEndian(data),
 				desiredHashSize);
 		}
 
@@ -345,7 +345,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, long data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data),
+				Endianness.GetBytesLittleEndian(data),
 				desiredHashSize);
 		}
 
@@ -378,7 +378,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, short data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data),
+				Endianness.GetBytesLittleEndian(data),
 				desiredHashSize);
 		}
 
@@ -414,7 +414,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, uint data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data),
+				Endianness.GetBytesLittleEndian(data),
 				desiredHashSize);
 		}
 
@@ -431,7 +431,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, ulong data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data),
+				Endianness.GetBytesLittleEndian(data),
 				desiredHashSize);
 		}
 
@@ -448,7 +448,7 @@ namespace HashifyNet
 		public static IHashValue ComputeHash<CName>(this IHashFunction<CName> hashFunction, ushort data, int desiredHashSize) where CName : IHashConfig<CName>
 		{
 			return hashFunction.ComputeHash(
-				BitConverter.GetBytes(data),
+				Endianness.GetBytesLittleEndian(data),
 				desiredHashSize);
 		}
 
@@ -478,13 +478,14 @@ namespace HashifyNet
 			var hashesNeeded = (desiredHashSize + (config.HashSizeInBits - 1)) / config.HashSizeInBits;
 
 			// Compute as many hashes as needed
+			ValueEndianness? endianness = null;
 			for (int x = 0; x < Math.Max(hashesNeeded, 1); ++x)
 			{
 				byte[] currentData;
 
 				if (x != 0)
 				{
-					Array.Copy(BitConverter.GetBytes(x), seededData, 4);
+					Array.Copy(Endianness.GetBytesLittleEndian(x), seededData, 4);
 					currentData = seededData;
 
 				}
@@ -494,9 +495,13 @@ namespace HashifyNet
 					currentData = data;
 				}
 
+				var result = hashFunction.ComputeHash(currentData);
+
+				if (!endianness.HasValue)
+					endianness = result.Endianness;
 
 				var elementHash = new BigInteger(
-					hashFunction.ComputeHash(currentData)
+						result
 						.Hash
 						.Concat(new[] { (byte)0 })
 						.ToArray());
@@ -526,7 +531,7 @@ namespace HashifyNet
 				hashBytes = buffer;
 			}
 
-			return new HashValue(hashBytes, desiredHashSize);
+			return new HashValue(endianness.Value, hashBytes, desiredHashSize);
 		}
 
 		#endregion

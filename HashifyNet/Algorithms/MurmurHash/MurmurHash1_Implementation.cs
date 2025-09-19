@@ -63,24 +63,20 @@ namespace HashifyNet.Algorithms.MurmurHash
 			_config = config.Clone();
 		}
 
-		protected override IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken)
+		protected override IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken)
 		{
-			var dataArray = data.Array;
-			var dataOffset = data.Offset;
-			var dataCount = data.Count;
-
-			var endOffset = dataOffset + dataCount;
+			var dataCount = data.Length;
 			var remainderCount = dataCount % 4;
 
 			uint hashValue = (uint)_config.Seed ^ ((uint)dataCount * _m);
 
 			// Process 4-byte groups
 			{
-				var groupEndOffset = endOffset - remainderCount;
+				var groupEndOffset = dataCount - remainderCount;
 
-				for (var currentOffset = dataOffset; currentOffset < groupEndOffset; currentOffset += 4)
+				for (var currentOffset = 0; currentOffset < groupEndOffset; currentOffset += 4)
 				{
-					hashValue += Endianness.ToUInt32LittleEndian(dataArray, currentOffset);
+					hashValue += Endianness.ToUInt32LittleEndian(data, currentOffset);
 					hashValue *= _m;
 					hashValue ^= hashValue >> 16;
 				}
@@ -89,14 +85,14 @@ namespace HashifyNet.Algorithms.MurmurHash
 			// Process remainder
 			if (remainderCount > 0)
 			{
-				var remainderOffset = endOffset - remainderCount;
+				var remainderOffset = dataCount - remainderCount;
 
 				switch (remainderCount)
 				{
-					case 3: hashValue += (uint)dataArray[remainderOffset + 2] << 16; goto case 2;
-					case 2: hashValue += (uint)dataArray[remainderOffset + 1] << 8; goto case 1;
+					case 3: hashValue += (uint)data[remainderOffset + 2] << 16; goto case 2;
+					case 2: hashValue += (uint)data[remainderOffset + 1] << 8; goto case 1;
 					case 1:
-						hashValue += dataArray[remainderOffset];
+						hashValue += data[remainderOffset];
 						break;
 				}
 				;
@@ -112,6 +108,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 			hashValue ^= hashValue >> 17;
 
 			return new HashValue(
+				ValueEndianness.LittleEndian,
 				Endianness.GetBytesLittleEndian(hashValue),
 				32);
 		}

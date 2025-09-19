@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -30,12 +30,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 #if NET8_0_OR_GREATER
-using HashifyNet.Algorithms.HMACSHA3_256;
-using HashifyNet.Algorithms.HMACSHA3_384;
-using HashifyNet.Algorithms.HMACSHA3_512;
 using HashifyNet.Algorithms.SHA3_256;
 using HashifyNet.Algorithms.SHA3_384;
 using HashifyNet.Algorithms.SHA3_512;
@@ -139,10 +135,6 @@ namespace HashifyNet
 		{
 			List<Tuple<Type, bool>> possibleUnavailableAlgorithms = new List<Tuple<Type, bool>>()
 			{
-				Tuple.Create(typeof(IHMACSHA3_256), IHMACSHA3_256.IsSupported),
-				Tuple.Create(typeof(IHMACSHA3_384), IHMACSHA3_384.IsSupported),
-				Tuple.Create(typeof(IHMACSHA3_512), IHMACSHA3_512.IsSupported),
-
 				Tuple.Create(typeof(ISHA3_256), ISHA3_256.IsSupported),
 				Tuple.Create(typeof(ISHA3_384), ISHA3_384.IsSupported),
 				Tuple.Create(typeof(ISHA3_512), ISHA3_512.IsSupported),
@@ -337,4 +329,3 @@ namespace HashifyNet
 		}
 	}
 }
-

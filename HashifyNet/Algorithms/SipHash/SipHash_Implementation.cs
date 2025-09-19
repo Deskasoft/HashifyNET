@@ -125,15 +125,15 @@ namespace HashifyNet.Algorithms.SipHash
 				other._messageLength = _messageLength;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				if (data.Count != 8)
+				if (data.Length != 8)
 				{
 					throw new InvalidOperationException("Expected 8 bytes per byte group.");
 				}
 
-				_messageLength += (ulong)data.Count;
-				ulong m = Endianness.ToUInt64LittleEndian(data.Array, data.Offset);
+				_messageLength += (ulong)data.Length;
+				ulong m = Endianness.ToUInt64LittleEndian(data, 0);
 
 				_v3 ^= m;
 				for (int i = 0; i < _cRounds; ++i)
@@ -143,20 +143,16 @@ namespace HashifyNet.Algorithms.SipHash
 				_v0 ^= m;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				var remainder = FinalizeInputBuffer;
-				int remainderCount = remainder?.Length ?? 0;
+				int remainderCount = leftover.Length;
 				_messageLength += (ulong)remainderCount;
 
 				// Pad the final block with zeros and append message length
 				ulong finalBlock = _messageLength << 56;
-				if (remainder != null)
+				for (int i = 0; i < remainderCount; ++i)
 				{
-					for (int i = 0; i < remainderCount; ++i)
-					{
-						finalBlock |= (ulong)remainder[i] << (i * 8);
-					}
+					finalBlock |= (ulong)leftover[i] << (i * 8);
 				}
 
 				cancellationToken.ThrowIfCancellationRequested();
@@ -179,7 +175,7 @@ namespace HashifyNet.Algorithms.SipHash
 				ulong finalHash = _v0 ^ _v1 ^ _v2 ^ _v3;
 				var hashValueBytes = Endianness.GetBytesLittleEndian(finalHash);
 
-				return new HashValue(hashValueBytes, 64);
+				return new HashValue(ValueEndianness.LittleEndian, hashValueBytes, 64);
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]

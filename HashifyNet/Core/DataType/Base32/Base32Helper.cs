@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,13 +27,63 @@
 // ******************************************************************************
 // *
 
-namespace HashifyNet.Algorithms.HMACMD5
+using System.Text;
+
+namespace HashifyNet
 {
-	/// <summary>
-	/// Represents the HMACMD5 cryptographic hash function, providing functionality to compute HMACMD5 hashes for data streams and
-	/// other inputs.
-	/// </summary>
-	public interface IHMACMD5 : ICryptographicStreamableHashFunction<IHMACMD5Config>, IHashAlgorithmWrapperAlgorithm<System.Security.Cryptography.HMACMD5>
+	internal static class Base32Helper
 	{
+		public static string AsBase32String(byte[] data, Base32Variant variant)
+		{
+			string alphabet;
+			bool usePadding;
+
+			switch (variant)
+			{
+				case Base32Variant.Crockford:
+					alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+					usePadding = false;
+					break;
+
+				case Base32Variant.Rfc4648:
+					alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+					usePadding = true;
+					break;
+
+				default:
+					throw new System.NotSupportedException($"Unsupported base32 variant '{variant}'.");
+			}
+
+			var builder = new StringBuilder();
+			int bitsRead = 0;
+			ulong buffer = 0;
+
+			foreach (byte b in data)
+			{
+				buffer = (buffer << 8) | b;
+				bitsRead += 8;
+
+				while (bitsRead >= 5)
+				{
+					int index = (int)(buffer >> (bitsRead - 5)) & 31;
+					builder.Append(alphabet[index]);
+					bitsRead -= 5;
+				}
+			}
+
+			if (bitsRead > 0)
+			{
+				int index = (int)(buffer << (5 - bitsRead)) & 31;
+				builder.Append(alphabet[index]);
+			}
+
+			if (usePadding)
+			{
+				int padding = (8 - (builder.Length % 8)) % 8;
+				builder.Append('=', padding);
+			}
+
+			return builder.ToString();
+		}
 	}
 }

@@ -35,7 +35,24 @@ namespace HashifyNet.UnitTests
 	public abstract class IHashFunction_TestBase<THashFunction, CName>
 		where THashFunction : IHashFunction<CName> where CName : IHashConfig<CName>
 	{
+		protected virtual ValueEndianness? FixedEndianness => null;
 		protected abstract IEnumerable<KnownValue> KnownValues { get; }
+
+		protected IHashValue GetResult(IHashValue result)
+		{
+			if (result.Endianness != ValueEndianness.NotApplicable)
+			{
+				if (FixedEndianness.HasValue)
+				{
+					if (result.Endianness != FixedEndianness.Value)
+					{
+						result = result.ReverseEndianness();
+					}
+				}
+			}
+
+			return result;
+		}
 
 		[Fact]
 		public void IHashFunction_ComputeHash_ByteArray_MatchesKnownValues()
@@ -43,11 +60,11 @@ namespace HashifyNet.UnitTests
 			foreach (var knownValue in KnownValues)
 			{
 				var hf = CreateHashFunction(knownValue.HashSize);
-				var hashResults = ComputeHash(hf, knownValue.TestValue);
+				var hashResults = GetResult(ComputeHash(hf, knownValue.TestValue));
 
 				IHashConfig<CName> config = hf.Config;
 				Assert.Equal(
-					new HashValue(knownValue.ExpectedValue.Take((config.HashSizeInBits + 7) / 8), config.HashSizeInBits),
+					new HashValue(ValueEndianness.NotApplicable, knownValue.ExpectedValue.Take((config.HashSizeInBits + 7) / 8), config.HashSizeInBits),
 					hashResults);
 			}
 		}
@@ -110,5 +127,4 @@ namespace HashifyNet.UnitTests
 			return valueBytes;
 		}
 	}
-
 }

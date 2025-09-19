@@ -41,31 +41,25 @@ namespace HashifyNet.Core
 		: IHashFunction<CName> where CName : IHashConfig<CName>
 	{
 		/// <summary>
-		/// Gets the configuration settings used for hashing operations.
+		/// <inheritdoc/>
 		/// </summary>
 		public abstract CName Config { get; }
 
 		/// <summary>
-		/// Computes hash value for given byte array.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">Array of data to hash.</param>
-		/// <returns>
-		/// Hash value of the data.
-		/// </returns>
-		/// <exception cref="ArgumentNullException"><paramref name="data"/></exception>
+		/// <param name="data"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
 		public IHashValue ComputeHash(byte[] data) =>
 			ComputeHash(data, CancellationToken.None);
 
 		/// <summary>
-		/// Computes hash value for given byte array.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">Array of data to hash.</param>
-		/// <param name="cancellationToken">A cancellation token to observe while calculating the hash value.</param>
-		/// <returns>
-		/// Hash value of the data.
-		/// </returns>
-		/// <exception cref="ArgumentNullException"><paramref name="data"/></exception>
-		/// <exception cref="TaskCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
+		/// <param name="data"><inheritdoc/></param>
+		/// <param name="cancellationToken"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		/// <exception cref="ArgumentNullException"><inheritdoc/></exception>
 		public IHashValue ComputeHash(byte[] data, CancellationToken cancellationToken)
 		{
 			if (data == null)
@@ -77,34 +71,25 @@ namespace HashifyNet.Core
 		}
 
 		/// <summary>
-		/// Computes hash value for given byte array.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">Array of data to hash.</param>
-		/// <param name="offset">The offset from which to begin using the data.</param>
-		/// <param name="count">The number of bytes to use as data.</param>
-		/// <returns>
-		/// Hash value of the data.
-		/// </returns>
-		/// <exception cref="ArgumentNullException"><paramref name="data"/></exception>
-		/// <exception cref="ArgumentOutOfRangeException"><paramref name="offset"/>;Offset must be a value greater than or equal to zero and less than or equal to the length of the array.</exception>
-		/// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/>;Count must be a value greater than zero and less than the the remaining length of the array after the offset value.</exception>
+		/// <param name="data"><inheritdoc/></param>
+		/// <param name="offset"><inheritdoc/></param>
+		/// <param name="count"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
 		public IHashValue ComputeHash(byte[] data, int offset, int count) =>
 			ComputeHash(data, offset, count, CancellationToken.None);
 
 		/// <summary>
-		/// Computes hash value for given byte array.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">Array of data to hash.</param>
-		/// <param name="offset">The offset from which to begin using the data.</param>
-		/// <param name="count">The number of bytes to use as data.</param>
-		/// <param name="cancellationToken">A cancellation token to observe while calculating the hash value.</param>
-		/// <returns>
-		/// Hash value of the data.
-		/// </returns>
-		/// <exception cref="ArgumentNullException"><paramref name="data"/></exception>
-		/// <exception cref="ArgumentOutOfRangeException"><paramref name="offset"/>;Offset must be a value greater than or equal to zero and less than or equal to the length of the array.</exception>
-		/// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/>;Count must be a value greater than or equal to zero and less than the the remaining length of the array after the offset value.</exception>
-		/// <exception cref="TaskCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
+		/// <param name="data"><inheritdoc/></param>
+		/// <param name="offset"><inheritdoc/></param>
+		/// <param name="count"><inheritdoc/></param>
+		/// <param name="cancellationToken"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		/// <exception cref="ArgumentNullException"><inheritdoc/></exception>
+		/// <exception cref="ArgumentOutOfRangeException"><inheritdoc/></exception>
 		public IHashValue ComputeHash(byte[] data, int offset, int count, CancellationToken cancellationToken)
 		{
 			if (data == null)
@@ -112,50 +97,38 @@ namespace HashifyNet.Core
 				throw new ArgumentNullException(nameof(data));
 			}
 
-			if (offset < 0 || offset > data.Length)
-			{
-				throw new ArgumentOutOfRangeException(nameof(offset), "Offset must be a value greater than or equal to zero and less than or equal to the length of the array.");
-			}
-
-			if (count < 0 || count > data.Length - offset)
-			{
-				throw new ArgumentOutOfRangeException(nameof(count), "Count must be a value greater than or equal to zero and less than the the remaining length of the array after the offset value.");
-			}
-
-			return ComputeHash(new ArraySegment<byte>(data, offset, count), cancellationToken);
+			return ComputeHash(data.AsSpan(offset, count), cancellationToken);
 		}
 
 		/// <summary>
-		/// Computes hash value for given byte array.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">Array of data to hash.</param>
-		/// <returns>
-		/// Hash value of the data.
-		/// </returns>
-		public IHashValue ComputeHash(ArraySegment<byte> data) =>
+		/// <param name="data"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		public IHashValue ComputeHash(ReadOnlySpan<byte> data) =>
 			ComputeHash(data, CancellationToken.None);
 
 		/// <summary>
-		/// Computes hash value for given array segment.
+		/// <inheritdoc/>
 		/// </summary>
-		/// <param name="data">Array segment of data to hash.</param>
-		/// <param name="cancellationToken">A cancellation token to observe while calculating the hash value.</param>
+		/// <param name="data"><inheritdoc/></param>
+		/// <param name="cancellationToken"><inheritdoc/></param>
 		/// <returns>
-		/// Hash value of the data.
+		/// <inheritdoc/>
 		/// </returns>
-		/// <exception cref="TaskCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
-		public IHashValue ComputeHash(ArraySegment<byte> data, CancellationToken cancellationToken) =>
+		/// <exception cref="TaskCanceledException"><inheritdoc/></exception>
+		public IHashValue ComputeHash(ReadOnlySpan<byte> data, CancellationToken cancellationToken) =>
 			ComputeHashInternal(data, cancellationToken);
 
 		/// <summary>
-		/// Computes hash value for given array segment.
+		/// Computes hash value for given read-only span.
 		/// </summary>
-		/// <param name="data">Array segment of data to hash.</param>
+		/// <param name="data">Span of the data to hash.</param>
 		/// <param name="cancellationToken">A cancellation token to observe while calculating the hash value.</param>
 		/// <returns>
 		/// Hash value of the data.
 		/// </returns>
 		/// <exception cref="TaskCanceledException">The <paramref name="cancellationToken"/> was canceled.</exception>
-		protected abstract IHashValue ComputeHashInternal(ArraySegment<byte> data, CancellationToken cancellationToken);
+		protected abstract IHashValue ComputeHashInternal(ReadOnlySpan<byte> data, CancellationToken cancellationToken);
 	}
 }

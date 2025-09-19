@@ -126,8 +126,6 @@ The following hash functions have been implemented from the most reliable refere
 * [Whirlpool](https://en.wikipedia.org/wiki/Whirlpool_(hash_function))
 * [xxHash](https://code.google.com/p/xxhash/)
   * xxHash - Original and 64-bit version.
-  * xxHash3 - Wraps around System.IO.Hashes.
-  * xxHash128 - Wraps around System.IO.Hashes.
 
 Wrapped Implementations
 -----------------------
@@ -284,6 +282,7 @@ License
 -------
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 

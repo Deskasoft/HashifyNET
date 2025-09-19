@@ -37,18 +37,20 @@ namespace HashifyNet
 		private const string Ascii85Alphabet = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstu";
 		private const string Z85Alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ.-:+=^!/*?&<>()[]{}@%$#";
 		private const string Rfc1924Alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!#$%&()*+-;<=>?@^_`{|}~";
+
 		private static readonly uint[] Powers = { 52200625, 614125, 7225, 85, 1 };
 
 		public static string AsBase85String(byte[] data, Base85Variant variant)
 		{
 			if (data == null || data.Length == 0)
 			{
-				return variant == Base85Variant.Ascii85 ? "<~~>" : "";
+				return variant == Base85Variant.AdobeAscii85 ? "<~~>" : "";
 			}
 
 			var builder = new StringBuilder();
 			string alphabet = GetAlphabet(variant);
 			int dataIndex = 0;
+
 			while (dataIndex + 3 < data.Length)
 			{
 				uint value = ((uint)data[dataIndex++] << 24) |
@@ -56,7 +58,7 @@ namespace HashifyNet
 							 ((uint)data[dataIndex++] << 8) |
 							 data[dataIndex++];
 
-				if (variant == Base85Variant.Ascii85 && value == 0)
+				if (value == 0 && (variant == Base85Variant.Ascii85 || variant == Base85Variant.AdobeAscii85))
 				{
 					builder.Append('z');
 					continue;
@@ -74,16 +76,22 @@ namespace HashifyNet
 				uint value = 0;
 				for (int i = 0; i < remainingBytes; i++)
 				{
-					value |= (uint)data[dataIndex + i] << (24 - i * 8);
+					value |= (uint)data[dataIndex + i] << (24 - (i * 8));
+				}
+
+				var finalChars = new char[5];
+				for (int i = 0; i < 5; i++)
+				{
+					finalChars[i] = alphabet[(int)(value / Powers[i] % 85)];
 				}
 
 				for (int i = 0; i < remainingBytes + 1; i++)
 				{
-					builder.Append(alphabet[(int)(value / Powers[i] % 85)]);
+					builder.Append(finalChars[i]);
 				}
 			}
 
-			if (variant == Base85Variant.Ascii85)
+			if (variant == Base85Variant.AdobeAscii85)
 			{
 				return $"<~{builder.ToString()}~>";
 			}
@@ -96,6 +104,7 @@ namespace HashifyNet
 			switch (variant)
 			{
 				case Base85Variant.Ascii85:
+				case Base85Variant.AdobeAscii85:
 					return Ascii85Alphabet;
 				case Base85Variant.Z85:
 					return Z85Alphabet;

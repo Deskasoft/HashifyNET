@@ -74,28 +74,25 @@ namespace HashifyNet.Algorithms.BernsteinHash
 				other._hashValue = _hashValue;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var endOffset = data.Offset + data.Count;
-
 				var tempHashValue = _hashValue;
 
-				for (var currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
+				for (var currentOffset = 0; currentOffset < data.Length; ++currentOffset)
 				{
-					tempHashValue = (33 * tempHashValue) ^ dataArray[currentOffset];
+					tempHashValue = (33 * tempHashValue) ^ data[currentOffset];
 				}
 
 				_hashValue = tempHashValue;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
 				return new HashValue(
+					ValueEndianness.LittleEndian,
 					Endianness.GetBytesLittleEndian(_hashValue),
 					32);
 			}
 		}
 	}
-
 }

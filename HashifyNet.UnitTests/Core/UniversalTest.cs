@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -31,9 +31,6 @@ using HashifyNet.Algorithms.Argon2id;
 using HashifyNet.Algorithms.BuzHash;
 using HashifyNet.Algorithms.CRC;
 using HashifyNet.Algorithms.FNV;
-using HashifyNet.Algorithms.HMACSHA3_256;
-using HashifyNet.Algorithms.HMACSHA3_384;
-using HashifyNet.Algorithms.HMACSHA3_512;
 using HashifyNet.Algorithms.Pearson;
 using HashifyNet.Algorithms.SHA3_256;
 using HashifyNet.Algorithms.SHA3_384;
@@ -697,6 +694,3 @@ namespace HashifyNet.UnitTests.Core
 		}
 	}
 }
-
-
-

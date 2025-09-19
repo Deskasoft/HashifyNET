@@ -76,16 +76,13 @@ namespace HashifyNet.Algorithms.Jenkins
 				other._hashValue = _hashValue;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var endOffset = data.Offset + data.Count;
-
 				var tempHashValue = _hashValue;
 
-				for (var currentOffset = data.Offset; currentOffset < endOffset; ++currentOffset)
+				for (var currentOffset = 0; currentOffset < data.Length; ++currentOffset)
 				{
-					tempHashValue += dataArray[currentOffset];
+					tempHashValue += data[currentOffset];
 					tempHashValue += tempHashValue << 10;
 					tempHashValue ^= tempHashValue >> 6;
 				}
@@ -93,7 +90,7 @@ namespace HashifyNet.Algorithms.Jenkins
 				_hashValue = tempHashValue;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
 				var finalHashValue = _hashValue;
 				finalHashValue += finalHashValue << 3;
@@ -101,10 +98,10 @@ namespace HashifyNet.Algorithms.Jenkins
 				finalHashValue += finalHashValue << 15;
 
 				return new HashValue(
+					ValueEndianness.LittleEndian,
 					Endianness.GetBytesLittleEndian(finalHashValue),
 					32);
 			}
 		}
 	}
-
 }

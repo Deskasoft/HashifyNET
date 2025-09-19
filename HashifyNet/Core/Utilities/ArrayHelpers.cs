@@ -44,11 +44,6 @@ namespace HashifyNet.Core.Utilities
 
 			Array.Clear(array, 0, array.Length);
 		}
-
-		public static void ZeroFill(ArraySegment<byte> array)
-		{
-			ZeroFill(array.Array);
-		}
 		
 		/// <summary>
 		/// Coerces the given <paramref name="hash"/> to a byte array with <paramref name="bitLength"/> significant bits.
@@ -112,5 +107,6 @@ namespace HashifyNet.Core.Utilities
 		}
 	}
 }
+
 
 

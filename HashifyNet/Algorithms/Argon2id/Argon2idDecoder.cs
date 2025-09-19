@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -41,14 +41,14 @@ namespace HashifyNet.Algorithms.Argon2id
 	public static class Argon2idDecoder
 	{
 		/// <summary>
-		/// Decodes the specified segment of a byte array into its original form.
+		/// Decodes the specified byte array and returns the resulting data.
 		/// </summary>
-		/// <param name="data">The segment of the byte array to decode. The segment must not be empty.</param>
-		/// <returns>A byte array containing the decoded data.</returns>
-		public static byte[] Decode(ArraySegment<byte> data)
+		/// <param name="data">The byte array to decode. Cannot be <see langword="null"/>.</param>
+		/// <returns>The decoded byte array, or <see langword="null"/> if decoding fails.</returns>
+		public static byte[] Decode(byte[] data)
 		{
 			Argon2Config config = new Argon2Config();
-			if (!DecodeExtension.DecodeString(config, Argon2idSerializer.Deserialize(data.Array), out var buffer))
+			if (!DecodeExtension.DecodeString(config, Argon2idSerializer.Deserialize(data), out var buffer))
 			{
 				return null;
 			}
@@ -56,20 +56,23 @@ namespace HashifyNet.Algorithms.Argon2id
 			return buffer.Buffer;
 		}
 
+#if NET8_0_OR_GREATER
 		/// <summary>
-		/// Decodes the specified byte array and returns the resulting data.
+		/// Decodes the specified read-only span of bytes and returns the resulting data.
 		/// </summary>
-		/// <param name="data">The byte array to decode. Cannot be null.</param>
-		/// <returns>A byte array containing the decoded data.</returns>
-		public static byte[] Decode(byte[] data)
+		/// <param name="data">The read-only span of bytes to decode.</param>
+		/// <returns>The decoded byte array, or <see langword="null"/> if decoding fails.</returns>
+		public static byte[] Decode(ReadOnlySpan<byte> data)
 		{
-			if (data == null)
+			Argon2Config config = new Argon2Config();
+			if (!DecodeExtension.DecodeString(config, Argon2idSerializer.Deserialize(data), out var buffer))
 			{
-				throw new ArgumentNullException(nameof(data));
+				return null;
 			}
 
-			return Decode(new ArraySegment<byte>(data));
+			return buffer.Buffer;
 		}
+#endif
 
 		/// <summary>
 		/// Decodes the hash value of an Argon2id hash into its raw byte representation.
@@ -88,4 +91,3 @@ namespace HashifyNet.Algorithms.Argon2id
 		}
 	}
 }
-

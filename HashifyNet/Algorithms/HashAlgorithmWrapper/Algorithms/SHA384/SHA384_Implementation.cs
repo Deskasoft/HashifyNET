@@ -28,6 +28,7 @@
 // *
 
 using HashifyNet.Core;
+using System.Security.Cryptography;
 
 namespace HashifyNet.Algorithms.SHA384
 {
@@ -38,7 +39,7 @@ namespace HashifyNet.Algorithms.SHA384
 	internal class SHA384_Implementation : HashAlgorithmWrapperBase<ISHA384Config>,
 		  ISHA384
 	{
-		public SHA384_Implementation(ISHA384Config config) : base(config, () => System.Security.Cryptography.SHA384.Create())
+		public SHA384_Implementation(ISHA384Config config) : base(config, () => config.Key == null ? IncrementalHash.CreateHash(HashAlgorithmName.SHA384) : IncrementalHash.CreateHMAC(HashAlgorithmName.SHA384, config.Key))
 		{
 		}
 	}

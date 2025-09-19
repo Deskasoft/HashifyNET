@@ -205,11 +205,9 @@ namespace HashifyNet.Algorithms.Blake2
 				other._delayedInputBuffer = _delayedInputBuffer;
 			}
 
-			protected override void TransformByteGroupsInternal(ArraySegment<byte> data)
+			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				var dataArray = data.Array;
-				var dataOffset = data.Offset;
-				var dataCount = data.Count;
+				var len = data.Length;
 
 				var tempA = _a;
 				var tempB = _b;
@@ -230,31 +228,29 @@ namespace HashifyNet.Algorithms.Blake2
 					Compress(
 						ref tempA, ref tempB, ref tempC, ref tempD, ref tempE, ref tempF, ref tempG, ref tempH,
 						tempCounter,
-						_delayedInputBuffer, 0,
+						_delayedInputBuffer.AsSpan(),
 						false);
 				}
 
 				// Delay the last 128 bytes of input
 				{
 					_delayedInputBuffer = new byte[128];
-					Array.Copy(dataArray, dataOffset + dataCount - 128, _delayedInputBuffer, 0, 128);
 
-					dataCount -= 128;
+					len -= 128;
+					data.Slice(len, 128).CopyTo(_delayedInputBuffer.AsSpan());
 				}
 
 				// Process all non-delayed input
-				if (dataCount > 0)
+				if (len > 0)
 				{
-					var endOffset = dataOffset + dataCount;
-
-					for (var currentOffset = dataOffset; currentOffset < endOffset; currentOffset += 128)
+					for (var currentOffset = 0; currentOffset < len; currentOffset += 128)
 					{
 						tempCounter += new UInt128(0, 128);
 
 						Compress(
 							ref tempA, ref tempB, ref tempC, ref tempD, ref tempE, ref tempF, ref tempG, ref tempH,
 							tempCounter,
-							dataArray, currentOffset,
+							data.Slice(currentOffset, 128),
 							false);
 					}
 				}
@@ -271,11 +267,8 @@ namespace HashifyNet.Algorithms.Blake2
 				_counter = tempCounter;
 			}
 
-			protected override IHashValue FinalizeHashValueInternal(CancellationToken cancellationToken)
+			protected override IHashValue FinalizeHashValueInternal(ReadOnlySpan<byte> leftover, CancellationToken cancellationToken)
 			{
-				var remainder = FinalizeInputBuffer;
-				var remainderCount = (remainder?.Length).GetValueOrDefault();
-
 				var tempA = _a;
 				var tempB = _b;
 				var tempC = _c;
@@ -289,34 +282,23 @@ namespace HashifyNet.Algorithms.Blake2
 
 				if (_delayedInputBuffer != null)
 				{
-					cancellationToken.ThrowIfCancellationRequested();
-
 					tempCounter += new UInt128(0, 128);
 
 					Compress(
 						ref tempA, ref tempB, ref tempC, ref tempD, ref tempE, ref tempF, ref tempG, ref tempH,
 						tempCounter,
-						_delayedInputBuffer, 0,
-						remainderCount == 0);
+						_delayedInputBuffer.AsSpan(),
+						leftover.Length == 0);
 				}
 
-				if (remainderCount > 0 || _delayedInputBuffer == null)
+				if (leftover.Length > 0 || _delayedInputBuffer == null)
 				{
-					cancellationToken.ThrowIfCancellationRequested();
-
-					var finalBuffer = new byte[128];
-
-					if (remainderCount > 0)
-					{
-						Array.Copy(remainder, 0, finalBuffer, 0, remainderCount);
-					}
-
-					tempCounter += new UInt128(0, (ulong)remainderCount);
+					tempCounter += new UInt128(0, (ulong)leftover.Length);
 
 					Compress(
 						ref tempA, ref tempB, ref tempC, ref tempD, ref tempE, ref tempF, ref tempG, ref tempH,
 						tempCounter,
-						finalBuffer, 0,
+						leftover,
 						true);
 				}
 
@@ -331,17 +313,20 @@ namespace HashifyNet.Algorithms.Blake2
 					.Take(_hashSizeInBits / 8)
 					.ToArray();
 
-				return new HashValue(hashValueBytes, _hashSizeInBits);
+				return new HashValue(ValueEndianness.LittleEndian, hashValueBytes, _hashSizeInBits);
 			}
 
 			private static void Compress(
 				ref ulong a, ref ulong b, ref ulong c, ref ulong d, ref ulong e, ref ulong f, ref ulong g, ref ulong h,
 				UInt128 counter,
-				byte[] dataArray, int dataOffset,
+				ReadOnlySpan<byte> data,
 				bool isFinal)
 			{
 				var reinterpretedData = new ulong[16];
-				Buffer.BlockCopy(dataArray, dataOffset, reinterpretedData, 0, BlockSizeBytes);
+				for (int i = 0; i < 16; i++)
+				{
+					reinterpretedData[i] = Endianness.ToUInt64LittleEndianSafe(data, i * 8);
+				}
 
 				var v = new ulong[16] {
 					a, b, c, d, e, f, g, h,
@@ -370,5 +355,4 @@ namespace HashifyNet.Algorithms.Blake2
 			}
 		}
 	}
-
 }

@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -71,5 +71,17 @@ namespace HashifyNet.Algorithms.Argon2id
 
 			return Encoding.UTF8.GetString(data);
 		}
+
+#if NET8_0_OR_GREATER
+		/// <summary>
+		/// Converts the specified string to a UTF-8 encoded byte array.
+		/// </summary>
+		/// <param name="data">The read-only span of bytes to convert.</param>
+		/// <returns>The string representation of the byte array.</returns>
+		public static string Deserialize(ReadOnlySpan<byte> data)
+		{
+			return Encoding.UTF8.GetString(data);
+		}
+#endif
 	}
 }

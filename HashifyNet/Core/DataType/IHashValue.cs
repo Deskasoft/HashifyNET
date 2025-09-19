@@ -46,6 +46,11 @@ namespace HashifyNet
 		int BitLength { get; }
 
 		/// <summary>
+		/// Gets the endianness of the hash value.
+		/// </summary>
+		ValueEndianness Endianness { get; }
+
+		/// <summary>
 		/// Gets the hash value as an immutable array of bytes.
 		/// </summary>
 		ImmutableArray<byte> Hash { get; }
@@ -130,7 +135,7 @@ namespace HashifyNet
 		string AsBinaryString();
 
 		/// <summary>
-		/// Gets the hash value as a Base85-encoded string. If the bit length is not a multiple of 8, the last byte is padded with zeros.
+		/// Gets the hash value as a Base85-encoded string in the <seealso cref="Base85Variant.Ascii85"/> standard. If the bit length is not a multiple of 8, the last byte is padded with zeros.
 		/// </summary>
 		/// <returns>The generated base85 string.</returns>
 		string AsBase85String();
@@ -150,29 +155,34 @@ namespace HashifyNet
 		string AsBase64String(Base64FormattingOptions formattingOptions = Base64FormattingOptions.None);
 
 		/// <summary>
-		/// Gets the hash value as a Base58-encoded string. If the bit length is not a multiple of 8, the last byte is padded with zeros.
+		/// Gets the hash value as a Base58-encoded string using the <seealso cref="Base58Variant.Bitcoin"/> variant. If the bit length is not a multiple of 8, the last byte is padded with zeros.
 		/// </summary>
 		/// <returns>The generated base58 string.</returns>
 		string AsBase58String();
 
 		/// <summary>
-		/// Gets the hash value as a Base32-encoded string. If the bit length is not a multiple of 8, the last byte is padded with zeros.
+		/// Encodes the current data as a Base58-encoded string using the specified variant.
+		/// </summary>
+		/// <returns>The generated base58 string in the specified variant.</returns>
+		string AsBase58String(Base58Variant variant);
+
+		/// <summary>
+		/// Gets the hash value as a Base32-encoded string in the <seealso cref="Base32Variant.Rfc4648"/> standard. If the bit length is not a multiple of 8, the last byte is padded with zeros.
 		/// </summary>
 		/// <returns>The generated base32 string.</returns>
 		string AsBase32String();
 
 		/// <summary>
-		/// Gets the hash value as a hexadecimal string, using lowercase letters for 'a' to 'f'.
+		/// Gets the hash value as a Base32-encoded string in the specified standard. If the bit length is not a multiple of 8, the last byte is padded with zeros.
+		/// </summary>
+		/// <returns>The generated base32 string.</returns>
+		string AsBase32String(Base32Variant variant);
+
+		/// <summary>
+		/// Gets the hash value as a hexadecimal string, using uppercase letters for 'a' to 'f'.
 		/// </summary>
 		/// <returns>The hexadecimal string.</returns>
 		string AsHexString();
-
-		/// <summary>
-		/// Gets the hash value as a hexadecimal string.
-		/// </summary>
-		/// <param name="uppercase">Indicating to use uppercase letters.</param>
-		/// <returns>The hexadecimal string.</returns>
-		string AsHexString(bool uppercase);
 
 		/// <summary>
 		/// Gets the hash value as a <see cref="BitArray"/>.
@@ -187,11 +197,72 @@ namespace HashifyNet
 		byte[] AsByteArray();
 
 		/// <summary>
+		/// Gets the hash value as a read-only span of bytes.
+		/// </summary>
+		/// <param name="start">The zero-based byte index at which to begin the span. Must be greater than or equal to 0 and less than <see cref="Hash"/>.Length.</param>
+		/// <param name="length">The number of bytes to include in the span. Must be greater than or equal to 0 and less than or equal to <see cref="Hash"/>.Length - <paramref name="start"/>.</param>
+		/// <returns>The read-only span of bytes.</returns>
+		ReadOnlySpan<byte> AsSpan(int start, int length);
+
+		/// <summary>
+		/// Gets the hash value as a read-only span of bytes of the specified length from the start.
+		/// </summary>
+		/// <param name="length">The number of bytes to include in the span. Must be greater than or equal to 0 and less than or equal to <see cref="Hash"/>.Length.</param>
+		/// <returns>The read-only span of bytes.</returns>
+		ReadOnlySpan<byte> AsSpan(int length);
+
+		/// <summary>
+		/// Gets the hash value as a read-only span of bytes.
+		/// </summary>
+		/// <returns>The read-only span of bytes.</returns>
+		ReadOnlySpan<byte> AsSpan();
+
+		/// <summary>
+		/// Slices a portion of the hash value starting from the specified bit index and spanning the specified number of bits.
+		/// </summary>
+		/// <param name="start">The zero-based bit index at which to begin the slice. Must be greater than or equal to 0 and less than <see cref="BitLength"/>.</param>
+		/// <param name="length">The number of bits to include in the slice. Must be greater than or equal to 1 and less than or equal to <see cref="BitLength"/> - <paramref name="start"/>.</param>
+		/// <returns>The sliced <see cref="IHashValue"/> instance.</returns>
+		IHashValue Slice(int start, int length);
+
+		/// <summary>
+		/// Slices the hash value to the specified length in bits, starting from the beginning of the hash.
+		/// </summary>
+		/// <param name="length">The number of bits to include in the slice. Must be greater than or equal to 1 and less than or equal to <see cref="BitLength"/>.</param>
+		/// <returns>The sliced <see cref="IHashValue"/> instance.</returns>
+		IHashValue Slice(int length);
+
+		/// <summary>
 		/// Converts the current hash value to a new representation with the specified bit length.
 		/// </summary>
 		/// <param name="bitLength">The desired bit length of the resulting hash value. Must be greater than or equal to 1.</param>
 		/// <returns>An <see cref="IHashValue"/> instance representing the hash value coerced to the specified bit length.</returns>
 		/// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="bitLength"/> is less than 1.</exception>
 		IHashValue Coerce(int bitLength);
+
+		/// <summary>
+		/// Converts the current hash value to a new representation with the specified endianness of little-endian.
+		/// </summary>
+		/// <returns>The new <see cref="IHashValue"/> instance with little-endian byte order. If the current instance is already in little-endian format, it returns the same instance.</returns>
+		IHashValue AsLittleEndian();
+
+		/// <summary>
+		/// Converts the current hash value to a new representation with the specified endianness of big-endian.
+		/// </summary>
+		/// <returns>The new <see cref="IHashValue"/> instance with big-endian byte order. If the current instance is already in big-endian format, it returns the same instance.</returns>
+		IHashValue AsBigEndian();
+
+		/// <summary>
+		/// Converts the current hash value to a new representation with the specified endianness.
+		/// </summary>
+		/// <param name="endianness">The desired <see cref="ValueEndianness"/> of the resulting hash value.</param>
+		/// <returns>The new <see cref="IHashValue"/> instance with the specified byte order. If the current instance is already in the specified format, it returns the same instance.</returns>
+		IHashValue ToEndianness(ValueEndianness endianness);
+
+		/// <summary>
+		/// Reverses the endianness of the current hash value. If the current endianness is <see cref="ValueEndianness.NotApplicable"/>, no changes are made.
+		/// </summary>
+		/// <returns>The new <see cref="IHashValue"/> instance with reversed byte order. If the current instance has <see cref="ValueEndianness.NotApplicable"/>, it returns the same instance.</returns>
+		IHashValue ReverseEndianness();
 	}
 }

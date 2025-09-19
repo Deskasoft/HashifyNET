@@ -28,6 +28,7 @@
 // *
 
 using HashifyNet.Core;
+using System.Security.Cryptography;
 
 namespace HashifyNet.Algorithms.SHA256
 {
@@ -38,7 +39,7 @@ namespace HashifyNet.Algorithms.SHA256
 	internal class SHA256_Implementation : HashAlgorithmWrapperBase<ISHA256Config>,
 		  ISHA256
 	{
-		public SHA256_Implementation(ISHA256Config config) : base(config, () => System.Security.Cryptography.SHA256.Create())
+		public SHA256_Implementation(ISHA256Config config) : base(config, () => config.Key == null ? IncrementalHash.CreateHash(HashAlgorithmName.SHA256) : IncrementalHash.CreateHMAC(HashAlgorithmName.SHA256, config.Key))
 		{
 		}
 	}

@@ -1,4 +1,4 @@
-// *
+﻿// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,25 +27,26 @@
 // ******************************************************************************
 // *
 
-namespace HashifyNet.Algorithms.HMACSHA512
+namespace HashifyNet
 {
 	/// <summary>
-	/// Represents the configuration settings for the HMACSHA512 cryptographic hash algorithm.
+	/// The endianness of a value when represented as a sequence of bytes.
 	/// </summary>
-	/// <remarks>This interface extends <see cref="ICryptographicHashConfig{T}"/> to provide configuration specific
-	/// to the HMACSHA512 algorithm. The <see cref="HashSizeInBits"/> property is fixed at <c>512</c> bits, as defined by the HMACSHA512
-	/// standard.</remarks>
-	public interface IHMACSHA512Config : ICryptographicHashConfig<IHMACSHA512Config>
+	public enum ValueEndianness
 	{
 		/// <summary>
-		/// <inheritdoc cref="IHashConfigBase.HashSizeInBits"/>
-		/// <para>For HMACSHA512, this is always fixed at <c>512</c> bits.</para>
+		/// The endianness is not applicable, as the hash is typically treated only as a byte sequence.
 		/// </summary>
-		new int HashSizeInBits { get; }
+		NotApplicable = 0,
 
 		/// <summary>
-		/// Gets the secret key for the hash algorithm.
+		/// Indicates that the value is in little-endian format (least significant byte first).
 		/// </summary>
-		byte[] Key { get; }
+		LittleEndian,
+
+		/// <summary>
+		/// Indicates that the value is in big-endian format (most significant byte first).
+		/// </summary>
+		BigEndian
 	}
 }

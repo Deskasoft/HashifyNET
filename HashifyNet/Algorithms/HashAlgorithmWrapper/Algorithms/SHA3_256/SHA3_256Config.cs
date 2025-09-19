@@ -29,6 +29,8 @@
 // ******************************************************************************
 // *
 
+using HashifyNet.Core.Utilities;
+
 namespace HashifyNet.Algorithms.SHA3_256
 {
 	/// <summary>
@@ -54,12 +56,28 @@ namespace HashifyNet.Algorithms.SHA3_256
 		public int HashSizeInBits { get; private set; }
 
 		/// <summary>
+		/// Gets or sets the secret key for the hash algorithm.
+		/// </summary>
+#if NET8_0_OR_GREATER
+#nullable enable
+		public byte[]?
+#nullable restore
+#else
+		public byte[]
+#endif // NET8_0_OR_GREATER
+		Key
+		{ get; set; } = null;
+
+		/// <summary>
 		/// Creates a deep copy of the current <see cref="SHA3_256Config"/> instance.
 		/// </summary>
 		/// <returns>A new <see cref="SHA3_256Config"/> instance with the same settings.</returns>
 		public ISHA3_256Config Clone()
 		{
-			return new SHA3_256Config();
+			return new SHA3_256Config()
+			{
+				Key = (byte[])Key?.Clone(),
+			};
 		}
 
 		/// <summary>
@@ -75,7 +93,10 @@ namespace HashifyNet.Algorithms.SHA3_256
 			{
 				if (disposing)
 				{
-					// Nothing to dispose.
+					if (Key != null)
+					{
+						ArrayHelpers.ZeroFill(Key);
+					}
 				}
 
 				// TODO: free unmanaged resources (unmanaged objects) and override finalizer
