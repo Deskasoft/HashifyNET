@@ -69,7 +69,7 @@ namespace HashifyNet.Core.Utilities
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
-		public int ByteLength => (BitLength + 7) / 8;
+		public int ByteLength { get; }
 
 		private HashValue(ValueEndianness endianness, ImmutableArray<byte> hash, int bitLength)
 		{
@@ -104,6 +104,7 @@ namespace HashifyNet.Core.Utilities
 			Hash = hash;
 			BitLength = bitLength;
 			Endianness = endianness;
+			ByteLength = (BitLength + 7) / 8;
 		}
 
 		/// <summary>
@@ -509,7 +510,7 @@ namespace HashifyNet.Core.Utilities
 		{
 			ImmutableArray<byte> hash = AsBigEndian().Hash;
 
-			var stringBuilder = new StringBuilder(hash.Length);
+			var stringBuilder = new StringBuilder(ByteLength);
 			var formatString = "X2";
 
 			foreach (var byteValue in hash)
@@ -568,7 +569,7 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public ReadOnlySpan<byte> AsSpan()
 		{
-			return AsSpan(0, Hash.Length);
+			return AsSpan(0, ByteLength);
 		}
 
 		/// <summary>
@@ -579,7 +580,7 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public IHashValue Slice(int start, int length)
 		{
-			return new HashValue(Endianness, Hash.AsSpan(start, length).ToImmutableArray(), length * 8);
+			return new HashValue(Endianness, AsSpan(start, length).ToImmutableArray(), length * 8);
 		}
 
 		/// <summary>
@@ -635,7 +636,7 @@ namespace HashifyNet.Core.Utilities
 		/// </summary>
 		/// <param name="endianness"><inheritdoc/></param>
 		/// <returns><inheritdoc/></returns>
-		public IHashValue ToEndianness(ValueEndianness endianness)
+		public IHashValue WithEndianness(ValueEndianness endianness)
 		{
 			if (Endianness == ValueEndianness.NotApplicable || endianness == ValueEndianness.NotApplicable || Endianness == endianness)
 				return this;
@@ -705,7 +706,7 @@ namespace HashifyNet.Core.Utilities
 				throw new ArgumentOutOfRangeException(nameof(arrayIndex), "The given array index is out of range.");
 			}
 
-			if (array.Length - arrayIndex < Hash.Length)
+			if (array.Length - arrayIndex < ByteLength)
 			{
 				throw new ArgumentException("The given array is too small to hold the hash value starting from the given index.", nameof(array));
 			}
@@ -719,12 +720,12 @@ namespace HashifyNet.Core.Utilities
 		/// <param name="destination"><inheritdoc/></param>
 		public void CopyTo(Span<byte> destination)
 		{
-			if (destination.Length < Hash.Length)
+			if (destination.Length < ByteLength)
 			{
 				throw new ArgumentException("The given destination span is too small to hold the hash value.", nameof(destination));
 			}
 
-			Hash.AsSpan().CopyTo(destination);
+			AsSpan().CopyTo(destination);
 		}
 
 		/// <summary>
@@ -733,12 +734,12 @@ namespace HashifyNet.Core.Utilities
 		/// <param name="destination"><inheritdoc/></param>
 		public void CopyTo(Memory<byte> destination)
 		{
-			if (destination.Length < Hash.Length)
+			if (destination.Length < ByteLength)
 			{
 				throw new ArgumentException("The given destination memory is too small to hold the hash value.", nameof(destination));
 			}
 
-			Hash.AsMemory().CopyTo(destination);
+			AsMemory().CopyTo(destination);
 		}
 
 		/// <summary>
@@ -754,15 +755,87 @@ namespace HashifyNet.Core.Utilities
 				throw new ArgumentOutOfRangeException(nameof(destinationIndex), "The given destination index is out of range.");
 			}
 
-			if (destination.Count - destinationIndex < Hash.Length)
+			if (destination.Count - destinationIndex < ByteLength)
 			{
 				throw new ArgumentException("The given destination is too small to hold the hash value starting from the given index.", nameof(destination));
 			}
 
-			for (int i = 0; i < Hash.Length; i++)
+			for (int i = 0; i < ByteLength; i++)
 			{
 				destination[destinationIndex + i] = Hash[i];
 			}
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="destination"><inheritdoc/></param>
+		public void CopyTo(Stream destination)
+		{
+			AsStream(destination);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public double CalculateEntropy()
+		{
+			int byteLength = ByteLength;
+			if (byteLength == 0)
+			{
+				return 0;
+			}
+
+			var counts = new int[256];
+			for (int i = 0; i < byteLength; ++i)
+			{
+				counts[Hash[i]]++;
+			}
+
+			double totalEntropy = 0.0;
+			for (int i = 0; i < counts.Length; i++)
+			{
+				int count = counts[i];
+				if (count > 0)
+				{
+					double probability = (double)count / byteLength;
+					totalEntropy -= probability *
+#if NET8_0_OR_GREATER
+						Math.Log2(probability)
+#else
+						(Math.Log(probability) / Math.Log(2))
+#endif
+						;
+				}
+			}
+
+			return totalEntropy;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public double CalculateEntropyPercentage()
+		{
+			int byteLength = ByteLength;
+			if (byteLength <= 1)
+			{
+				return 100.0;
+			}
+
+			double actualEntropy = this.CalculateEntropy();
+			double maxPossibleEntropy =
+
+#if NET8_0_OR_GREATER
+				Math.Log2(byteLength)
+#else
+				(Math.Log(byteLength) / Math.Log(2))
+#endif
+				;
+
+			return (actualEntropy / maxPossibleEntropy) * 100.0;
 		}
 
 		/// <summary>
