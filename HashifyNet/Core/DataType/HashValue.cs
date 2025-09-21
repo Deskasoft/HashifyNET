@@ -31,6 +31,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -45,6 +47,7 @@ namespace HashifyNet.Core.Utilities
 	/// its bit length. It includes methods to convert the hash value into various formats, such as Base64, hexadecimal,
 	/// and numeric types. The hash value is immutable and ensures that the provided bit length matches the actual length
 	/// of the hash in bits.</remarks>
+	[DebuggerDisplay("Hex: {AsHexString()}, Base64: {AsBase64String()}")]
 	public class HashValue
 		: IHashValue
 	{
@@ -648,6 +651,130 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="inputStream"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		public Stream AsStream(Stream inputStream)
+		{
+			Stream stream = inputStream ?? new MemoryStream();
+			if (!stream.CanWrite)
+			{
+				throw new ArgumentException("The given stream must be writable.", nameof(inputStream));
+			}
+
+			byte[] buffer = AsByteArray();
+			stream.Write(buffer, 0, buffer.Length);
+
+			return stream;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public Stream AsStream()
+		{
+			return AsStream(new MemoryStream());
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public ReadOnlyMemory<byte> AsMemory()
+		{
+			return Hash.AsMemory();
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="array"><inheritdoc/></param>
+		/// <param name="arrayIndex"><inheritdoc/></param>
+		public void CopyTo(byte[] array, int arrayIndex)
+		{
+			_ = array ?? throw new ArgumentNullException(nameof(array));
+			if (arrayIndex < 0 || arrayIndex >= array.Length)
+			{
+				throw new ArgumentOutOfRangeException(nameof(arrayIndex), "The given array index is out of range.");
+			}
+
+			if (array.Length - arrayIndex < Hash.Length)
+			{
+				throw new ArgumentException("The given array is too small to hold the hash value starting from the given index.", nameof(array));
+			}
+
+			Hash.CopyTo(array, arrayIndex);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="destination"><inheritdoc/></param>
+		public void CopyTo(Span<byte> destination)
+		{
+			if (destination.Length < Hash.Length)
+			{
+				throw new ArgumentException("The given destination span is too small to hold the hash value.", nameof(destination));
+			}
+
+			Hash.AsSpan().CopyTo(destination);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="destination"><inheritdoc/></param>
+		public void CopyTo(Memory<byte> destination)
+		{
+			if (destination.Length < Hash.Length)
+			{
+				throw new ArgumentException("The given destination memory is too small to hold the hash value.", nameof(destination));
+			}
+
+			Hash.AsMemory().CopyTo(destination);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="destination"><inheritdoc/></param>
+		/// <param name="destinationIndex"><inheritdoc/></param>
+		public void CopyTo(ImmutableArray<byte>.Builder destination, int destinationIndex)
+		{
+			_ = destination ?? throw new ArgumentNullException(nameof(destination));
+			if (destinationIndex < 0 || destinationIndex >= destination.Count)
+			{
+				throw new ArgumentOutOfRangeException(nameof(destinationIndex), "The given destination index is out of range.");
+			}
+
+			if (destination.Count - destinationIndex < Hash.Length)
+			{
+				throw new ArgumentException("The given destination is too small to hold the hash value starting from the given index.", nameof(destination));
+			}
+
+			for (int i = 0; i < Hash.Length; i++)
+			{
+				destination[destinationIndex + i] = Hash[i];
+			}
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public IEnumerator<byte> GetEnumerator()
+		{
+			return ((IEnumerable<byte>)Hash).GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		/// <summary>
 		/// Computes a hash code for the current object.
 		/// </summary>
 		/// <remarks>The hash code is calculated based on the values of the <see cref="BitLength"/> property and the
@@ -754,6 +881,42 @@ namespace HashifyNet.Core.Utilities
 			}
 
 			return 0;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public override string ToString()
+		{
+			return $"Hex: {AsHexString()}, Base64: {AsBase64String()}";
+		}
+
+		/// <summary>
+		/// The equality operator for comparing two <see cref="HashValue"/> instances.
+		/// </summary>
+		/// <param name="left">The left <see cref="HashValue"/> instance to compare.</param>
+		/// <param name="right">The right <see cref="HashValue"/> instance to compare.</param>
+		/// <returns>The result of the equality comparison.</returns>
+		public static bool operator ==(HashValue left, HashValue right)
+		{
+			if (left is null)
+			{
+				return right is null;
+			}
+
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		/// The inequality operator for comparing two <see cref="HashValue"/> instances.
+		/// </summary>
+		/// <param name="left">The left <see cref="HashValue"/> instance to compare.</param>
+		/// <param name="right">The right <see cref="HashValue"/> instance to compare.</param>
+		/// <returns>The result of the inequality comparison.</returns>
+		public static bool operator !=(HashValue left, HashValue right)
+		{
+			return !(left == right);
 		}
 	}
 }
