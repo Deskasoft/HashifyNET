@@ -48,6 +48,11 @@ namespace HashifyNet
 		int BitLength { get; }
 
 		/// <summary>
+		/// Gets the length of the hash in bytes.
+		/// </summary>
+		int ByteLength { get; }
+
+		/// <summary>
 		/// Gets the endianness of the hash value.
 		/// </summary>
 		ValueEndianness Endianness { get; }
