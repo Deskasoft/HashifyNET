@@ -66,6 +66,11 @@ namespace HashifyNet.Core.Utilities
 		/// </summary>
 		public int BitLength { get; }
 
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		public int ByteLength => (BitLength + 7) / 8;
+
 		private HashValue(ValueEndianness endianness, ImmutableArray<byte> hash, int bitLength)
 		{
 			if (hash.IsDefaultOrEmpty)
