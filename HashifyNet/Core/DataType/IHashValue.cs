@@ -29,7 +29,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Numerics;
 
 namespace HashifyNet
@@ -38,7 +40,7 @@ namespace HashifyNet
 	/// Common interface to represent a hash value. The hash value is guaranteed to be immutable.
 	/// </summary>
 	public interface IHashValue
-		: IEquatable<IHashValue>, IComparable<IHashValue>
+		: IEquatable<IHashValue>, IComparable<IHashValue>, IEnumerable<byte>
 	{
 		/// <summary>
 		/// Gets the length of the hash in bits.
@@ -264,5 +266,50 @@ namespace HashifyNet
 		/// </summary>
 		/// <returns>The new <see cref="IHashValue"/> instance with reversed byte order. If the current instance has <see cref="ValueEndianness.NotApplicable"/>, it returns the same instance.</returns>
 		IHashValue ReverseEndianness();
+
+		/// <summary>
+		/// Gets the hash value as a <see cref="Stream"/>, writing into the provided <paramref name="inputStream"/>. If the input stream is null, a new <see cref="MemoryStream"/> is created.
+		/// </summary>
+		/// <param name="inputStream">The <see cref="Stream"/> to write the hash value into. If null, a new <see cref="MemoryStream"/> is created.</param>
+		/// <returns>The <see cref="Stream"/> instance containing the hash value bytes.</returns>
+		Stream AsStream(Stream inputStream);
+
+		/// <summary>
+		/// Gets the hash value as a <see cref="Stream"/>.
+		/// </summary>
+		/// <returns>The newly created <see cref="MemoryStream"/> instance containing the hash value bytes.</returns>
+		Stream AsStream();
+
+		/// <summary>
+		/// Gets the hash value as a read-only memory of bytes.
+		/// </summary>
+		/// <returns>The read-only memory of bytes.</returns>
+		ReadOnlyMemory<byte> AsMemory();
+
+		/// <summary>
+		/// Copies the hash value bytes into the provided byte array starting at the specified index.
+		/// </summary>
+		/// <param name="array">The destination byte array.</param>
+		/// <param name="arrayIndex">The zero-based index in the destination array at which to begin copying.</param>
+		void CopyTo(byte[] array, int arrayIndex);
+
+		/// <summary>
+		/// Copies the hash value bytes into the provided <see cref="Span{Byte}"/> or <see cref="Memory{Byte}"/> or <see cref="ImmutableArray{Byte}.Builder"/>.
+		/// </summary>
+		/// <param name="destination">The destination span, memory, or immutable array builder to copy the bytes into.</param>
+		void CopyTo(Span<byte> destination);
+
+		/// <summary>
+		/// Copies the hash value bytes into the provided <see cref="Memory{Byte}"/>.
+		/// </summary>
+		/// <param name="destination">The destination memory to copy the bytes into.</param>
+		void CopyTo(Memory<byte> destination);
+
+		/// <summary>
+		/// Copies the hash value bytes into the provided <see cref="ImmutableArray{Byte}.Builder"/> starting at the specified index.
+		/// </summary>
+		/// <param name="destination">The destination immutable array builder to copy the bytes into.</param>
+		/// <param name="destinationIndex">The zero-based index in the destination builder at which to begin copying.</param>
+		void CopyTo(ImmutableArray<byte>.Builder destination, int destinationIndex);
 	}
 }
