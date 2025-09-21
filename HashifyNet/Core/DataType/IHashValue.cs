@@ -264,7 +264,7 @@ namespace HashifyNet
 		/// </summary>
 		/// <param name="endianness">The desired <see cref="ValueEndianness"/> of the resulting hash value.</param>
 		/// <returns>The new <see cref="IHashValue"/> instance with the specified byte order. If the current instance is already in the specified format, it returns the same instance.</returns>
-		IHashValue ToEndianness(ValueEndianness endianness);
+		IHashValue WithEndianness(ValueEndianness endianness);
 
 		/// <summary>
 		/// Reverses the endianness of the current hash value. If the current endianness is <see cref="ValueEndianness.NotApplicable"/>, no changes are made.
@@ -294,9 +294,9 @@ namespace HashifyNet
 		/// <summary>
 		/// Copies the hash value bytes into the provided byte array starting at the specified index.
 		/// </summary>
-		/// <param name="array">The destination byte array.</param>
+		/// <param name="destination">The destination byte array.</param>
 		/// <param name="arrayIndex">The zero-based index in the destination array at which to begin copying.</param>
-		void CopyTo(byte[] array, int arrayIndex);
+		void CopyTo(byte[] destination, int arrayIndex);
 
 		/// <summary>
 		/// Copies the hash value bytes into the provided <see cref="Span{Byte}"/> or <see cref="Memory{Byte}"/> or <see cref="ImmutableArray{Byte}.Builder"/>.
@@ -316,5 +316,23 @@ namespace HashifyNet
 		/// <param name="destination">The destination immutable array builder to copy the bytes into.</param>
 		/// <param name="destinationIndex">The zero-based index in the destination builder at which to begin copying.</param>
 		void CopyTo(ImmutableArray<byte>.Builder destination, int destinationIndex);
+
+		/// <summary>
+		/// Copies the hash value bytes into the provided <see cref="Stream"/>.
+		/// </summary>
+		/// <param name="destination">The destination stream to copy the bytes into.</param>
+		void CopyTo(Stream destination);
+
+		/// <summary>
+		/// Calculates the Shannon entropy of the hash value, which is a measure of the randomness or unpredictability of the data.
+		/// </summary>
+		/// <returns>The calculated entropy value between 0 and 8.</returns>
+		double CalculateEntropy();
+
+		/// <summary>
+		/// Calculates the Shannon entropy percentage of the hash value, which is a measure of the randomness or unpredictability of the data, expressed as a percentage of the maximum possible entropy for the bit length of the underlying hash value.
+		/// </summary>
+		/// <returns>The calculated entropy percentage value between 0.0 and 100.0.</returns>
+		double CalculateEntropyPercentage();
 	}
 }
