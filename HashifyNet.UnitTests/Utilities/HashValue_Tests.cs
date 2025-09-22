@@ -27,7 +27,10 @@
 // ******************************************************************************
 // *
 
-using HashifyNet.Algorithms.Blake2;
+using HashifyNet.Algorithms.SHA1;
+using HashifyNet.Algorithms.SHA256;
+using HashifyNet.Algorithms.SHA384;
+using HashifyNet.Algorithms.SHA512;
 using HashifyNet.Core.Utilities;
 using Moq;
 using System.Collections.Immutable;
@@ -163,6 +166,20 @@ namespace HashifyNet.UnitTests.Utilities
 
 		#endregion
 
+		#region ByteLength
+		[Fact]
+		public void HashValue_ByteLength_IsSameAsConstructorValue()
+		{
+			var validByteLengths = Enumerable.Range(1, 16);
+
+			foreach (var validByteLength in validByteLengths)
+			{
+				var hv = new HashValue(ValueEndianness.NotApplicable, TestConstants.CreateRandomBuffer((validByteLength + 7) / 8), validByteLength);
+				Assert.Equal(hv.Hash.Length, hv.ByteLength);
+			}
+		}
+		#endregion
+
 		#region AsBase64String
 
 		[Fact]
@@ -236,6 +253,177 @@ namespace HashifyNet.UnitTests.Utilities
 					knownValue.ByteArray,
 					knownValue.HashValue.AsByteArray());
 			}
+		}
+		#endregion
+
+		#region CalculateEntropy
+		[Fact]
+		public void HashValue_CalculateEntropy_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { EntropyValue = HashFactory<ISHA512>.Create().ComputeHash(TestConstants.Empty).CalculateEntropy(), ExpectedMinimum = 5.0d },
+				new { EntropyValue = HashFactory<ISHA384>.Create().ComputeHash(TestConstants.Empty).CalculateEntropy(), ExpectedMinimum = 5.0d },
+				new { EntropyValue = HashFactory<ISHA256>.Create().ComputeHash(TestConstants.Empty).CalculateEntropy(), ExpectedMinimum = 4.4d },
+				new { EntropyValue = HashFactory<ISHA1>.Create().ComputeHash(TestConstants.Empty).CalculateEntropy(), ExpectedMinimum = 4.3d },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.InRange(knownValue.EntropyValue, knownValue.ExpectedMinimum, 8.0d);
+			}
+		}
+		#endregion
+
+		#region CalculateEntropyPercentage
+		[Fact]
+		public void HashValue_CalculateEntropyPercentage_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { EntropyPercentage = HashFactory<ISHA512>.Create().ComputeHash(TestConstants.Empty).CalculateEntropyPercentage(), ExpectedMinimum = 96.0d },
+				new { EntropyPercentage = HashFactory<ISHA384>.Create().ComputeHash(TestConstants.Empty).CalculateEntropyPercentage(), ExpectedMinimum = 97.0d},
+				new { EntropyPercentage = HashFactory<ISHA256>.Create().ComputeHash(TestConstants.Empty).CalculateEntropyPercentage(), ExpectedMinimum = 98.0d },
+				new { EntropyPercentage = HashFactory<ISHA1>.Create().ComputeHash(TestConstants.Empty).CalculateEntropyPercentage(), ExpectedMinimum = 99.0d },
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				Assert.InRange(knownValue.EntropyPercentage, knownValue.ExpectedMinimum, 100.0d);
+			}
+		}
+		#endregion
+
+		#region CopyTo
+		[Fact]
+		public void HashValue_CopyTo_ExpectedValues()
+		{
+			var knownValues = new[] {
+				new { HashValue = new HashValue(ValueEndianness.NotApplicable, TestConstants.CreateRandomBuffer(8), 64) }
+			};
+
+			foreach (var knownValue in knownValues)
+			{
+				byte[] output1 = new byte[8];
+
+				Span<byte> output2 = new Span<byte>(new byte[8]);
+
+				ImmutableArray<byte>.Builder output3 = ImmutableArray.CreateBuilder<byte>(8);
+				output3.Count = 8;
+
+				MemoryStream output4 = new MemoryStream(8);
+
+				knownValue.HashValue.CopyTo(output1, 0);
+				knownValue.HashValue.CopyTo(output2);
+				knownValue.HashValue.CopyTo(output3, 0);
+				knownValue.HashValue.CopyTo(output4);
+
+				byte[] original = knownValue.HashValue.AsByteArray();
+				Assert.Equal(original, output1);
+				Assert.Equal(original, output2);
+				Assert.Equal(original, output3);
+				Assert.Equal(original, output4.ToArray());
+			}
+		}
+		#endregion
+
+		#region Endianness
+		[Fact]
+		public void HashValue_Endianness_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, TestConstants.CreateRandomBuffer(8), 64);
+			var hv2 = new HashValue(ValueEndianness.BigEndian, TestConstants.CreateRandomBuffer(8), 64);
+			var hv3 = new HashValue(ValueEndianness.LittleEndian, TestConstants.CreateRandomBuffer(8), 64);
+
+			// Endianness shouldn't touch the buffer if NotApplicable:
+			Assert.Equal(hv1.WithEndianness(ValueEndianness.BigEndian), hv1);
+			Assert.Equal(hv1.WithEndianness(ValueEndianness.LittleEndian), hv1);
+			Assert.Equal(hv1.WithEndianness(ValueEndianness.NotApplicable), hv1);
+
+			// Endianness must not touch if the desired endianness is the same as the current:
+			Assert.Equal(hv1.WithEndianness(ValueEndianness.NotApplicable), hv1);
+			Assert.Equal(hv2.WithEndianness(ValueEndianness.BigEndian), hv2);
+			Assert.Equal(hv3.WithEndianness(ValueEndianness.LittleEndian), hv3);
+
+			// Endianness must convert Big Endian to Little Endian and Little Endian to Big Endian:
+			Assert.Equal(hv2.WithEndianness(ValueEndianness.LittleEndian), hv2.Reverse());
+			Assert.Equal(hv3.WithEndianness(ValueEndianness.BigEndian), hv3.Reverse());
+
+			// Revert Endianness must convert Big Endian to Little Endian and Little Endian to Big Endian but not touch NotApplicable:
+			Assert.Equal(hv1.ReverseEndianness(), hv1);
+			Assert.Equal(hv2.ReverseEndianness(), hv2.Reverse());
+			Assert.Equal(hv3.ReverseEndianness(), hv3.Reverse());
+
+			// AsBigEndian must return Big Endian and NotApplicable as-is but convert Little Endian to Big Endian:
+			Assert.Equal(hv1.AsBigEndian(), hv1);
+			Assert.Equal(hv2.AsBigEndian(), hv2);
+			Assert.Equal(hv3.AsBigEndian(), hv3.Reverse());
+
+			// AsLittleEndian must return Little Endian and NotApplicable as-is but convert Big Endian to Little Endian:
+			Assert.Equal(hv1.AsLittleEndian(), hv1);
+			Assert.Equal(hv2.AsLittleEndian(), hv2.Reverse());
+			Assert.Equal(hv3.AsLittleEndian(), hv3);
+		}
+		#endregion
+
+		#region AsSpan
+		[Fact]
+		public void HashValue_AsSpan_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, TestConstants.CreateRandomBuffer(8), 64);
+
+			var span1 = hv1.AsSpan();
+			var span2 = hv1.AsSpan(4);
+			var span3 = hv1.AsSpan(4, 4);
+
+			Assert.Equal(span1, hv1.Hash.AsSpan());
+			Assert.Equal(span2, hv1.Hash.AsSpan(0, 4));
+			Assert.Equal(span3, hv1.Hash.AsSpan(4, 4));
+		}
+		#endregion
+
+		#region AsMemory
+		[Fact]
+		public void HashValue_AsMemory_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, TestConstants.CreateRandomBuffer(8), 64);
+
+			var mem1 = hv1.AsMemory();
+
+			Assert.Equal(mem1, hv1.Hash.AsMemory());
+		}
+		#endregion
+
+		#region Slice
+		[Fact]
+		public void HashValue_Slice_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, TestConstants.CreateRandomBuffer(8), 64);
+
+			var slice1 = hv1.Slice(4);
+			var slice2 = hv1.Slice(4, 4);
+
+			Assert.Equal(slice1.AsSpan(), hv1.AsSpan(4));
+			Assert.Equal(slice2.AsSpan(), hv1.AsSpan(4, 4));
+		}
+		#endregion
+
+		#region AsStream
+		[Fact]
+		public void HashValue_AsStream_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, TestConstants.CreateRandomBuffer(8), 64);
+
+			Stream ns = hv1.AsStream();
+			ns.Position = 0;
+			byte[] ns_array = new byte[8];
+			int c = ns.Read(ns_array, 0, 8);
+			Assert.Equal(8, c);
+
+			MemoryStream ms = new MemoryStream(8);
+			hv1.AsStream(ms);
+
+			byte[] original = hv1.AsByteArray();
+			Assert.Equal(original, ns_array);
+			Assert.Equal(original, ms.ToArray());
 		}
 		#endregion
 
