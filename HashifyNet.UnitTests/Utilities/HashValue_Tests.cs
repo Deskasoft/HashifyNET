@@ -364,6 +364,193 @@ namespace HashifyNet.UnitTests.Utilities
 		}
 		#endregion
 
+		#region Integrals
+		[Fact]
+		public void HashValue_AsDecimal_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
+			var hv3 = new HashValue(ValueEndianness.NotApplicable, new byte[12], 96);
+			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+
+			Assert.Equal(0, hv1.AsDecimal());
+			Assert.Equal(0, hv2.AsDecimal());
+			Assert.Equal(0, hv3.AsDecimal());
+
+			Assert.Throws<NotSupportedException>(() => hv_invalid.AsDecimal());
+		}
+
+		[Fact]
+		public void HashValue_AsDouble_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
+			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+
+			Assert.Equal(0, hv1.AsDouble());
+			Assert.Equal(0, hv2.AsDouble());
+
+			Assert.Throws<NotSupportedException>(() => hv_invalid.AsDouble());
+		}
+
+		[Fact]
+		public void HashValue_AsSingle_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[2], 16);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
+			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+
+			Assert.Equal(0, hv1.AsSingle());
+			Assert.Equal(0, hv2.AsSingle());
+
+			Assert.Throws<NotSupportedException>(() => hv_invalid.AsSingle());
+		}
+
+		[Fact]
+		public void HashValue_AsInt64_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
+			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+
+			Assert.Equal(0, hv1.AsInt64());
+			Assert.Equal(0, hv2.AsInt64());
+
+			Assert.Throws<NotSupportedException>(() => hv_invalid.AsInt64());
+		}
+
+		[Fact]
+		public void HashValue_AsInt32_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[2], 16);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
+			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+
+			Assert.Equal(0, hv1.AsInt32());
+			Assert.Equal(0, hv2.AsInt32());
+
+			Assert.Throws<NotSupportedException>(() => hv_invalid.AsInt32());
+		}
+
+		[Fact]
+		public void HashValue_AsInt16_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[1], 8);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[2], 16);
+			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+
+			Assert.Equal(0, hv1.AsInt16());
+			Assert.Equal(0, hv2.AsInt16());
+
+			Assert.Throws<NotSupportedException>(() => hv_invalid.AsInt16());
+		}
+
+		[Fact]
+		public void HashValue_AsBigInteger_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[1], 8);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[2], 16);
+			var hv3 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
+			var hv4 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
+			var hv5 = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv6 = new HashValue(ValueEndianness.NotApplicable, new byte[32], 256);
+			var hv7 = new HashValue(ValueEndianness.NotApplicable, new byte[64], 512);
+			var hv8 = new HashValue(ValueEndianness.NotApplicable, new byte[128], 1024);
+
+			Assert.Equal(0, hv1.AsBigInteger());
+			Assert.Equal(0, hv2.AsBigInteger());
+			Assert.Equal(0, hv3.AsBigInteger());
+			Assert.Equal(0, hv4.AsBigInteger());
+			Assert.Equal(0, hv5.AsBigInteger());
+			Assert.Equal(0, hv6.AsBigInteger());
+			Assert.Equal(0, hv7.AsBigInteger());
+			Assert.Equal(0, hv8.AsBigInteger());
+		}
+
+		#endregion
+
+		#region AsChar
+		[Fact]
+		public void HashValue_AsChar_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[2], 16);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[1], 8);
+			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
+
+			Assert.Equal('\0', hv1.AsChar());
+			Assert.Equal('\0', hv2.AsChar());
+
+			Assert.Throws<NotSupportedException>(() => hv_invalid.AsChar());
+		}
+		#endregion
+
+		#region Time
+		[Fact]
+		public void HashValue_AsDateTime_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
+			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+
+			Assert.Equal(new DateTime(0), hv1.AsDateTime());
+			Assert.Equal(new DateTime(0), hv2.AsDateTime());
+
+			Assert.Throws<NotSupportedException>(() => hv_invalid.AsDateTime());
+		}
+
+		[Fact]
+		public void HashValue_AsDateTimeOffset_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
+			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+
+			Assert.Equal(new DateTimeOffset(0, TimeSpan.Zero), hv1.AsDateTimeOffset());
+			Assert.Equal(new DateTimeOffset(0, TimeSpan.Zero), hv2.AsDateTimeOffset());
+
+			Assert.Throws<NotSupportedException>(() => hv_invalid.AsDateTimeOffset());
+		}
+
+		[Fact]
+		public void HashValue_AsTimeSpan_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
+			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+
+			Assert.Equal(new TimeSpan(0), hv1.AsTimeSpan());
+			Assert.Equal(new TimeSpan(0), hv2.AsTimeSpan());
+
+			Assert.Throws<NotSupportedException>(() => hv_invalid.AsTimeSpan());
+		}
+		#endregion
+
+		#region AsBinaryString
+		[Fact]
+		public void HashValue_AsBinaryString_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+
+			Assert.Equal("0000000000000000000000000000000000000000000000000000000000000000", hv1.AsBinaryString());
+			Assert.Equal("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", hv2.AsBinaryString());
+		}
+		#endregion
+
+		#region AsGuid
+		[Fact]
+		public void HashValue_AsGuid_Works()
+		{
+			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
+			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[32], 256);
+
+			Assert.Equal(new Guid(new byte[16]), hv1.AsGuid());
+			Assert.Equal(new Guid(new byte[16]), hv2.AsGuid());
+			Assert.Throws<InvalidOperationException>(() => hv_invalid.AsGuid());
+		}
+		#endregion
+
 		#region AsSpan
 		[Fact]
 		public void HashValue_AsSpan_Works()
