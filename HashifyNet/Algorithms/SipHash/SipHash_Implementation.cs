@@ -127,11 +127,6 @@ namespace HashifyNet.Algorithms.SipHash
 
 			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
-				if (data.Length != 8)
-				{
-					throw new InvalidOperationException("Expected 8 bytes per byte group.");
-				}
-
 				_messageLength += (ulong)data.Length;
 				ulong m = Endianness.ToUInt64LittleEndian(data, 0);
 
