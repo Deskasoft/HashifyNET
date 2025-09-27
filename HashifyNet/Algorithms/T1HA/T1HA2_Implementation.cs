@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -282,7 +282,7 @@ namespace HashifyNet.Algorithms.T1HA
 			static void MixUp64(ref ulong a, ref ulong b, ulong v, ulong prime)
 			{
 				// *a ^= mul_64x64_128(*b + v, prime, &h); *b += h;
-				BigMul128(b + v, prime, out var lo, out var hi);
+				T1HAGlobals.BigMul128(b + v, prime, out var lo, out var hi);
 				a ^= lo;
 				b += hi;
 			}
@@ -297,27 +297,8 @@ namespace HashifyNet.Algorithms.T1HA
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
 			static ulong Mux64(ulong v, ulong prime)
 			{
-				BigMul128(v, prime, out var lo, out var hi);
+				T1HAGlobals.BigMul128(v, prime, out var lo, out var hi);
 				return lo ^ hi;
-			}
-
-			static void BigMul128(ulong a, ulong b, out ulong lo, out ulong hi)
-			{
-#if NET8_0_OR_GREATER
-				hi = Math.BigMul(a, b, out lo);
-#else
-				ulong aLo = (uint)a, aHi = a >> 32;
-				ulong bLo = (uint)b, bHi = b >> 32;
-
-				ulong p0 = aLo * bLo;
-				ulong p1 = aLo * bHi;
-				ulong p2 = aHi * bLo;
-				ulong p3 = aHi * bHi;
-
-				ulong mid = (p1 << 32) + (p2 << 32);
-				lo = p0 + mid;
-				hi = p3 + (p1 >> 32) + (p2 >> 32) + (lo < p0 ? 1UL : 0UL);
-#endif
 			}
 
 			[MethodImpl(MethodImplOptions.AggressiveInlining)]
