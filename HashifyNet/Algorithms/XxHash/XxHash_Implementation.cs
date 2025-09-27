@@ -148,19 +148,19 @@ namespace HashifyNet.Algorithms.XxHash
 
 				for (var currentIndex = 0; currentIndex < dataCount; currentIndex += 16)
 				{
-					tempA += Endianness.ToUInt32LittleEndian(data, currentIndex) * tempPrime1;
+					tempA += Endianness.ToUInt32LittleEndian(data.Slice(currentIndex)) * tempPrime1;
 					tempA = RotateLeft(tempA, 13);
 					tempA *= tempPrime0;
 
-					tempB += Endianness.ToUInt32LittleEndian(data, currentIndex + 4) * tempPrime1;
+					tempB += Endianness.ToUInt32LittleEndian(data.Slice(currentIndex + 4)) * tempPrime1;
 					tempB = RotateLeft(tempB, 13);
 					tempB *= tempPrime0;
 
-					tempC += Endianness.ToUInt32LittleEndian(data, currentIndex + 8) * tempPrime1;
+					tempC += Endianness.ToUInt32LittleEndian(data.Slice(currentIndex + 8)) * tempPrime1;
 					tempC = RotateLeft(tempC, 13);
 					tempC *= tempPrime0;
 
-					tempD += Endianness.ToUInt32LittleEndian(data, currentIndex + 12) * tempPrime1;
+					tempD += Endianness.ToUInt32LittleEndian(data.Slice(currentIndex + 12)) * tempPrime1;
 					tempD = RotateLeft(tempD, 13);
 					tempD *= tempPrime0;
 				}
@@ -199,7 +199,7 @@ namespace HashifyNet.Algorithms.XxHash
 
 						for (var currentOffset = 0; currentOffset < endOffset; currentOffset += 4)
 						{
-							hashValue += Endianness.ToUInt32LittleEndian(leftover, currentOffset) * _primes32[2];
+							hashValue += Endianness.ToUInt32LittleEndian(leftover.Slice(currentOffset)) * _primes32[2];
 							hashValue = RotateLeft(hashValue, 17) * _primes32[3];
 						}
 					}
@@ -304,19 +304,19 @@ namespace HashifyNet.Algorithms.XxHash
 
 				for (var currentIndex = 0; currentIndex < dataCount; currentIndex += 32)
 				{
-					tempA += Endianness.ToUInt64LittleEndian(data, currentIndex) * tempPrime1;
+					tempA += Endianness.ToUInt64LittleEndian(data.Slice(currentIndex)) * tempPrime1;
 					tempA = RotateLeft(tempA, 31);
 					tempA *= tempPrime0;
 
-					tempB += Endianness.ToUInt64LittleEndian(data, currentIndex + 8) * tempPrime1;
+					tempB += Endianness.ToUInt64LittleEndian(data.Slice(currentIndex + 8)) * tempPrime1;
 					tempB = RotateLeft(tempB, 31);
 					tempB *= tempPrime0;
 
-					tempC += Endianness.ToUInt64LittleEndian(data, currentIndex + 16) * tempPrime1;
+					tempC += Endianness.ToUInt64LittleEndian(data.Slice(currentIndex + 16)) * tempPrime1;
 					tempC = RotateLeft(tempC, 31);
 					tempC *= tempPrime0;
 
-					tempD += Endianness.ToUInt64LittleEndian(data, currentIndex + 24) * tempPrime1;
+					tempD += Endianness.ToUInt64LittleEndian(data.Slice(currentIndex + 24)) * tempPrime1;
 					tempD = RotateLeft(tempD, 31);
 					tempD *= tempPrime0;
 				}
@@ -389,7 +389,7 @@ namespace HashifyNet.Algorithms.XxHash
 					// In 8-byte chunks, process all full chunks
 					for (int x = 0; x < leftover.Length / 8; ++x)
 					{
-						hashValue ^= RotateLeft(Endianness.ToUInt64LittleEndian(leftover, x * 8) * _primes64[1], 31) * _primes64[0];
+						hashValue ^= RotateLeft(Endianness.ToUInt64LittleEndian(leftover.Slice(x * 8)) * _primes64[1], 31) * _primes64[0];
 						hashValue = (RotateLeft(hashValue, 27) * _primes64[0]) + _primes64[3];
 					}
 
@@ -398,7 +398,7 @@ namespace HashifyNet.Algorithms.XxHash
 					{
 						var startOffset = remainderLength - (remainderLength % 8);
 
-						hashValue ^= Endianness.ToUInt32LittleEndian(leftover, startOffset) * _primes64[0];
+						hashValue ^= Endianness.ToUInt32LittleEndian(leftover.Slice(startOffset)) * _primes64[0];
 						hashValue = (RotateLeft(hashValue, 23) * _primes64[1]) + _primes64[2];
 					}
 
