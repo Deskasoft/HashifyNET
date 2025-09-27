@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -171,35 +171,8 @@ namespace HashifyNet.Algorithms.T1HA
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static ulong Mux64(ulong v, ulong prime)
 		{
-			Mul128(v, prime, out ulong lo, out ulong hi);
+			T1HAGlobals.BigMul128(v, prime, out ulong lo, out ulong hi);
 			return unchecked(lo ^ hi);
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		private static void Mul128(ulong x, ulong y, out ulong lo, out ulong hi)
-		{
-#if NET8_0_OR_GREATER
-			lo = Math.BigMul(x, y, out hi);
-#else
-            ulong xL = (uint)x;
-            ulong xH = x >> 32;
-            ulong yL = (uint)y;
-            ulong yH = y >> 32;
-
-            ulong ll = unchecked(xL * yL);
-            ulong lh = unchecked(xH * yL);
-            ulong hl = unchecked(xL * yH);
-            ulong hh = unchecked(xH * yH);
-
-            ulong mid1 = unchecked(ll + (lh << 32));
-            ulong carry1 = (mid1 < ll) ? 1UL : 0UL;
-
-            ulong mid2 = unchecked(mid1 + (hl << 32));
-            ulong carry2 = (mid2 < mid1) ? 1UL : 0UL;
-
-            lo = mid2;
-            hi = unchecked(hh + (lh >> 32) + (hl >> 32) + carry1 + carry2);
-#endif
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
