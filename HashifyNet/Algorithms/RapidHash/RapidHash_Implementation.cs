@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -254,13 +254,13 @@ namespace HashifyNet.Algorithms.RapidHash
 						_seed ^= _totalLength;
 						if (_totalLength >= 8)
 						{
-							a = Endianness.ToUInt64LittleEndian(remainder, pOffset);
-							b = Endianness.ToUInt64LittleEndian(remainder, pOffset + i - 8);
+							a = Endianness.ToUInt64LittleEndian(remainder.Slice(pOffset));
+							b = Endianness.ToUInt64LittleEndian(remainder.Slice(pOffset + i - 8));
 						}
 						else
 						{
-							a = Endianness.ToUInt32LittleEndian(remainder, pOffset);
-							b = Endianness.ToUInt32LittleEndian(remainder, pOffset + i - 4);
+							a = Endianness.ToUInt32LittleEndian(remainder.Slice(pOffset));
+							b = Endianness.ToUInt32LittleEndian(remainder.Slice(pOffset + i - 4));
 						}
 					}
 					else if (_totalLength > 0)
@@ -284,26 +284,26 @@ namespace HashifyNet.Algorithms.RapidHash
 					if (i > 16)
 					{
 						_seed = RapidHashShared.RapidMix(
-							Endianness.ToUInt64LittleEndian(remainder, pOffset) ^ RapidHashShared.Secret[2],
-							Endianness.ToUInt64LittleEndian(remainder, pOffset + 8) ^ _seed);
+							Endianness.ToUInt64LittleEndian(remainder.Slice(pOffset)) ^ RapidHashShared.Secret[2],
+							Endianness.ToUInt64LittleEndian(remainder.Slice(pOffset + 8)) ^ _seed);
 
 						if (i > 32)
 						{
 							_seed = RapidHashShared.RapidMix(
-								Endianness.ToUInt64LittleEndian(remainder, pOffset + 16) ^ RapidHashShared.Secret[2],
-								Endianness.ToUInt64LittleEndian(remainder, pOffset + 24) ^ _seed);
+								Endianness.ToUInt64LittleEndian(remainder.Slice(pOffset + 16)) ^ RapidHashShared.Secret[2],
+								Endianness.ToUInt64LittleEndian(remainder.Slice(pOffset + 24)) ^ _seed);
 
 							if (i > 48)
 							{
 								_seed = RapidHashShared.RapidMix(
-									Endianness.ToUInt64LittleEndian(remainder, pOffset + 32) ^ RapidHashShared.Secret[1],
-									Endianness.ToUInt64LittleEndian(remainder, pOffset + 40) ^ _seed);
+									Endianness.ToUInt64LittleEndian(remainder.Slice(pOffset + 32)) ^ RapidHashShared.Secret[1],
+									Endianness.ToUInt64LittleEndian(remainder.Slice(pOffset + 40)) ^ _seed);
 
 								if (i > 64)
 								{
 									_seed = RapidHashShared.RapidMix(
-										Endianness.ToUInt64LittleEndian(remainder, pOffset + 48) ^ RapidHashShared.Secret[1],
-										Endianness.ToUInt64LittleEndian(remainder, pOffset + 56) ^ _seed);
+										Endianness.ToUInt64LittleEndian(remainder.Slice(pOffset + 48)) ^ RapidHashShared.Secret[1],
+										Endianness.ToUInt64LittleEndian(remainder.Slice(pOffset + 56)) ^ _seed);
 								}
 							}
 						}
@@ -331,8 +331,8 @@ namespace HashifyNet.Algorithms.RapidHash
 						}
 					}
 
-					a = Endianness.ToUInt64LittleEndian(last16Bytes, 0) ^ length_to_mix;
-					b = Endianness.ToUInt64LittleEndian(last16Bytes, 8);
+					a = Endianness.ToUInt64LittleEndian(last16Bytes) ^ length_to_mix;
+					b = Endianness.ToUInt64LittleEndian(last16Bytes.Slice(8));
 				}
 
 				a ^= RapidHashShared.Secret[1];
@@ -394,9 +394,9 @@ namespace HashifyNet.Algorithms.RapidHash
 
 				_hasProcessedBlocks = true;
 
-				_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p, 0) ^ RapidHashShared.Secret[0], Endianness.ToUInt64LittleEndian(p, 8) ^ _seed);
-				_see1 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p, 16) ^ RapidHashShared.Secret[1], Endianness.ToUInt64LittleEndian(p, 24) ^ _see1);
-				_see2 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p, 32) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(p, 40) ^ _see2);
+				_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p) ^ RapidHashShared.Secret[0], Endianness.ToUInt64LittleEndian(p.Slice(8)) ^ _seed);
+				_see1 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p.Slice(16)) ^ RapidHashShared.Secret[1], Endianness.ToUInt64LittleEndian(p.Slice(24)) ^ _see1);
+				_see2 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p.Slice(32)) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(p.Slice(40)) ^ _see2);
 			}
 
 			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
@@ -422,13 +422,13 @@ namespace HashifyNet.Algorithms.RapidHash
 						_seed ^= _totalLength;
 						if (_totalLength >= 8)
 						{
-							a = Endianness.ToUInt64LittleEndian(leftover, pOffset);
-							b = Endianness.ToUInt64LittleEndian(leftover, pOffset + i - 8);
+							a = Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset));
+							b = Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + i - 8));
 						}
 						else
 						{
-							a = Endianness.ToUInt32LittleEndian(leftover, pOffset);
-							b = Endianness.ToUInt32LittleEndian(leftover, pOffset + i - 4);
+							a = Endianness.ToUInt32LittleEndian(leftover.Slice(pOffset));
+							b = Endianness.ToUInt32LittleEndian(leftover.Slice(pOffset + i - 4));
 						}
 					}
 					else if (_totalLength > 0)
@@ -448,10 +448,10 @@ namespace HashifyNet.Algorithms.RapidHash
 
 					if (i > 16)
 					{
-						_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover, pOffset) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(leftover, pOffset + 8) ^ _seed);
+						_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset)) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 8)) ^ _seed);
 						if (i > 32)
 						{
-							_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover, pOffset + 16) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(leftover, pOffset + 24) ^ _seed);
+							_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 16)) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 24)) ^ _seed);
 						}
 					}
 
@@ -477,8 +477,8 @@ namespace HashifyNet.Algorithms.RapidHash
 						}
 					}
 
-					a = Endianness.ToUInt64LittleEndian(last16Bytes, 0) ^ (ulong)i;
-					b = Endianness.ToUInt64LittleEndian(last16Bytes, 8);
+					a = Endianness.ToUInt64LittleEndian(last16Bytes) ^ (ulong)i;
+					b = Endianness.ToUInt64LittleEndian(last16Bytes.Slice(8));
 				}
 
 				a ^= RapidHashShared.Secret[1];
@@ -547,13 +547,13 @@ namespace HashifyNet.Algorithms.RapidHash
 
 				_hasProcessedBlocks = true;
 
-				_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p, 0) ^ RapidHashShared.Secret[0], Endianness.ToUInt64LittleEndian(p, 8) ^ _seed);
-				_see1 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p, 16) ^ RapidHashShared.Secret[1], Endianness.ToUInt64LittleEndian(p, 24) ^ _see1);
-				_see2 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p, 32) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(p, 40) ^ _see2);
-				_see3 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p, 48) ^ RapidHashShared.Secret[3], Endianness.ToUInt64LittleEndian(p, 56) ^ _see3);
-				_see4 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p, 64) ^ RapidHashShared.Secret[4], Endianness.ToUInt64LittleEndian(p, 72) ^ _see4);
-				_see5 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p, 80) ^ RapidHashShared.Secret[5], Endianness.ToUInt64LittleEndian(p, 88) ^ _see5);
-				_see6 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p, 96) ^ RapidHashShared.Secret[6], Endianness.ToUInt64LittleEndian(p, 104) ^ _see6);
+				_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p) ^ RapidHashShared.Secret[0], Endianness.ToUInt64LittleEndian(p.Slice(8)) ^ _seed);
+				_see1 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p.Slice(16)) ^ RapidHashShared.Secret[1], Endianness.ToUInt64LittleEndian(p.Slice(24)) ^ _see1);
+				_see2 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p.Slice(32)) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(p.Slice(40)) ^ _see2);
+				_see3 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p.Slice(48)) ^ RapidHashShared.Secret[3], Endianness.ToUInt64LittleEndian(p.Slice(56)) ^ _see3);
+				_see4 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p.Slice(64)) ^ RapidHashShared.Secret[4], Endianness.ToUInt64LittleEndian(p.Slice(72)) ^ _see4);
+				_see5 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p.Slice(80)) ^ RapidHashShared.Secret[5], Endianness.ToUInt64LittleEndian(p.Slice(88)) ^ _see5);
+				_see6 = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(p.Slice(96)) ^ RapidHashShared.Secret[6], Endianness.ToUInt64LittleEndian(p.Slice(104)) ^ _see6);
 			}
 
 			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
@@ -579,13 +579,13 @@ namespace HashifyNet.Algorithms.RapidHash
 						_seed ^= _totalLength;
 						if (_totalLength >= 8)
 						{
-							a = Endianness.ToUInt64LittleEndian(leftover, pOffset);
-							b = Endianness.ToUInt64LittleEndian(leftover, pOffset + i - 8);
+							a = Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset));
+							b = Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + i - 8));
 						}
 						else
 						{
-							a = Endianness.ToUInt32LittleEndian(leftover, pOffset);
-							b = Endianness.ToUInt32LittleEndian(leftover, pOffset + i - 4);
+							a = Endianness.ToUInt32LittleEndian(leftover.Slice(pOffset));
+							b = Endianness.ToUInt32LittleEndian(leftover.Slice(pOffset + i - 4));
 						}
 					}
 					else if (_totalLength > 0)
@@ -609,22 +609,22 @@ namespace HashifyNet.Algorithms.RapidHash
 
 					if (i > 16)
 					{
-						_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover, pOffset) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(leftover, pOffset + 8) ^ _seed);
+						_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset)) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 8)) ^ _seed);
 						if (i > 32)
 						{
-							_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover, pOffset + 16) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(leftover, pOffset + 24) ^ _seed);
+							_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 16)) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 24)) ^ _seed);
 							if (i > 48)
 							{
-								_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover, pOffset + 32) ^ RapidHashShared.Secret[1], Endianness.ToUInt64LittleEndian(leftover, pOffset + 40) ^ _seed);
+								_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 32)) ^ RapidHashShared.Secret[1], Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 40)) ^ _seed);
 								if (i > 64)
 								{
-									_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover, pOffset + 48) ^ RapidHashShared.Secret[1], Endianness.ToUInt64LittleEndian(leftover, pOffset + 56) ^ _seed);
+									_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 48)) ^ RapidHashShared.Secret[1], Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 56)) ^ _seed);
 									if (i > 80)
 									{
-										_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover, pOffset + 64) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(leftover, pOffset + 72) ^ _seed);
+										_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 64)) ^ RapidHashShared.Secret[2], Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 72)) ^ _seed);
 										if (i > 96)
 										{
-											_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover, pOffset + 80) ^ RapidHashShared.Secret[1], Endianness.ToUInt64LittleEndian(leftover, pOffset + 88) ^ _seed);
+											_seed = RapidHashShared.RapidMix(Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 80)) ^ RapidHashShared.Secret[1], Endianness.ToUInt64LittleEndian(leftover.Slice(pOffset + 88)) ^ _seed);
 										}
 									}
 								}
@@ -655,8 +655,8 @@ namespace HashifyNet.Algorithms.RapidHash
 						}
 					}
 
-					a = Endianness.ToUInt64LittleEndian(last16Bytes, 0) ^ (ulong)i;
-					b = Endianness.ToUInt64LittleEndian(last16Bytes, 8);
+					a = Endianness.ToUInt64LittleEndian(last16Bytes) ^ (ulong)i;
+					b = Endianness.ToUInt64LittleEndian(last16Bytes.Slice(8));
 				}
 
 				a ^= RapidHashShared.Secret[1];
