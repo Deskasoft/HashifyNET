@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -131,16 +131,16 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				for (var currentOffset = 0; currentOffset < dataCount; currentOffset += 32)
 				{
-					tempA += Endianness.ToUInt64LittleEndian(data, currentOffset) * _k0;
+					tempA += Endianness.ToUInt64LittleEndian(data.Slice(currentOffset)) * _k0;
 					tempA = RotateRight(tempA, 29) + tempC;
 
-					tempB += Endianness.ToUInt64LittleEndian(data, currentOffset + 8) * _k1;
+					tempB += Endianness.ToUInt64LittleEndian(data.Slice(currentOffset + 8)) * _k1;
 					tempB = RotateRight(tempB, 29) + tempD;
 
-					tempC += Endianness.ToUInt64LittleEndian(data, currentOffset + 16) * _k2;
+					tempC += Endianness.ToUInt64LittleEndian(data.Slice(currentOffset + 16)) * _k2;
 					tempC = RotateRight(tempC, 29) + tempA;
 
-					tempD += Endianness.ToUInt64LittleEndian(data, currentOffset + 24) * _k3;
+					tempD += Endianness.ToUInt64LittleEndian(data.Slice(currentOffset + 24)) * _k3;
 					tempD = RotateRight(tempD, 29) + tempB;
 				}
 
@@ -171,10 +171,10 @@ namespace HashifyNet.Algorithms.MetroHash
 				var remainderCount = leftover.Length;
 				if (remainderCount >= 16)
 				{
-					tempA += Endianness.ToUInt64LittleEndian(leftover, remainderOffset) * _k2;
+					tempA += Endianness.ToUInt64LittleEndian(leftover.Slice(remainderOffset)) * _k2;
 					tempA = RotateRight(tempA, 33) * _k3;
 
-					tempB += Endianness.ToUInt64LittleEndian(leftover, remainderOffset + 8) * _k2;
+					tempB += Endianness.ToUInt64LittleEndian(leftover.Slice(remainderOffset + 8)) * _k2;
 					tempB = RotateRight(tempB, 33) * _k3;
 
 					tempA ^= RotateRight((tempA * _k2) + tempB, 45) * _k1;
@@ -186,7 +186,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 8)
 				{
-					tempA += Endianness.ToUInt64LittleEndian(leftover, remainderOffset) * _k2;
+					tempA += Endianness.ToUInt64LittleEndian(leftover.Slice(remainderOffset)) * _k2;
 					tempA = RotateRight(tempA, 33) * _k3;
 					tempA ^= RotateRight((tempA * _k2) + tempB, 27) * _k1;
 
@@ -196,7 +196,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 4)
 				{
-					tempB += Endianness.ToUInt32LittleEndian(leftover, remainderOffset) * _k2;
+					tempB += Endianness.ToUInt32LittleEndian(leftover.Slice(remainderOffset)) * _k2;
 					tempB = RotateRight(tempB, 33) * _k3;
 					tempB ^= RotateRight((tempB * _k3) + tempA, 46) * _k0;
 
@@ -206,7 +206,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 2)
 				{
-					tempA += Endianness.ToUInt16LittleEndian(leftover, remainderOffset) * _k2;
+					tempA += Endianness.ToUInt16LittleEndian(leftover.Slice(remainderOffset)) * _k2;
 					tempA = RotateRight(tempA, 33) * _k3;
 					tempA ^= RotateRight((tempA * _k2) + tempB, 22) * _k1;
 
@@ -304,16 +304,16 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				for (var currentOffset = 0; currentOffset < data.Length; currentOffset += 32)
 				{
-					tempA += Endianness.ToUInt64LittleEndian(data, currentOffset) * _k0;
+					tempA += Endianness.ToUInt64LittleEndian(data.Slice(currentOffset)) * _k0;
 					tempA = RotateRight(tempA, 29) + tempC;
 
-					tempB += Endianness.ToUInt64LittleEndian(data, currentOffset + 8) * _k1;
+					tempB += Endianness.ToUInt64LittleEndian(data.Slice(currentOffset + 8)) * _k1;
 					tempB = RotateRight(tempB, 29) + tempD;
 
-					tempC += Endianness.ToUInt64LittleEndian(data, currentOffset + 16) * _k2;
+					tempC += Endianness.ToUInt64LittleEndian(data.Slice(currentOffset + 16)) * _k2;
 					tempC = RotateRight(tempC, 29) + tempA;
 
-					tempD += Endianness.ToUInt64LittleEndian(data, currentOffset + 24) * _k3;
+					tempD += Endianness.ToUInt64LittleEndian(data.Slice(currentOffset + 24)) * _k3;
 					tempD = RotateRight(tempD, 29) + tempB;
 				}
 
@@ -348,10 +348,10 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 16)
 				{
-					tempB = tempA + (Endianness.ToUInt64LittleEndian(leftover, remainderOffset) * _k2);
+					tempB = tempA + (Endianness.ToUInt64LittleEndian(leftover.Slice(remainderOffset)) * _k2);
 					tempB = RotateRight(tempB, 29) * _k3;
 
-					tempC = tempA + (Endianness.ToUInt64LittleEndian(leftover, remainderOffset + 8) * _k2);
+					tempC = tempA + (Endianness.ToUInt64LittleEndian(leftover.Slice(remainderOffset + 8)) * _k2);
 					tempC = RotateRight(tempC, 29) * _k3;
 
 					tempB ^= RotateRight(tempB * _k0, 21) + tempC;
@@ -365,7 +365,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 8)
 				{
-					tempA += Endianness.ToUInt64LittleEndian(leftover, remainderOffset) * _k3;
+					tempA += Endianness.ToUInt64LittleEndian(leftover.Slice(remainderOffset)) * _k3;
 					tempA ^= RotateRight(tempA, 55) * _k1;
 
 					remainderOffset += 8;
@@ -374,7 +374,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 4)
 				{
-					tempA += Endianness.ToUInt32LittleEndian(leftover, remainderOffset) * _k3;
+					tempA += Endianness.ToUInt32LittleEndian(leftover.Slice(remainderOffset)) * _k3;
 					tempA ^= RotateRight(tempA, 26) * _k1;
 
 					remainderOffset += 4;
@@ -383,7 +383,7 @@ namespace HashifyNet.Algorithms.MetroHash
 
 				if (remainderCount >= 2)
 				{
-					tempA += Endianness.ToUInt16LittleEndian(leftover, remainderOffset) * _k3;
+					tempA += Endianness.ToUInt16LittleEndian(leftover.Slice(remainderOffset)) * _k3;
 					tempA ^= RotateRight(tempA, 48) * _k1;
 
 					remainderOffset += 2;
