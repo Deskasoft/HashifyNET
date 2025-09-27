@@ -33,9 +33,12 @@ using HashifyNet.Algorithms.SHA1;
 using HashifyNet.Algorithms.SHA256;
 using HashifyNet.Algorithms.SHA384;
 using HashifyNet.Algorithms.SHA512;
+
+#if !LEGACY
 using HashifyNet.Algorithms.SHA3_256;
 using HashifyNet.Algorithms.SHA3_384;
 using HashifyNet.Algorithms.SHA3_512;
+#endif
 
 namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 {
@@ -296,6 +299,8 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 
 #endregion // SHA512_Tests
 
+#if !LEGACY
+
 #region SHA3_256_Tests
 
 #region SHA3_256_Constructor
@@ -466,6 +471,8 @@ namespace HashifyNet.UnitTests.Algorithms.HashAlgorithmWrapper
 #endregion // SHA3_512_ConfigValidation
 
 #endregion // SHA3_512_Tests
+
+#endif
 	}
 }
 
