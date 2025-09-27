@@ -128,7 +128,7 @@ namespace HashifyNet.Algorithms.SipHash
 			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
 				_messageLength += (ulong)data.Length;
-				ulong m = Endianness.ToUInt64LittleEndian(data, 0);
+				ulong m = Endianness.ToUInt64LittleEndian(data);
 
 				_v3 ^= m;
 				for (int i = 0; i < _cRounds; ++i)
