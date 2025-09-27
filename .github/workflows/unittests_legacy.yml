@@ -1,4 +1,4 @@
-name: HashifyNET Unit Tests
+name: HashifyNET Legacy Unit Tests
 
 permissions:
   contents: read
