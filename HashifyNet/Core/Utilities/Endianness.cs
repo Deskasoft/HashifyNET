@@ -41,6 +41,7 @@ namespace HashifyNet.Core.Utilities
 			if (buf.IsEmpty) return 0;
 			if (index < 0) return 0;
 			if (index >= buf.Length) return 0;
+
 			return buf[index];
 		}
 
