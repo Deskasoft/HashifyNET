@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -152,7 +152,7 @@ namespace HashifyNet.Algorithms.SM3
 
 				for (int i = 0; i < 16; i++)
 				{
-					W[i] = Endianness.ToUInt32BigEndian(block, i * 4);
+					W[i] = Endianness.ToUInt32BigEndian(block.Slice(i * 4));
 				}
 
 				for (int j = 16; j < 68; j++)
