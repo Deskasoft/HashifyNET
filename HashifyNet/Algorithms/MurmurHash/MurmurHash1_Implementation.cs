@@ -76,7 +76,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 
 				for (var currentOffset = 0; currentOffset < groupEndOffset; currentOffset += 4)
 				{
-					hashValue += Endianness.ToUInt32LittleEndian(data, currentOffset);
+					hashValue += Endianness.ToUInt32LittleEndian(data.Slice(currentOffset));
 					hashValue *= _m;
 					hashValue ^= hashValue >> 16;
 				}
