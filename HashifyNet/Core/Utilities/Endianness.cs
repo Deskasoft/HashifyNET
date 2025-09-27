@@ -50,6 +50,7 @@ namespace HashifyNet.Core.Utilities
 			if (buf.IsEmpty) return 0;
 			if (index < 0) return 0;
 			if (index >= buf.Length) return 0;
+
 			return buf[index];
 		}
 
@@ -513,15 +514,15 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static ulong ToUInt64LittleEndianSafe(ReadOnlySpan<byte> buffer)
+		public static ulong ToUInt64LittleEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return ToUInt64LittleEndian(buffer.SafeRead(0), buffer.SafeRead(1), buffer.SafeRead(2), buffer.SafeRead(3), buffer.SafeRead(4), buffer.SafeRead(5), buffer.SafeRead(6), buffer.SafeRead(7));
+			return ToUInt64LittleEndian(buffer.SafeRead(offset + 0), buffer.SafeRead(offset + 1), buffer.SafeRead(offset + 2), buffer.SafeRead(offset + 3), buffer.SafeRead(offset + 4), buffer.SafeRead(offset + 5), buffer.SafeRead(offset + 6), buffer.SafeRead(offset + 7));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static long ToInt64LittleEndianSafe(ReadOnlySpan<byte> buffer)
+		public static long ToInt64LittleEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return (long)ToUInt64LittleEndianSafe(buffer);
+			return (long)ToUInt64LittleEndianSafe(buffer, offset);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -571,15 +572,15 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static ushort ToUInt16LittleEndianSafe(ReadOnlySpan<byte> buffer)
+		public static ushort ToUInt16LittleEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return ToUInt16LittleEndian(buffer.SafeRead(0), buffer.SafeRead(1));
+			return ToUInt16LittleEndian(buffer.SafeRead(offset + 0), buffer.SafeRead(offset + 1));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static short ToInt16LittleEndianSafe(ReadOnlySpan<byte> buffer)
+		public static short ToInt16LittleEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return (short)ToUInt16LittleEndianSafe(buffer);
+			return (short)ToUInt16LittleEndianSafe(buffer, offset);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -674,15 +675,15 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static uint ToUInt32LittleEndianSafe(ReadOnlySpan<byte> buffer)
+		public static uint ToUInt32LittleEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return ToUInt32LittleEndian(buffer.SafeRead(0), buffer.SafeRead(1), buffer.SafeRead(2), buffer.SafeRead(3));
+			return ToUInt32LittleEndian(buffer.SafeRead(offset + 0), buffer.SafeRead(offset + 1), buffer.SafeRead(offset + 2), buffer.SafeRead(offset + 3));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static int ToInt32LittleEndianSafe(ReadOnlySpan<byte> buffer)
+		public static int ToInt32LittleEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return (int)ToUInt32LittleEndianSafe(buffer);
+			return (int)ToUInt32LittleEndianSafe(buffer, offset);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -746,15 +747,16 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static ulong ToUInt64BigEndianSafe(ReadOnlySpan<byte> buffer)
+		public static ulong ToUInt64BigEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return ToUInt64BigEndian(buffer.SafeRead(0), buffer.SafeRead(1), buffer.SafeRead(2), buffer.SafeRead(3), buffer.SafeRead(4), buffer.SafeRead(5), buffer.SafeRead(6), buffer.SafeRead(7));
+			return ToUInt64BigEndian(buffer.SafeRead(offset + 0), buffer.SafeRead(offset + 1), buffer.SafeRead(offset + 2), buffer.SafeRead(offset + 3), 
+								     buffer.SafeRead(offset + 4), buffer.SafeRead(offset + 5), buffer.SafeRead(offset + 6), buffer.SafeRead(offset + 7));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static long ToInt64BigEndianSafe(ReadOnlySpan<byte> buffer)
+		public static long ToInt64BigEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return (long)ToUInt64BigEndianSafe(buffer);
+			return (long)ToUInt64BigEndianSafe(buffer, offset);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -843,15 +845,15 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static ulong ToUInt16BigEndianSafe(ReadOnlySpan<byte> buffer)
+		public static ulong ToUInt16BigEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return ToUInt16BigEndian(buffer.SafeRead(0), buffer.SafeRead(1));
+			return ToUInt16BigEndian(buffer.SafeRead(offset + 0), buffer.SafeRead(offset + 1));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static long ToInt16BigEndianSafe(ReadOnlySpan<byte> buffer)
+		public static long ToInt16BigEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return (long)ToUInt16BigEndianSafe(buffer);
+			return (long)ToUInt16BigEndianSafe(buffer, offset);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -904,15 +906,15 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static uint ToUInt32BigEndianSafe(ReadOnlySpan<byte> buffer)
+		public static uint ToUInt32BigEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return ToUInt32BigEndian(buffer.SafeRead(0), buffer.SafeRead(1), buffer.SafeRead(2), buffer.SafeRead(3));
+			return ToUInt32BigEndian(buffer.SafeRead(offset + 0), buffer.SafeRead(offset + 1), buffer.SafeRead(offset + 2), buffer.SafeRead(offset + 3));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static int ToInt32BigEndianSafe(ReadOnlySpan<byte> buffer)
+		public static int ToInt32BigEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return (int)ToUInt32BigEndianSafe(buffer);
+			return (int)ToUInt32BigEndianSafe(buffer, offset);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
