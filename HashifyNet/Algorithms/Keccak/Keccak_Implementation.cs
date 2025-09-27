@@ -134,7 +134,7 @@ namespace HashifyNet.Algorithms.Keccak
 					{
 						if (byteIndex < _rateInBytes)
 						{
-							_state[x, y] ^= Endianness.ToUInt64LittleEndian(data, byteIndex);
+							_state[x, y] ^= Endianness.ToUInt64LittleEndian(data.Slice(byteIndex));
 							byteIndex += 8;
 						}
 						else
