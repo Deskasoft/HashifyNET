@@ -107,9 +107,9 @@ namespace HashifyNet.Algorithms.Jenkins
 
 				for (var currentOffset = 0; currentOffset < dataCount; currentOffset += 12)
 				{
-					tempA += Endianness.ToUInt32LittleEndian(data, currentOffset);
-					tempB += Endianness.ToUInt32LittleEndian(data, currentOffset + 4);
-					tempC += Endianness.ToUInt32LittleEndian(data, currentOffset + 8);
+					tempA += Endianness.ToUInt32LittleEndian(data.Slice(currentOffset));
+					tempB += Endianness.ToUInt32LittleEndian(data.Slice(currentOffset + 4));
+					tempC += Endianness.ToUInt32LittleEndian(data.Slice(currentOffset + 8));
 
 					Mix(ref tempA, ref tempB, ref tempC);
 				}
@@ -136,7 +136,7 @@ namespace HashifyNet.Algorithms.Jenkins
 					// the first byte of c is reserved for the length
 
 					case 8:
-						finalB += Endianness.ToUInt32LittleEndian(leftover, 4);
+						finalB += Endianness.ToUInt32LittleEndian(leftover.Slice(4));
 						goto case 4;
 
 					case 7: finalB += (uint)leftover[6] << 16; goto case 6;
@@ -144,7 +144,7 @@ namespace HashifyNet.Algorithms.Jenkins
 					case 5: finalB += leftover[4]; goto case 4;
 
 					case 4:
-						finalA += Endianness.ToUInt32LittleEndian(leftover, 0);
+						finalA += Endianness.ToUInt32LittleEndian(leftover);
 						break;
 
 					case 3: finalA += (uint)leftover[2] << 16; goto case 2;
