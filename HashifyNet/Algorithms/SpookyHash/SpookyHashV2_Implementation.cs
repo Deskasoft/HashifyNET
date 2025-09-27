@@ -372,7 +372,7 @@ namespace HashifyNet.Algorithms.SpookyHash
 				{
 					for (var i = 0; i < 12; ++i)
 					{
-						hashValue[i] += Endianness.ToUInt64LittleEndian(data, currentOffset + (i * 8));
+						hashValue[i] += Endianness.ToUInt64LittleEndian(data.Slice(currentOffset + (i * 8)));
 						hashValue[(i + 2) % 12] ^= hashValue[(i + 10) % 12];
 						hashValue[(i + 11) % 12] ^= hashValue[i];
 						hashValue[i] = RotateLeft(hashValue[i], _MixRotationParameters[i]);
