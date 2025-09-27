@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -32,9 +32,13 @@ using HashifyNet.Algorithms.BuzHash;
 using HashifyNet.Algorithms.CRC;
 using HashifyNet.Algorithms.FNV;
 using HashifyNet.Algorithms.Pearson;
+
+#if !LEGACY
 using HashifyNet.Algorithms.SHA3_256;
 using HashifyNet.Algorithms.SHA3_384;
 using HashifyNet.Algorithms.SHA3_512;
+#endif
+
 using HashifyNet.UnitTests.Utilities;
 using System.Diagnostics;
 
@@ -585,7 +589,13 @@ namespace HashifyNet.UnitTests.Core
 				
 				// Cryptographic Forced Defaults
 				{ typeof(IArgon2id), new Argon2idConfigProfileOWASP() }
-			}, HashFactory.GetUnavailableHashAlgorithms());
+
+
+			}
+#if !LEGACY
+			, HashFactory.GetUnavailableHashAlgorithms()
+#endif
+			);
 
 			Assert.NotNull(all);
 			Assert.NotEmpty(all);
