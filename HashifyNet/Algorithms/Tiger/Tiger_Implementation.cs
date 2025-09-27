@@ -119,7 +119,7 @@ namespace HashifyNet.Algorithms.Tiger
 				var block = new ulong[8];
 				for (int i = 0; i < 8; i++)
 				{
-					block[i] = Endianness.ToUInt64LittleEndian(data, i * 8);
+					block[i] = Endianness.ToUInt64LittleEndian(data.Slice(i * 8));
 				}
 
 				ProcessBlock(block);
