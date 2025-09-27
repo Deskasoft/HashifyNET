@@ -32,4 +32,4 @@ jobs:
       run: dotnet build --no-restore --configuration Release
 
     - name: Test
-      run: dotnet test **./HashifyNet.UnitTests/HashifyNet.UnitTests.Legacy.csproj** --no-build --verbosity normal --configuration Release
+      run: dotnet test ./HashifyNet.UnitTests/HashifyNet.UnitTests.Legacy.csproj --no-build --verbosity normal --configuration Release
