@@ -119,7 +119,11 @@ namespace HashifyNet.UnitTests.Core
 			IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
 			{
 				{ typeof(IArgon2id), new Argon2idConfigProfileOWASP() }
-			}, HashFactory.GetUnavailableHashAlgorithms());
+			}
+#if !LEGACY
+			, HashFactory.GetUnavailableHashAlgorithms()
+#endif		
+			);
 
 			Assert.NotNull(functions);
 			Assert.NotEmpty(functions);
@@ -172,12 +176,14 @@ namespace HashifyNet.UnitTests.Core
 			Assert.All(configs, item => Assert.Contains(typeof(IHashConfigBase), item.GetInterfaces()));
 		}
 
+#if !LEGACY
 		[Fact]
 		public void Factory_GetUnavailableHashAlgorithms_Works()
 		{
 			var unavailable = HashFactory.GetUnavailableHashAlgorithms();
 			Assert.NotNull(unavailable);
 		}
+#endif
 
 		[Fact]
 		public void Factory_CreateDefaultConcreteConfig_Null_Throws()
