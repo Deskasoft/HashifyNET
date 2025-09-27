@@ -102,7 +102,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 
 				for (var currentOffset = 0; currentOffset < groupEndOffset; currentOffset += 4)
 				{
-					uint k = Endianness.ToUInt32LittleEndian(data, currentOffset);
+					uint k = Endianness.ToUInt32LittleEndian(data.Slice(currentOffset));
 
 					k *= _mixConstant32;
 					k ^= k >> 24;
@@ -154,7 +154,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 
 				for (var currentOffset = 0; currentOffset < groupEndOffset; currentOffset += 8)
 				{
-					ulong k = Endianness.ToUInt64LittleEndian(data, currentOffset);
+					ulong k = Endianness.ToUInt64LittleEndian(data.Slice(currentOffset));
 
 					k *= _mixConstant64;
 					k ^= k >> 47;
@@ -176,7 +176,7 @@ namespace HashifyNet.Algorithms.MurmurHash
 					case 6: hashValue ^= (ulong)data[remainderOffset + 5] << 40; goto case 5;
 					case 5: hashValue ^= (ulong)data[remainderOffset + 4] << 32; goto case 4;
 					case 4:
-						hashValue ^= Endianness.ToUInt32LittleEndian(data, remainderOffset);
+						hashValue ^= Endianness.ToUInt32LittleEndian(data.Slice(remainderOffset));
 						break;
 
 					case 3: hashValue ^= (ulong)data[remainderOffset + 2] << 16; goto case 2;
