@@ -443,7 +443,8 @@ namespace HashifyNet.Core.Utilities
 				throw new ArgumentOutOfRangeException(nameof(buffer), "Buffer must contain at least 8 bytes starting from the specified offset.");
 			}
 
-			return ToUInt64LittleEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3], buffer[offset + 4], buffer[offset + 5], buffer[offset + 6], buffer[offset + 7]);
+			return ToUInt64LittleEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3], 
+										buffer[offset + 4], buffer[offset + 5], buffer[offset + 6], buffer[offset + 7]);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -517,7 +518,8 @@ namespace HashifyNet.Core.Utilities
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static ulong ToUInt64LittleEndianSafe(ReadOnlySpan<byte> buffer, int offset)
 		{
-			return ToUInt64LittleEndian(buffer.SafeRead(offset + 0), buffer.SafeRead(offset + 1), buffer.SafeRead(offset + 2), buffer.SafeRead(offset + 3), buffer.SafeRead(offset + 4), buffer.SafeRead(offset + 5), buffer.SafeRead(offset + 6), buffer.SafeRead(offset + 7));
+			return ToUInt64LittleEndian(buffer.SafeRead(offset + 0), buffer.SafeRead(offset + 1), buffer.SafeRead(offset + 2), buffer.SafeRead(offset + 3), 
+										buffer.SafeRead(offset + 4), buffer.SafeRead(offset + 5), buffer.SafeRead(offset + 6), buffer.SafeRead(offset + 7));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -695,7 +697,8 @@ namespace HashifyNet.Core.Utilities
 				throw new ArgumentException("Buffer must contain at least 8 bytes starting from the specified offset.", nameof(buffer));
 			}
 
-			return ToUInt64BigEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3], buffer[offset + 4], buffer[offset + 5], buffer[offset + 6], buffer[offset + 7]);
+			return ToUInt64BigEndian(buffer[offset], buffer[offset + 1], buffer[offset + 2], buffer[offset + 3],
+								buffer[offset + 4], buffer[offset + 5], buffer[offset + 6], buffer[offset + 7]);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
