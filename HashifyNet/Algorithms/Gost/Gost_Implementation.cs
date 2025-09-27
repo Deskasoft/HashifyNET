@@ -657,7 +657,7 @@ namespace HashifyNet.Algorithms.Gost
 			protected override void TransformByteGroupsInternal(ReadOnlySpan<byte> data)
 			{
 				Span<ulong> m = stackalloc ulong[8];
-				BytesToUlongsLE(data, 0, m);
+				BytesToUlongsLE(data, m);
 				ProcessBlock(m);
 			}
 
@@ -678,7 +678,7 @@ namespace HashifyNet.Algorithms.Gost
 
 				finalBlock[leftover.Length] = 0x01;
 
-				BytesToUlongsLE(finalBlock, 0, finalM);
+				BytesToUlongsLE(finalBlock, finalM);
 
 				GN(_n.AsSpan(), _h.AsSpan(), finalM);
 
@@ -776,11 +776,11 @@ namespace HashifyNet.Algorithms.Gost
 				}
 			}
 
-			private static void BytesToUlongsLE(ReadOnlySpan<byte> input, int offset, Span<ulong> output)
+			private static void BytesToUlongsLE(ReadOnlySpan<byte> input, Span<ulong> output)
 			{
 				for (int i = 0; i < 8; i++)
 				{
-					output[i] = Endianness.ToUInt64LittleEndian(input, offset + (i * 8));
+					output[i] = Endianness.ToUInt64LittleEndian(input.Slice(i * 8));
 				}
 			}
 
@@ -788,7 +788,7 @@ namespace HashifyNet.Algorithms.Gost
 			{
 				for (int i = 0; i < 8; i++)
 				{
-					Endianness.ToLittleEndianBytes(input[i], output, i * 8);
+					Endianness.ToLittleEndianBytes(input[i], output.Slice(i * 8));
 				}
 			}
 		}
