@@ -1,26 +1,26 @@
 > [!IMPORTANT]
 > [HashifyNET Command Line Interface](https://github.com/Deskasoft/HashifyNETCLI) is now available!
 
-
-HashifyNET
+HashifyNET<img width="32" height="32" src="https://github.com/Deskasoft/HashifyNET/blob/main/logo.png" alt="logo" />
 ==========
 
 HashifyNET is a CLS-Compliant, platform-independent .NET library designed to offer a common interface for a wide range of [cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Keyed_cryptographic_hash_functions) and [non-cryptographic](https://en.wikipedia.org/wiki/List_of_hash_functions#Non-cryptographic_hash_functions) hashing algorithms.
 
-All functionality of the library is tested using [xUnit](https://github.com/xunit/xunit). A primary requirement for each release is 100% code coverage by these tests.
+All library functionality is tested using [xUnit](https://github.com/xunit/xunit). A primary requirement for each release is 100% code coverage by these tests.
 All code within the library is commented using Visual Studio-compatible XML comments.
 
 Should you require assistance or wish to join our community, please use the following link to access our Discord server: https://discord.gg/PrKery9
 
 Differences
 -----------
-This library is the successor to https://github.com/Deskasoft/Data.HashFunction. While keeping the API structure *mostly* the same, the biggest change this library brings is the clearance of the dependency overhaul previously caused by Data.HashFunction.
-Every hash algorithm is now collected under one single assembly and package named HashifyNET, and all of the namespaces are shortened to HashifyNet.
+This library is the successor to https://github.com/Deskasoft/Data.HashFunction. The principal modification introduced by this library, while preserving substantial continuity in the API structure, is the rectification of the dependency burden previously incurred by `Data.HashFunction`.
+All hash algorithms are now centralized within a singular assembly and corresponding package, HashifyNET. 
+Furthermore, the associated namespaces have been concisely streamlined to HashifyNet.
 
 The former factory-based implementation, which assigned a unique factory to each hash function, has been superseded by a more modular and centralized factory.
 This new model provides superior accessibility and efficiency.
 
-As an addition, we introduced 30 more hash algorithms, sorted below:
+In addition, we introduced 33 more hash algorithms, sorted below:
 - Adler32
 - Blake3
 - Gost
@@ -33,6 +33,9 @@ As an addition, we introduced 30 more hash algorithms, sorted below:
 - Keccak
 - Argon2id
 - RapidHash
+- T1HA0
+- T1HA1
+- T1HA2
 
 Implementations introduced by wrapping existing .NET implementations:
 - xxHash3
@@ -60,7 +63,7 @@ Implementations introduced by wrapping existing .NET implementations:
 ### Demo
 You can see a working example of HasihfyNET using Blazor right [here](https://deskasoft.github.io/HashifyNETDemo/).
 You can also click on the showcase below to go to the demo.
-[<img width="1280" height="720" alt="hashifynet_demo_short" src="https://github.com/user-attachments/assets/2bd7c477-88d6-4616-a9cb-5d24cb9d4be5" />](https://deskasoft.github.io/HashifyNETDemo/)
+[<img width="1280" height="720" alt="hashifynet_demo_short" src="https://github.com/Deskasoft/HashifyNETDemo/blob/main/hashifynet_demo_short.png" />](https://deskasoft.github.io/HashifyNETDemo/)
 
 ### NuGet
 You can directly bind HashifyNET to your project through NuGet below:
@@ -123,6 +126,10 @@ The following hash functions have been implemented from the most reliable refere
 * [Tiger](https://en.wikipedia.org/wiki/Tiger_(hash_function))
   * Tiger - Original
   * Tiger2 - The padding at the beginning of the algorithm changes from 0x01 to 0x80. This is the only difference from the original Tiger algorithm.
+* [T1HA](https://github.com/erthink/t1ha)
+  * T1HA0 - 64-bit Little-Endian version.
+  * T1HA1 - 64-bit Little-Endian version.
+  * T1HA2 - 64-bit and 128-bit Little-Endian versions.
 * [Whirlpool](https://en.wikipedia.org/wiki/Whirlpool_(hash_function))
 * [xxHash](https://code.google.com/p/xxhash/)
   * xxHash - Original and 64-bit version.
@@ -246,8 +253,8 @@ foreach (IHashFunctionBase function in functions)
 }
 ```
 
-There are a lot more changes made to the library, and feel free to explore them by adding to your project.
-We'd love to see what you are going to do or have done with our library, so feel free to share them with us at https://discord.gg/PrKery9.
+A significant number of additional modifications have been implemented within the library. We encourage you to integrate these updates into your project and explore them fully.
+We are eager to observe the innovative applications you develop, or have already developed, using our library. Please feel free to share your work with us by joining our community at: https://discord.gg/PrKery9.
 
 Please visit [wiki/Release-Notes](https://github.com/Deskasoft/HashifyNET/wiki/Release-Notes) for more information about usage examples and the latest features available.
 
@@ -282,14 +289,3 @@ License
 -------
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
-
-
-
-
-
-
-
-
-
-
-
