@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -48,11 +48,11 @@ namespace HashifyNet
 
 			byte[] lilEndianData = data.Reverse().ToArray();
 			byte[] dataForBigInt = lilEndianData;
-			if (dataForBigInt.Length > 0 && (dataForBigInt[0] & 0x80) != 0)
+			if (dataForBigInt.Length > 0 && (dataForBigInt[dataForBigInt.Length - 1] & 0x80) != 0)
 			{
 				dataForBigInt = new byte[lilEndianData.Length + 1];
-				Array.Copy(lilEndianData, 0, dataForBigInt, 1, lilEndianData.Length);
-				dataForBigInt[0] = 0;
+				Array.Copy(lilEndianData, 0, dataForBigInt, 0, lilEndianData.Length);
+				dataForBigInt[dataForBigInt.Length - 1] = 0;
 			}
 
 			var intData = new BigInteger(dataForBigInt);
