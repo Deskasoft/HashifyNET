@@ -27,9 +27,6 @@
 // ******************************************************************************
 // *
 
-using HashifyNet.Algorithms.Blake2;
-using HashifyNet.Algorithms.SHA256;
-using HashifyNet.Core.Utilities;
 using System;
 using System.Linq;
 using System.Numerics;
