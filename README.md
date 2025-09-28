@@ -63,7 +63,7 @@ Implementations introduced by wrapping existing .NET implementations:
 ### Demo
 You can see a working example of HasihfyNET using Blazor right [here](https://deskasoft.github.io/HashifyNETDemo/).
 You can also click on the showcase below to go to the demo.
-[<img width="1280" height="720" alt="hashifynet_demo_short" src="https://github.com/Deskasoft/HashifyNETDemo/blob/main/hashifynet_demo_short.png" />](https://deskasoft.github.io/HashifyNETDemo/)
+[<img width="1280" height="720" alt="hashifynet_demo_short" src="https://github.com/Deskasoft/HashifyNETDemo/blob/main/hashifynet_demo.webp" />](https://deskasoft.github.io/HashifyNETDemo/)
 
 ### NuGet
 You can directly bind HashifyNET to your project through NuGet below:
@@ -289,3 +289,4 @@ License
 -------
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
