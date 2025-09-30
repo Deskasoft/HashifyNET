@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -41,6 +41,11 @@ namespace HashifyNet
 	/// produce consistent hash values for the same input data.</remarks>
 	public interface IHashFunctionBase
 	{
+		/// <summary>
+		/// Gets the configuration settings for the hash operation.
+		/// </summary>
+		IHashConfigBase Config { get; }
+
 		/// <summary>
 		/// Computes hash value for given byte array.
 		/// </summary>
