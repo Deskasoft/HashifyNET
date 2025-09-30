@@ -169,9 +169,9 @@ namespace HashifyNet.UnitTests
 					BitConverter.GetBytes(value));
 			}
 
-			private void AssertSugar(Action<IHashFunction<DefaultHashConfig>> action, byte[] data)
+			private void AssertSugar(Action<IHashFunctionBase> action, byte[] data)
 			{
-				var hashFunctionMock = new Mock<IHashFunction<DefaultHashConfig>>();
+				var hashFunctionMock = new Mock<IHashFunctionBase>();
 
 				hashFunctionMock.SetupGet(hf => hf.Config)
 					.Returns(new DefaultHashConfig() { HashSizeInBits = 32 });
@@ -341,9 +341,9 @@ namespace HashifyNet.UnitTests
 
 #endif
 
-			private void AssertSugar(Action<IHashFunction<DefaultHashConfig>, int> action, byte[] data)
+			private void AssertSugar(Action<IHashFunctionBase, int> action, byte[] data)
 			{
-				var hashFunctionMock = new Mock<IHashFunction<DefaultHashConfig>>();
+				var hashFunctionMock = new Mock<IHashFunctionBase>();
 
 				hashFunctionMock.SetupGet(hf => hf.Config)
 					.Returns(new DefaultHashConfig() { HashSizeInBits = 32 });
