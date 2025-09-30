@@ -45,6 +45,8 @@ namespace HashifyNet.Core
 		/// </summary>
 		public abstract CName Config { get; }
 
+		IHashConfigBase IHashFunctionBase.Config => Config;
+
 		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
