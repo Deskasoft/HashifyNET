@@ -35,8 +35,8 @@ namespace HashifyNet
 	public interface IHashFunction<CName> : IHashFunctionBase where CName : IHashConfig<CName>
 	{
 		/// <summary>
-		/// Gets the configuration settings for the hash operation.
+		/// <inheritdoc cref="IHashFunctionBase.Config"/>
 		/// </summary>
-		CName Config { get; }
+		new CName Config { get; }
 	}
 }
