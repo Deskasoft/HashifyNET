@@ -102,7 +102,7 @@
     <Company>Deskasoft International</Company>
     <Product>HashifyNET</Product>
     <Copyright>Copyright © Deskasoft International</Copyright>
-    <Version>7.0.1</Version>
+    <Version>7.1.1</Version>
     <PackageTags>hashing;hash;algorithms;security;crypto;non-crypto;CLS-compliant;VB.NET;F#</PackageTags>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <EnableNETAnalyzers>False</EnableNETAnalyzers>
@@ -121,4 +121,5 @@
   </PropertyGroup>
 
 </Project>
+
 
