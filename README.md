@@ -219,8 +219,8 @@ IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionTyp
 
 foreach (IHashFunctionBase function in functions)
 {
-	IHashValue hv = function.ComputeHash("foobar");
-	// Use the computed hash here...
+	IHashValue computedHash = function.ComputeHash("foobar");
+	Console.WriteLine(computedHash.AsHexString());
 }
 ```
 
@@ -236,7 +236,9 @@ IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionTyp
 
 foreach (IHashFunctionBase function in functions)
 {
-	IHashValue hv = function.ComputeHash("foobar");
+	IHashValue computedHash = function.ComputeHash("foobar");
+
+	Console.WriteLine(computedHash.AsHexString());
 
 	// This ensures that we only try disposing of cryptographic hashes.
 	if (function is ICryptographicHashFunctionBase cryptoHash)
@@ -244,6 +246,33 @@ foreach (IHashFunctionBase function in functions)
 		cryptoHash.Dispose();
 	}
 }
+```
+
+### Example computing all hashes then finding the safest result for our input:
+``` CSharp
+IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Noncryptographic | HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
+{
+
+	// Only adding configs that require us to pick or define one, for the rest of the hash algorithms, the default provided configs will be used instead.
+	{ typeof(ICRC), new CRCConfigProfileCRC32() },
+	{ typeof(IPearson), new PearsonConfigProfileWikipedia() },
+	{ typeof(IFNV1), new FNVConfigProfile32Bits()},
+	{ typeof(IFNV1a), new FNVConfigProfile32Bits() },
+	{ typeof(IBuzHash), new BuzHashConfigProfileDefault() },
+
+	{ typeof(IArgon2id), new Argon2idConfigProfileOWASP() }
+
+});
+
+Dictionary<Type, IHashValue> hashValues = new();
+foreach (IHashFunctionBase function in functions)
+{
+	IHashValue computedHash = function.ComputeHash("foobar");
+	hashValues.Add(function.GetType(), computedHash);
+}
+
+KeyValuePair<Type, IHashValue> safestHash = hashValues.MaxBy(t => t.Value.CalculateEntropy())!;
+Console.WriteLine($"Safest Hash Value for 'foobar' is '{safestHash.Key.Name}': {safestHash.Value.AsHexString()}");
 ```
 
 A significant number of additional modifications have been implemented within the library. We encourage you to integrate these updates into your project and explore them fully.
@@ -282,5 +311,6 @@ License
 -------
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
