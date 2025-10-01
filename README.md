@@ -205,27 +205,22 @@ Thanks to our latest design, we can now calculate multiple hashes at once, in ca
 
 ### Example using 'System.Type' to compute all non-cryptographic hashes:
 ``` CSharp
-IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>() 
+IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Noncryptographic, new Dictionary<Type, IHashConfigBase>()
 {
 
-    // Only adding configs that require us to pick or define one, for the rest of the hash algorithms, the default provided configs will be used instead.
-	{ typeof(ICRC), CRCConfig.CRC32 },
-	{ typeof(IPearson), new WikipediaPearsonConfig() },
-	{ typeof(IFNV1), FNVConfig.GetPredefinedConfig(32) },
-	{ typeof(IFNV1a), FNVConfig.GetPredefinedConfig(32) },
-	{ typeof(IBuzHash), new DefaultBuzHashConfig() },
+	// Only adding configs that require us to pick or define one, for the rest of the hash algorithms, the default provided configs will be used instead.
+	{ typeof(ICRC), new CRCConfigProfileCRC32() },
+	{ typeof(IPearson), new PearsonConfigProfileWikipedia() },
+	{ typeof(IFNV1), new FNVConfigProfile32Bits()},
+	{ typeof(IFNV1a), new FNVConfigProfile32Bits() },
+	{ typeof(IBuzHash), new BuzHashConfigProfileDefault() },
 
 });
 
-Assert.NotNull(functions);
-Assert.NotEmpty(functions);
-Assert.All(functions, item => Assert.NotNull(item));
-
 foreach (IHashFunctionBase function in functions)
 {
-	IHashValue hv = function.ComputeHash(TestConstants.FooBar);
-	Assert.NotNull(hv);
-	Assert.NotEmpty(hv.Hash);
+	IHashValue hv = function.ComputeHash("foobar");
+	// Use the computed hash here...
 }
 ```
 
@@ -234,22 +229,20 @@ foreach (IHashFunctionBase function in functions)
 IHashFunctionBase[] functions = HashFactory.CreateHashAlgorithms(HashFunctionType.Cryptographic, new Dictionary<Type, IHashConfigBase>()
 {
 
-    // Only adding configs that require us to pick or define one, for the rest of the hash algorithms, the default provided configs will be used instead.
-	{ typeof(IArgon2id), Argon2idConfig.OWASP_Standard }
+	// Only adding configs that require us to pick or define one, for the rest of the hash algorithms, the default provided configs will be used instead.
+	{ typeof(IArgon2id), new Argon2idConfigProfileOWASP() }
 
 }, typeof(IBlake3)); // (Example) We do not want Blake3, though you can add as many as you want to ignore, including base interfaces to ignore all derived interfaces (such as IFNV to also ignore IFNV1 and IFNV1a).
 
-Assert.NotNull(functions);
-Assert.NotEmpty(functions);
-Assert.All(functions, item => Assert.NotNull(item));
-
 foreach (IHashFunctionBase function in functions)
 {
-	IHashValue hv = function.ComputeHash(TestConstants.FooBar);
-	Assert.NotNull(hv);
-	Assert.NotEmpty(hv.Hash);
+	IHashValue hv = function.ComputeHash("foobar");
 
-	(function as ICryptographicHashFunctionBase).Dispose();
+	// This ensures that we only try disposing of cryptographic hashes.
+	if (function is ICryptographicHashFunctionBase cryptoHash)
+	{
+		cryptoHash.Dispose();
+	}
 }
 ```
 
@@ -289,4 +282,5 @@ License
 -------
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
