@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -27,8 +27,8 @@
 // ******************************************************************************
 // *
 
+using System;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace HashifyNet
 {
@@ -54,6 +54,22 @@ namespace HashifyNet
 		/// <exception cref="System.ArgumentNullException">Thrown if either <paramref name="left"/> or <paramref name="right"/> is <see langword="null"/>.</exception>
 		public static bool FixedTimeEquals(byte[] left, byte[] right)
 		{
+			return FixedTimeEquals(left.AsSpan(), right.AsSpan());
+		}
+
+		/// <summary>
+		/// Compares two <see cref="ReadOnlySpan{Byte}"/> instances for equality in a way that is resistant to timing attacks.
+		/// </summary>
+		/// <remarks>This method performs a constant-time comparison to prevent timing attacks, which can occur when
+		/// the time taken to compare two values leaks information about their contents. The method ensures that the
+		/// comparison time depends only on the length of the <see cref="ReadOnlySpan{Byte}"/>, not their contents. <para> If the <see cref="ReadOnlySpan{Byte}"/> instances have different
+		/// lengths, the method returns <see langword="false"/> immediately.</para></remarks>
+		/// <param name="left">The first <see cref="ReadOnlySpan{Byte}"/> to compare. Cannot be <see langword="null"/>.</param>
+		/// <param name="right">The second <see cref="ReadOnlySpan{Byte}"/> to compare. Cannot be <see langword="null"/>.</param>
+		/// <returns><see langword="true"/> if the two <see cref="ReadOnlySpan{Byte}"/> instances are equal; otherwise, <see langword="false"/>.</returns>
+		/// <exception cref="System.ArgumentNullException">Thrown if either <paramref name="left"/> or <paramref name="right"/> is <see langword="null"/>.</exception>
+		public static bool FixedTimeEquals(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right)
+		{
 			if (left == null)
 			{
 				throw new System.ArgumentNullException(nameof(left));
@@ -65,7 +81,7 @@ namespace HashifyNet
 			}
 
 #if NETCOREAPP2_1 || NETCOREAPP2_2 || NETCOREAPP3_0 || NETCOREAPP3_1 || NETSTANDARD2_1 || NET5_0_OR_GREATER
-            return System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(left, right);
+			return System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(left, right);
 #else
 			if (left.Length != right.Length)
 			{
@@ -97,11 +113,7 @@ namespace HashifyNet
 		/// <exception cref="System.ArgumentNullException">Thrown if either <paramref name="left"/> or <paramref name="right"/> is <see langword="null"/>.</exception>
 		public static bool FixedTimeEquals(ImmutableArray<byte> left, ImmutableArray<byte> right)
 		{
-			return FixedTimeEquals(left.ToArray(), right.ToArray());
+			return FixedTimeEquals(left.AsSpan(), right.AsSpan());
 		}
 	}
 }
-
-
-
-
