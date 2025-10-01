@@ -361,6 +361,18 @@ namespace HashifyNet.UnitTests.Utilities
 			Assert.Equal(hv1.AsLittleEndian(), hv1);
 			Assert.Equal(hv2.AsLittleEndian(), hv2.Reverse());
 			Assert.Equal(hv3.AsLittleEndian(), hv3);
+
+			// TreatAsLittleEndian must return the same array but convert BigEndian and NotApplicable to LittleEndian.
+			Assert.Equal(hv1.TreatAsLittleEndian(), hv1);
+			Assert.Equal(ValueEndianness.LittleEndian, hv1.TreatAsLittleEndian().Endianness);
+			Assert.Equal(hv2.TreatAsLittleEndian(), hv2);
+			Assert.Equal(ValueEndianness.LittleEndian, hv2.TreatAsLittleEndian().Endianness);
+
+			// TreatAsBigEndian must return the same array but convert LittleEndian and NotApplicable to BigEndian.
+			Assert.Equal(hv1.TreatAsBigEndian(), hv1);
+			Assert.Equal(ValueEndianness.BigEndian, hv1.TreatAsBigEndian().Endianness);
+			Assert.Equal(hv3.TreatAsBigEndian(), hv3);
+			Assert.Equal(ValueEndianness.BigEndian, hv3.TreatAsBigEndian().Endianness);
 		}
 		#endregion
 
@@ -368,10 +380,10 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsDecimal_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
-			var hv3 = new HashValue(ValueEndianness.NotApplicable, new byte[12], 96);
-			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[8], 64);
+			var hv3 = new HashValue(ValueEndianness.LittleEndian, new byte[12], 96);
+			var hv_invalid = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
 
 			Assert.Equal(0, hv1.AsDecimal());
 			Assert.Equal(0, hv2.AsDecimal());
@@ -383,9 +395,9 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsDouble_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
-			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[8], 64);
+			var hv_invalid = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
 
 			Assert.Equal(0, hv1.AsDouble());
 			Assert.Equal(0, hv2.AsDouble());
@@ -396,9 +408,9 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsSingle_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[2], 16);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
-			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[2], 16);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[4], 32);
+			var hv_invalid = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
 
 			Assert.Equal(0, hv1.AsSingle());
 			Assert.Equal(0, hv2.AsSingle());
@@ -409,9 +421,9 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsInt64_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
-			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[8], 64);
+			var hv_invalid = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
 
 			Assert.Equal(0, hv1.AsInt64());
 			Assert.Equal(0, hv2.AsInt64());
@@ -422,9 +434,9 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsInt32_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[2], 16);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
-			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[2], 16);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[4], 32);
+			var hv_invalid = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
 
 			Assert.Equal(0, hv1.AsInt32());
 			Assert.Equal(0, hv2.AsInt32());
@@ -435,9 +447,9 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsInt16_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[1], 8);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[2], 16);
-			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[1], 8);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[2], 16);
+			var hv_invalid = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
 
 			Assert.Equal(0, hv1.AsInt16());
 			Assert.Equal(0, hv2.AsInt16());
@@ -448,14 +460,14 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsBigInteger_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[1], 8);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[2], 16);
-			var hv3 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
-			var hv4 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
-			var hv5 = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
-			var hv6 = new HashValue(ValueEndianness.NotApplicable, new byte[32], 256);
-			var hv7 = new HashValue(ValueEndianness.NotApplicable, new byte[64], 512);
-			var hv8 = new HashValue(ValueEndianness.NotApplicable, new byte[128], 1024);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[1], 8);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[2], 16);
+			var hv3 = new HashValue(ValueEndianness.LittleEndian, new byte[4], 32);
+			var hv4 = new HashValue(ValueEndianness.LittleEndian, new byte[8], 64);
+			var hv5 = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
+			var hv6 = new HashValue(ValueEndianness.LittleEndian, new byte[32], 256);
+			var hv7 = new HashValue(ValueEndianness.LittleEndian, new byte[64], 512);
+			var hv8 = new HashValue(ValueEndianness.LittleEndian, new byte[128], 1024);
 
 			Assert.Equal(0, hv1.AsBigInteger());
 			Assert.Equal(0, hv2.AsBigInteger());
@@ -473,9 +485,9 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsChar_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[2], 16);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[1], 8);
-			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[2], 16);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[1], 8);
+			var hv_invalid = new HashValue(ValueEndianness.LittleEndian, new byte[4], 32);
 
 			Assert.Equal('\0', hv1.AsChar());
 			Assert.Equal('\0', hv2.AsChar());
@@ -488,9 +500,9 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsDateTime_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
-			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[8], 64);
+			var hv_invalid = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
 
 			Assert.Equal(new DateTime(0), hv1.AsDateTime());
 			Assert.Equal(new DateTime(0), hv2.AsDateTime());
@@ -501,9 +513,9 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsDateTimeOffset_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
-			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[8], 64);
+			var hv_invalid = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
 
 			Assert.Equal(new DateTimeOffset(0, TimeSpan.Zero), hv1.AsDateTimeOffset());
 			Assert.Equal(new DateTimeOffset(0, TimeSpan.Zero), hv2.AsDateTimeOffset());
@@ -514,9 +526,9 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsTimeSpan_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[4], 32);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
-			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[4], 32);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[8], 64);
+			var hv_invalid = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
 
 			Assert.Equal(new TimeSpan(0), hv1.AsTimeSpan());
 			Assert.Equal(new TimeSpan(0), hv2.AsTimeSpan());
@@ -529,8 +541,8 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsBinaryString_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[8], 64);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
 
 			Assert.Equal("0000000000000000000000000000000000000000000000000000000000000000", hv1.AsBinaryString());
 			Assert.Equal("00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", hv2.AsBinaryString());
@@ -541,9 +553,9 @@ namespace HashifyNet.UnitTests.Utilities
 		[Fact]
 		public void HashValue_AsGuid_Works()
 		{
-			var hv1 = new HashValue(ValueEndianness.NotApplicable, new byte[8], 64);
-			var hv2 = new HashValue(ValueEndianness.NotApplicable, new byte[16], 128);
-			var hv_invalid = new HashValue(ValueEndianness.NotApplicable, new byte[32], 256);
+			var hv1 = new HashValue(ValueEndianness.LittleEndian, new byte[8], 64);
+			var hv2 = new HashValue(ValueEndianness.LittleEndian, new byte[16], 128);
+			var hv_invalid = new HashValue(ValueEndianness.LittleEndian, new byte[32], 256);
 
 			Assert.Equal(new Guid(new byte[16]), hv1.AsGuid());
 			Assert.Equal(new Guid(new byte[16]), hv2.AsGuid());
