@@ -1,4 +1,4 @@
-﻿// *
+// *
 // *****************************************************************************
 // *
 // * Copyright (c) 2025 Deskasoft International
@@ -60,6 +60,18 @@ namespace HashifyNet.Core.Utilities
 			_decodeOp = decodeOp ?? throw new ArgumentNullException(nameof(decodeOp));
 
 			EncodedHash = encodedHash.ToImmutableArray();
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <param name="endianness"><inheritdoc/></param>
+		/// <param name="hash"><inheritdoc/></param>
+		/// <param name="bitLength"><inheritdoc/></param>
+		/// <returns><inheritdoc/></returns>
+		protected override IHashValue CreateInstance(ValueEndianness endianness, ImmutableArray<byte> hash, int bitLength)
+		{
+			return new EncodedHashValue(endianness, EncodedHash, _decodeOp, hash, bitLength);
 		}
 
 		/// <summary>
