@@ -334,5 +334,17 @@ namespace HashifyNet
 		/// </summary>
 		/// <returns>The calculated entropy percentage value between 0.0 and 100.0.</returns>
 		double CalculateEntropyPercentage();
+
+		/// <summary>
+		/// Creates a new instance of <see cref="IHashValue"/> that treats the value as Little-Endian without touching the actual byte array.
+		/// </summary>
+		/// <returns>The newly created <see cref="IHashValue"/> instance that'll treat the value as Little-Endian.</returns>
+		IHashValue TreatAsLittleEndian();
+
+		/// <summary>
+		/// Creates a new instance of <see cref="IHashValue"/> that treats the value as Big-Endian without touching the actual byte array.
+		/// </summary>
+		/// <returns>The newly created <see cref="IHashValue"/> instance that'll treat the value as Big-Endian.</returns>
+		IHashValue TreatAsBigEndian();
 	}
 }
