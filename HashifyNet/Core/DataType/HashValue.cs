@@ -134,6 +134,18 @@ namespace HashifyNet.Core.Utilities
 		}
 
 		/// <summary>
+		/// Creates a new instance using the base class <see cref="HashValue"/>. Override this to create your own instance of <see cref="IHashValue"/> so all the functions of <see cref="HashValue"/> uses your class.
+		/// </summary>
+		/// <param name="endianness">The endianness of the hash value.</param>
+		/// <param name="hash">The immutable hash value.</param>
+		/// <param name="bitLength">The bit length of the hash value.</param>
+		/// <returns>A new instance of <see cref="IHashValue"/>.</returns>
+		protected virtual IHashValue CreateInstance(ValueEndianness endianness, ImmutableArray<byte> hash, int bitLength)
+		{
+			return new HashValue(endianness, hash, bitLength);
+		}
+
+		/// <summary>
 		/// <inheritdoc/>
 		/// </summary>
 		/// <returns><inheritdoc/></returns>
@@ -296,12 +308,27 @@ namespace HashifyNet.Core.Utilities
 				throw new NotSupportedException("Bit Length greater than 64 is not supported.");
 			}
 
-			byte[] data = AsByteArray();
-
-			long num = 0;
-			for (int i = 0; i < data.Length; ++i)
+			if (Endianness == ValueEndianness.NotApplicable)
 			{
-				num |= (long)data[i] << (8 * i);
+				throw new NotSupportedException("Values with no endianness cannot be represented in a primitive, please first convert the value to big-endian or little-endian.");
+			}
+
+			byte[] data = AsByteArray();
+			long num = 0;
+			if (Endianness == ValueEndianness.LittleEndian)
+			{
+				for (int i = 0; i < data.Length; ++i)
+				{
+					num |= (long)data[i] << (8 * i);
+				}
+			}
+			else // ValueEndianness.BigEndian
+			{
+				for (int i = 0; i < data.Length; ++i)
+				{
+					int shift = (data.Length - 1 - i) * 8;
+					num |= (long)data[i] << shift;
+				}
 			}
 
 			return num;
@@ -327,11 +354,8 @@ namespace HashifyNet.Core.Utilities
 			return (short)AsNumber64();
 		}
 
-		/// <summary>
-		/// <inheritdoc/>
-		/// </summary>
-		/// <returns><inheritdoc/></returns>
-		public DateTime AsDateTime()
+		[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.AggressiveInlining)]
+		private long GetTicks(long minTicks, long maxTicks)
 		{
 			long ticks = AsNumber64();
 			if (ticks < 0)
@@ -342,20 +366,29 @@ namespace HashifyNet.Core.Utilities
 			if (BitLength < 64)
 			{
 				double maxHashValue = 1L << BitLength;
-				ticks = (long)(ticks / maxHashValue * DateTime.MaxValue.Ticks);
+				ticks = (long)(ticks / maxHashValue * maxTicks);
 			}
 
-			if (ticks < DateTime.MinValue.Ticks)
+			if (ticks < minTicks)
 			{
-				ticks = DateTime.MinValue.Ticks;
+				ticks = minTicks;
 			}
 
-			if (ticks > DateTime.MaxValue.Ticks)
+			if (ticks > maxTicks)
 			{
-				ticks = DateTime.MaxValue.Ticks;
+				ticks = maxTicks;
 			}
 
-			return new DateTime(ticks);
+			return ticks;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public DateTime AsDateTime()
+		{
+			return new DateTime(GetTicks(DateTime.MinValue.Ticks, DateTime.MaxValue.Ticks));
 		}
 
 		/// <summary>
@@ -364,29 +397,7 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public DateTimeOffset AsDateTimeOffset()
 		{
-			long ticks = AsNumber64();
-			if (ticks < 0)
-			{
-				ticks &= long.MaxValue;
-			}
-
-			if (BitLength < 64)
-			{
-				double maxHashValue = 1L << BitLength;
-				ticks = (long)(ticks / maxHashValue * DateTimeOffset.MaxValue.Ticks);
-			}
-
-			if (ticks < DateTimeOffset.MinValue.Ticks)
-			{
-				ticks = DateTimeOffset.MinValue.Ticks;
-			}
-
-			if (ticks > DateTimeOffset.MaxValue.Ticks)
-			{
-				ticks = DateTimeOffset.MaxValue.Ticks;
-			}
-
-			return new DateTimeOffset(ticks, TimeSpan.Zero);
+			return new DateTimeOffset(GetTicks(DateTimeOffset.MinValue.Ticks, DateTimeOffset.MaxValue.Ticks), TimeSpan.Zero);
 		}
 
 		/// <summary>
@@ -395,29 +406,7 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public TimeSpan AsTimeSpan()
 		{
-			long ticks = AsNumber64();
-			if (ticks < 0)
-			{
-				ticks &= long.MaxValue;
-			}
-
-			if (BitLength < 64)
-			{
-				double maxHashValue = 1L << BitLength;
-				ticks = (long)(ticks / maxHashValue * TimeSpan.MaxValue.Ticks);
-			}
-
-			if (ticks < TimeSpan.MinValue.Ticks)
-			{
-				ticks = TimeSpan.MinValue.Ticks;
-			}
-
-			if (ticks > TimeSpan.MaxValue.Ticks)
-			{
-				ticks = TimeSpan.MaxValue.Ticks;
-			}
-
-			return new TimeSpan(ticks);
+			return new TimeSpan(GetTicks(TimeSpan.MinValue.Ticks, TimeSpan.MaxValue.Ticks));
 		}
 
 		/// <summary>
@@ -580,7 +569,7 @@ namespace HashifyNet.Core.Utilities
 		/// <returns><inheritdoc/></returns>
 		public IHashValue Slice(int start, int length)
 		{
-			return new HashValue(Endianness, AsSpan(start, length).ToImmutableArray(), length * 8);
+			return CreateInstance(Endianness, AsSpan(start, length).ToImmutableArray(), length * 8);
 		}
 
 		/// <summary>
@@ -604,7 +593,7 @@ namespace HashifyNet.Core.Utilities
 			if (BitLength == bitLength)
 				return this;
 
-			return new HashValue(Endianness, ArrayHelpers.CoerceToArray(Hash.ToArray(), bitLength), bitLength);
+			return CreateInstance(Endianness, ArrayHelpers.CoerceToArray(Hash, bitLength).ToImmutableArray(), bitLength);
 		}
 
 		/// <summary>
@@ -616,7 +605,7 @@ namespace HashifyNet.Core.Utilities
 			if (Endianness != ValueEndianness.BigEndian)
 				return this;
 
-			return new HashValue(ValueEndianness.LittleEndian, Hash.Reverse().ToImmutableArray(), BitLength);
+			return CreateInstance(ValueEndianness.LittleEndian, Hash.Reverse().ToImmutableArray(), BitLength);
 		}
 
 		/// <summary>
@@ -628,7 +617,7 @@ namespace HashifyNet.Core.Utilities
 			if (Endianness != ValueEndianness.LittleEndian)
 				return this;
 
-			return new HashValue(ValueEndianness.BigEndian, Hash.Reverse().ToImmutableArray(), BitLength);
+			return CreateInstance(ValueEndianness.BigEndian, Hash.Reverse().ToImmutableArray(), BitLength);
 		}
 
 		/// <summary>
@@ -653,7 +642,7 @@ namespace HashifyNet.Core.Utilities
 			if (Endianness == ValueEndianness.NotApplicable)
 				return this;
 
-			return new HashValue(Endianness == ValueEndianness.BigEndian ? ValueEndianness.LittleEndian : ValueEndianness.BigEndian, Hash.Reverse().ToImmutableArray(), BitLength);
+			return CreateInstance(Endianness == ValueEndianness.BigEndian ? ValueEndianness.LittleEndian : ValueEndianness.BigEndian, Hash.Reverse().ToImmutableArray(), BitLength);
 		}
 
 		/// <summary>
@@ -836,6 +825,24 @@ namespace HashifyNet.Core.Utilities
 				;
 
 			return (actualEntropy / maxPossibleEntropy) * 100.0;
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public virtual IHashValue TreatAsLittleEndian()
+		{
+			return CreateInstance(ValueEndianness.LittleEndian, Hash, BitLength);
+		}
+
+		/// <summary>
+		/// <inheritdoc/>
+		/// </summary>
+		/// <returns><inheritdoc/></returns>
+		public virtual IHashValue TreatAsBigEndian()
+		{
+			return CreateInstance(ValueEndianness.BigEndian, Hash, BitLength);
 		}
 
 		/// <summary>
