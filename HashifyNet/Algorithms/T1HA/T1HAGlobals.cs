@@ -54,7 +54,7 @@ namespace HashifyNet.Algorithms.T1HA
 		public const ulong PRIME_6 = 0xCB5AF53AE3AAAC31UL;
 
 
-#if true
+#if NETSTANDARD2_0
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static ulong BigMul_ref(ulong a, ulong b, out ulong low)
 		{
@@ -87,3 +87,4 @@ namespace HashifyNet.Algorithms.T1HA
 		}
 	}
 }
+
