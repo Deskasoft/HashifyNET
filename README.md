@@ -58,7 +58,7 @@ Implementations introduced by wrapping existing .NET implementations:
 - SHA3_512
 
 > [!NOTE]
-> Please check Implementations for the full list of available hash algorithms.
+> Please check [Implementations](#implementations) for the full list of available hash algorithms.
 
 ### Demo
 You can see a working example of HasihfyNET using Blazor right [here](https://deskasoft.github.io/HashifyNETDemo/).
@@ -311,6 +311,7 @@ License
 -------
 
 HashifyNET is released under the terms of the MIT license. See [LICENSE](https://github.com/deskasoft/HashifyNET/blob/master/LICENSE) for more information or see http://opensource.org/licenses/MIT.
+
 
 
 
